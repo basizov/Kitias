@@ -3,5 +3,5 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Kitias.Persistence.Models
 {
-  public class User : IdentityUser<Guid> { }
+  public class Role : IdentityRole<Guid> { }
 }
