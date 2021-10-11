@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using System;
 
-namespace Kitias.Domain.Models
+namespace Kitias.Persistence.Models
 {
 	public class User : IdentityUser<Guid> { }
 }

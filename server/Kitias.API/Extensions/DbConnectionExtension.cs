@@ -11,8 +11,10 @@ namespace Kitias.API.Extensions
 	{
 		public static IServiceCollection AddDbConnection(this IServiceCollection services, IConfiguration config)
 		{
+			var pgAdminConnectionString = config.GetConnectionString("PgadminConnection");
+
 			services.AddDbContext<DataContext>(
-			  options => options.UseNpgsql(config.GetConnectionString("PgadminConnection"))
+			  options => options.UseNpgsql(pgAdminConnectionString)
 			);
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
 			return services;

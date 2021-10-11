@@ -1,6 +1,6 @@
-namespace Kitias.Domain.DTOs
+namespace Kitias.Persistence.DTOs
 {
-	public record LoginDTO
+	public record LoginModel
 	{
 		public string Email { get; init; }
 		public string Password { get; init; }

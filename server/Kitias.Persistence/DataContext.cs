@@ -1,4 +1,4 @@
-using Kitias.Domain.Models;
+using Kitias.Persistence.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
