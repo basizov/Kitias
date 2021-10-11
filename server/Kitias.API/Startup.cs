@@ -8,44 +8,38 @@ using Microsoft.OpenApi.Models;
 
 namespace Kitias.API
 {
-  public class Startup
-  {
-    private readonly IConfiguration _config;
+	public class Startup
+	{
+		private readonly IConfiguration _config;
 
-    public Startup(IConfiguration config) =>
-      _config = config;
+		public Startup(IConfiguration config) =>
+		  _config = config;
 
-    public void ConfigureServices(IServiceCollection services)
-    {
-      services.AddControllers();
-      services.AddSwaggerGen(c =>
-      {
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "Kitias.API", Version = "v1" });
-      });
-      services.AddDbConnection(_config);
-    }
+		public void ConfigureServices(IServiceCollection services)
+		{
+			services.AddControllers();
+			services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "Kitias.API", Version = "v1" }));
+			services.AddDbConnection(_config);
+		}
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-    {
-      if (env.IsDevelopment())
-      {
-        app.UseDeveloperExceptionPage();
-        app.UseSwagger();
-        app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Kitias.API v1"));
-      }
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+		{
+			if (env.IsDevelopment())
+			{
+				app.UseDeveloperExceptionPage();
+				app.UseSwagger();
+				app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Kitias.API v1"));
+			}
 
-      app.UseHttpsRedirection();
+			app.UseHttpsRedirection();
 
-      app.UseRouting();
+			app.UseRouting();
 
 
-      app.UseAuthentication();
-      app.UseAuthorization();
+			app.UseAuthentication();
+			app.UseAuthorization();
 
-      app.UseEndpoints(endpoints =>
-      {
-        endpoints.MapControllers();
-      });
-    }
-  }
+			app.UseEndpoints(endpoints => endpoints.MapControllers());
+		}
+	}
 }
