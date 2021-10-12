@@ -1,4 +1,5 @@
-﻿using Kitias.API.Models;
+﻿using Kitias.API.Interfaces;
+using Kitias.API.Models;
 using Kitias.Persistence.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -11,7 +12,7 @@ using System.Text;
 
 namespace Kitias.API.Services
 {
-	public class TokensService
+	public class TokensService : ITokensService
 	{
 		private readonly IConfiguration _config;
 

@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Kitias.Persistence.DTOs;
+using Kitias.Persistence.Models;
 
 namespace Kitias.Providers
 {
@@ -6,7 +8,8 @@ namespace Kitias.Providers
 	{
 		public MappingProfile()
 		{
-
+			CreateMap<User, UserDto>()
+				.ForMember(s => s.FullName, o => o.MapFrom(s => $"{s.Surname} {s.Name} {s.Patronymic}"));
 		}
 	}
 }

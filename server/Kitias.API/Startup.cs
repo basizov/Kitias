@@ -1,6 +1,5 @@
 using Kitias.API.Extensions;
 using Kitias.API.Middleware;
-using Kitias.API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Hosting;
@@ -28,7 +27,6 @@ namespace Kitias.API
 			services.AddDbConnection(_config);
 			services.AddIdentityProps();
 			services.AddJwtAutentication(_config);
-			services.AddScoped<TokensService>();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -37,7 +35,7 @@ namespace Kitias.API
 			{
 				app.UseDeveloperExceptionPage();
 				app.UseSwagger();
-				app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger", "Kitias.API"));
+				app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Kitias.API v1"));
 			}
 
 			app.UseMiddleware<AuthenticationMiddleware>();

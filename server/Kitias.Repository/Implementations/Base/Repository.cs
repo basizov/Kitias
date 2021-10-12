@@ -14,9 +14,13 @@ namespace Kitias.Repository.Implementations.Base
 
 		public Repository(DataContext dbContext) => _dbContext = dbContext;
 
-		public virtual void Create(T entity) => throw new NotImplementedException();
+		public virtual void Create(T entity) => _dbContext.Set<T>().Add(entity);
 
-		public virtual void Update(T entity) => throw new NotImplementedException();
+		public virtual void Update(T entity)
+		{
+			_dbContext.Set<T>().Attach(entity);
+			_dbContext.Entry(entity).State = EntityState.Modified;
+		}
 
 		public virtual void Delete(T entity) => throw new NotImplementedException();
 

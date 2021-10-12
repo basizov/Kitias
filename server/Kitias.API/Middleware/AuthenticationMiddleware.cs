@@ -7,9 +7,9 @@ namespace Kitias.API.Middleware
 	public class AuthenticationMiddleware
 	{
 		private readonly RequestDelegate _next;
-		private readonly ILogger _logger;
+		private readonly ILogger<AuthenticationMiddleware> _logger;
 
-		public AuthenticationMiddleware(RequestDelegate next, ILogger logger)
+		public AuthenticationMiddleware(RequestDelegate next, ILogger<AuthenticationMiddleware> logger)
 		{
 			_next = next;
 			_logger = logger;

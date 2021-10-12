@@ -1,4 +1,6 @@
-﻿using Kitias.Persistence;
+﻿using Kitias.API.Interfaces;
+using Kitias.API.Services;
+using Kitias.Persistence;
 using Kitias.Persistence.Models;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +15,8 @@ namespace Kitias.API.Extensions
 				o.Password.RequireNonAlphanumeric = false;
 				o.SignIn.RequireConfirmedEmail = false;
 			}).AddEntityFrameworkStores<DataContext>();
+			services.AddScoped<ITokensService, TokensService>();
+			services.AddScoped<IUserService, UserService>();
 			return services;
 		}
 	}
