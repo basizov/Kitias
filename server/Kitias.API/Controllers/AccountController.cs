@@ -101,7 +101,12 @@ namespace Kitias.API.Controllers
 			HttpContext.Response.Cookies.Append(
 				".AspNetCore.Application.Guidance",
 				tokens.RefreshToken,
-				new CookieOptions { MaxAge = TimeSpan.FromDays(7) }
+				new CookieOptions
+				{
+					MaxAge = TimeSpan.FromDays(7),
+					Domain = ".localhost",
+					Path = "/api/account"
+				}
 			);
 			return true;
 		}

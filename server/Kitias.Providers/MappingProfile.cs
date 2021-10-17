@@ -8,8 +8,7 @@ namespace Kitias.Providers
 	{
 		public MappingProfile()
 		{
-			CreateMap<User, UserDto>()
-				.ForMember(s => s.FullName, o => o.MapFrom(s => $"{s.Surname} {s.Name} {s.Patronymic}"));
+			CreateMap<User, UserDto>();
 		}
 	}
 }

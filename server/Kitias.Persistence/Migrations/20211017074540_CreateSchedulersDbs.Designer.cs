@@ -3,15 +3,17 @@ using System;
 using Kitias.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Kitias.Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211017074540_CreateSchedulersDbs")]
+    partial class CreateSchedulersDbs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,38 +27,19 @@ namespace Kitias.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<byte>("Course")
-                        .HasColumnType("smallint");
+                    b.Property<long>("Course")
+                        .HasColumnType("bigint");
 
-                    b.Property<string>("EducationType")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<DateTime>("IssueDate")
-                        .HasColumnType("timestamp without time zone");
+                    b.Property<int>("EducationType")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Number")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("ReceiptDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("Speciality")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                    b.Property<int>("Speciality")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasAlternateKey("Number");
-
-                    b.HasIndex("Number")
-                        .IsUnique()
-                        .HasDatabaseName("GroupNameIndex")
-                        .HasFilter("[Number] IS NOT NULL");
 
                     b.ToTable("Groups");
                 });
@@ -68,32 +51,21 @@ namespace Kitias.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Expires")
-                        .HasColumnType("date");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("FingerPrint")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Ip")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Token")
-                        .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("character varying(16)");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasAlternateKey("Token");
-
-                    b.HasIndex("Token")
-                        .IsUnique()
-                        .HasDatabaseName("TokenIndex")
-                        .HasFilter("[Token] IS NOT NULL");
 
                     b.HasIndex("UserId");
 
@@ -155,45 +127,29 @@ namespace Kitias.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("Date")
-                        .IsRequired()
-                        .HasColumnType("date");
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("Day")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                    b.Property<int>("Day")
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("GroupId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
                     b.Property<TimeSpan>("Time")
-                        .HasColumnType("time");
+                        .HasColumnType("interval");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Week")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                    b.Property<int>("Week")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("Name");
-
                     b.HasIndex("GroupId");
-
-                    b.HasIndex("Name")
-                        .IsUnique()
-                        .HasDatabaseName("SubjectName")
-                        .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("Subjects");
                 });
@@ -234,11 +190,6 @@ namespace Kitias.Persistence.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("FullName")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("text")
-                        .HasComputedColumnSql("RTRIM([Surname] + ' ' + [Name] + ' ' + [Patronymic])");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
 
@@ -246,7 +197,6 @@ namespace Kitias.Persistence.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("NormalizedEmail")
@@ -261,9 +211,7 @@ namespace Kitias.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Patronymic")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("");
+                        .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("text");
@@ -275,7 +223,6 @@ namespace Kitias.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Surname")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("TwoFactorEnabled")
