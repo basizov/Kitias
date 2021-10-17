@@ -1,8 +1,10 @@
-﻿using Kitias.Persistence;
+﻿using Kitias.Auth.API.Interfaces;
+using Kitias.Auth.API.Services;
+using Kitias.Persistence;
 using Kitias.Persistence.Models;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Kitias.API.Extensions
+namespace Kitias.Auth.API.Extensions
 {
 	public static class IdentityExtemsion
 	{
@@ -13,6 +15,8 @@ namespace Kitias.API.Extensions
 				o.Password.RequireNonAlphanumeric = false;
 				o.SignIn.RequireConfirmedEmail = false;
 			}).AddEntityFrameworkStores<DataContext>();
+			services.AddScoped<ITokensService, TokensService>();
+			services.AddScoped<IUserService, UserService>();
 			return services;
 		}
 	}

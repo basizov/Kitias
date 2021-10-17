@@ -188,7 +188,8 @@ namespace Kitias.Persistence.Migrations
                 table: "AspNetUsers",
                 type: "text",
                 nullable: true,
-                computedColumnSql: "RTRIM([Surname] + ' ' + [Name] + ' ' + [Patronymic])");
+                computedColumnSql: "trim(\"Surname\" || ' ' || \"Name\" || ' ' || \"Patronymic\")",
+                stored: true);
 
             migrationBuilder.AddUniqueConstraint(
                 name: "AK_Subjects_Name",
@@ -210,21 +211,21 @@ namespace Kitias.Persistence.Migrations
                 table: "Subjects",
                 column: "Name",
                 unique: true,
-                filter: "[Name] IS NOT NULL");
+                filter: "\"Name\" IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "TokenIndex",
                 table: "RefreshTokens",
                 column: "Token",
                 unique: true,
-                filter: "[Token] IS NOT NULL");
+                filter: "\"Token\" IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "GroupNameIndex",
                 table: "Groups",
                 column: "Number",
                 unique: true,
-                filter: "[Number] IS NOT NULL");
+                filter: "\"Number\" IS NOT NULL");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

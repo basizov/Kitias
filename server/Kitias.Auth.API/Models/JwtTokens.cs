@@ -1,4 +1,4 @@
-﻿namespace Kitias.API.Models
+﻿namespace Kitias.Auth.API.Models
 {
 	public record JwtTokens
 	{

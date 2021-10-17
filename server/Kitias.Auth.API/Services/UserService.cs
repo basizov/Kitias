@@ -1,5 +1,5 @@
-﻿using Kitias.API.Interfaces;
-using Kitias.API.Models;
+﻿using Kitias.Auth.API.Interfaces;
+using Kitias.Auth.API.Models;
 using Kitias.Persistence.Models;
 using Kitias.Repository.Interfaces.Base;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kitias.API.Services
+namespace Kitias.Auth.API.Services
 {
 	public class UserService : IUserService
 	{
@@ -46,6 +46,9 @@ namespace Kitias.API.Services
 			{
 				Email = registerModel.Email,
 				UserName = registerModel.Email,
+				Name = registerModel.Name,
+				Surname = registerModel.Surname,
+				Patronymic = registerModel.Patronymic,
 				PasswordHash = GeneratePasswordHash(registerModel.Password)
 			};
 			_unitOfWork.User.Create(user);
@@ -54,7 +57,7 @@ namespace Kitias.API.Services
 			return result > 0 ? user : null;
 		}
 
-		private string GeneratePasswordHash(string password)
+		private static string GeneratePasswordHash(string password)
 		{
 			if (password == null)
 				throw new ArgumentNullException("Password mustn't be null");

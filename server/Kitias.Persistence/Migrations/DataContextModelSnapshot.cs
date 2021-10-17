@@ -56,7 +56,7 @@ namespace Kitias.Persistence.Migrations
                     b.HasIndex("Number")
                         .IsUnique()
                         .HasDatabaseName("GroupNameIndex")
-                        .HasFilter("[Number] IS NOT NULL");
+                        .HasFilter("\"Number\" IS NOT NULL");
 
                     b.ToTable("Groups");
                 });
@@ -93,7 +93,7 @@ namespace Kitias.Persistence.Migrations
                     b.HasIndex("Token")
                         .IsUnique()
                         .HasDatabaseName("TokenIndex")
-                        .HasFilter("[Token] IS NOT NULL");
+                        .HasFilter("\"Token\" IS NOT NULL");
 
                     b.HasIndex("UserId");
 
@@ -193,7 +193,7 @@ namespace Kitias.Persistence.Migrations
                     b.HasIndex("Name")
                         .IsUnique()
                         .HasDatabaseName("SubjectName")
-                        .HasFilter("[Name] IS NOT NULL");
+                        .HasFilter("\"Name\" IS NOT NULL");
 
                     b.ToTable("Subjects");
                 });
@@ -237,7 +237,7 @@ namespace Kitias.Persistence.Migrations
                     b.Property<string>("FullName")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("text")
-                        .HasComputedColumnSql("RTRIM([Surname] + ' ' + [Name] + ' ' + [Patronymic])");
+                        .HasComputedColumnSql("trim(\"Surname\" || ' ' || \"Name\" || ' ' || \"Patronymic\")", true);
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");

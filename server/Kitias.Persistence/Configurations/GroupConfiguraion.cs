@@ -28,7 +28,7 @@ namespace Kitias.Persistence.Configurations
 			builder.HasAlternateKey(g => g.Number);
 			builder.HasIndex(g => g.Number)
 				.IsUnique()
-				.HasFilter("[Number] IS NOT NULL")
+				.HasFilter(@"""Number"" IS NOT NULL")
 				.HasDatabaseName("GroupNameIndex");
 		}
 	}

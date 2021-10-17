@@ -15,7 +15,7 @@ namespace Kitias.Persistence.Configurations
 			builder.Property(g => g.Patronymic)
 				.HasDefaultValue("");
 			builder.Property(g => g.FullName)
-				.HasComputedColumnSql("RTRIM([Surname] + ' ' + [Name] + ' ' + [Patronymic])");
+				.HasComputedColumnSql(@"trim(""Surname"" || ' ' || ""Name"" || ' ' || ""Patronymic"")", stored: true);
 		}
 	}
 }

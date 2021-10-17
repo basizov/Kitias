@@ -20,7 +20,7 @@ namespace Kitias.Persistence.Configurations
 			builder.HasAlternateKey(g => g.Token);
 			builder.HasIndex(g => g.Token)
 				.IsUnique()
-				.HasFilter("[Token] IS NOT NULL")
+				.HasFilter(@"""Token"" IS NOT NULL")
 				.HasDatabaseName("TokenIndex");
 		}
 	}

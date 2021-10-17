@@ -1,8 +1,8 @@
-﻿using Kitias.API.Models;
+﻿using Kitias.Auth.API.Models;
 using Kitias.Persistence.Models;
 using System.Threading.Tasks;
 
-namespace Kitias.API.Interfaces
+namespace Kitias.Auth.API.Interfaces
 {
 	public interface IUserService
 	{

@@ -32,7 +32,8 @@ namespace Kitias.Persistence.Configurations
 			builder.HasAlternateKey(g => g.Name);
 			builder.HasIndex(g => g.Name)
 				.IsUnique()
-				.HasFilter("[Name] IS NOT NULL")
+				.IsUnique()
+				.HasFilter(@"""Name"" IS NOT NULL")
 				.HasDatabaseName("SubjectName");
 		}
 	}

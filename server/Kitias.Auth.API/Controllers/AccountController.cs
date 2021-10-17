@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Kitias.API.Interfaces;
-using Kitias.API.Models;
+using Kitias.Auth.API.Interfaces;
+using Kitias.Auth.API.Models;
 using Kitias.Persistence.DTOs;
 using Kitias.Repository.Interfaces.Base;
 using Microsoft.AspNetCore.Authorization;
@@ -12,7 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Kitias.API.Controllers
+namespace Kitias.Auth.API.Controllers
 {
 	[Authorize]
 	public class AccountController : BaseController
@@ -40,9 +40,17 @@ namespace Kitias.API.Controllers
 
 			if (user == null)
 				return BadRequest($"Email is already used");
-			else if (!GenerateAndSetTokensToCookies(user))
+			var accessToken = GenerateAndSetTokensToCookies(user);
+
+			if (accessToken == null)
 				return BadRequest("Couldn't create tokens");
-			return Ok(_mapper.Map<UserDto>(user));
+			return Ok(new AuthorizationResultModel
+			{
+				Id = user.Id,
+				Email = user.Email,
+				FullName = user.FullName,
+				AccessToken = accessToken
+			});
 		}
 
 		[AllowAnonymous]
@@ -66,9 +74,11 @@ namespace Kitias.API.Controllers
 
 			if (userEntity == null)
 				return BadRequest($"Couldn't find user with same id");
-			else if (!GenerateAndSetTokensToCookies(userEntity))
+			var accessToken = GenerateAndSetTokensToCookies(userEntity);
+
+			if (accessToken == null)
 				return BadRequest("Couldn't create tokens");
-			return Ok("Refresh tokens");
+			return Ok(accessToken);
 		}
 
 		[HttpPost("logout")]
@@ -79,24 +89,20 @@ namespace Kitias.API.Controllers
 			return Ok("Success logout");
 		}
 
-		[HttpGet]
-		public IActionResult GetAccounts()
-		{
-			var users = _unitOfWork.User.GetAll();
-
-			return Ok(_mapper.Map<IList<UserDto>>(users));
-		}
-
-		private bool GenerateAndSetTokensToCookies(Persistence.Models.User user)
+		private string GenerateAndSetTokensToCookies(Persistence.Models.User user)
 		{
 			var tokens = _tokenService.GenerateTokens(user);
 
 			if (tokens == null)
-				return false;
+				return null;
 			HttpContext.Response.Cookies.Append(
 				".AspNetCore.Application.Guid",
 				tokens.AccessToken,
-				new CookieOptions { MaxAge = TimeSpan.FromHours(1) }
+				new CookieOptions {
+					MaxAge = TimeSpan.FromHours(1),
+					Domain = ".localhost",
+					Path = "/api/account"
+				}
 			);
 			HttpContext.Response.Cookies.Append(
 				".AspNetCore.Application.Guidance",
@@ -108,7 +114,7 @@ namespace Kitias.API.Controllers
 					Path = "/api/account"
 				}
 			);
-			return true;
+			return tokens.AccessToken;
 		}
 	}
 }

@@ -1,4 +1,4 @@
-using Kitias.API.Extensions;
+using Kitias.Auth.API.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
-namespace Kitias.API
+namespace Kitias.Auth.API
 {
 	public class Startup
 	{
@@ -21,12 +21,11 @@ namespace Kitias.API
 		{
 			services.AddCors();
 			services.AddControllers();
-			services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "Kitias.API", Version = "v1" }));
+			services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "Kitias.Auth.API", Version = "v1" }));
 			services.AddMappingProfile();
 			services.AddDbConnection(_config);
 			services.AddIdentityProps();
 			services.AddJwtAutentication(_config);
-			services.AddSwagger();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -35,7 +34,7 @@ namespace Kitias.API
 			{
 				app.UseDeveloperExceptionPage();
 				app.UseSwagger();
-				app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Kitias.API v1"));
+				app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Kitias.Auth.API v1"));
 			}
 
 			app.UseHttpsRedirection();
