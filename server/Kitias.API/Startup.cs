@@ -14,8 +14,7 @@ namespace Kitias.API
 	{
 		private readonly IConfiguration _config;
 
-		public Startup(IConfiguration config) =>
-		  _config = config;
+		public Startup(IConfiguration config) => _config = config;
 
 		public void ConfigureServices(IServiceCollection services)
 		{
@@ -25,7 +24,6 @@ namespace Kitias.API
 			services.AddMappingProfile();
 			services.AddDbConnection(_config);
 			services.AddIdentityProps();
-			services.AddJwtAutentication(_config);
 			services.AddSwagger();
 		}
 

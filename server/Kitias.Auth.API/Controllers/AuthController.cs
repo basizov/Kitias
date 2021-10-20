@@ -15,15 +15,17 @@ using System.Threading.Tasks;
 namespace Kitias.Auth.API.Controllers
 {
 	[Authorize]
-	public class AccountController : BaseController
+	[ApiController]
+	[Route("api/[controller]")]
+	public class AuthController : ControllerBase
 	{
-		private readonly ILogger<AccountController> _logger;
+		private readonly ILogger<AuthController> _logger;
 		private readonly IMapper _mapper;
 		private readonly IUserService _userService;
 		private readonly ITokensService _tokenService;
 		private readonly IUnitOfWork _unitOfWork;
 
-		public AccountController(ILogger<AccountController> logger, IUserService userService, ITokensService tokenService, IMapper mapper, IUnitOfWork unitOfWork)
+		public AuthController(ILogger<AuthController> logger, IUserService userService, ITokensService tokenService, IMapper mapper, IUnitOfWork unitOfWork)
 		{
 			_logger = logger;
 			_userService = userService;
@@ -97,8 +99,7 @@ namespace Kitias.Auth.API.Controllers
 				return null;
 			HttpContext.Response.Cookies.Append(
 				".AspNetCore.Application.Guid",
-				tokens.AccessToken,
-				new CookieOptions {
+				tokens.AccessToken,				new CookieOptions {
 					MaxAge = TimeSpan.FromHours(1),
 					Domain = ".localhost",
 					Path = "/api/account"
