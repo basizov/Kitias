@@ -9,11 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kitias.API", "Kitias.API\Ki
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kitias.Repository", "Kitias.Repository\Kitias.Repository.csproj", "{22CDB2F1-DD4B-43A4-ADF1-227A93B42691}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kitias.Providers", "Kitias.Providers\Kitias.Providers.csproj", "{FF8F88E4-6B68-4CA3-90CD-7ABD5F75CFED}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kitias.Auth.API", "Kitias.Auth.API\Kitias.Auth.API.csproj", "{EFA80174-13CB-4280-8E23-02DF4E2C4EAA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kitias.IdentityServer", "Kitias.IdentityServer\Kitias.IdentityServer.csproj", "{048E2BEB-59AA-4250-94A5-354EDE0AF502}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kitias.Providers", "Kitias.Providers\Kitias.Providers.csproj", "{FF8F88E4-6B68-4CA3-90CD-7ABD5F75CFED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,30 +69,6 @@ Global
 		{FF8F88E4-6B68-4CA3-90CD-7ABD5F75CFED}.Release|x64.Build.0 = Release|Any CPU
 		{FF8F88E4-6B68-4CA3-90CD-7ABD5F75CFED}.Release|x86.ActiveCfg = Release|Any CPU
 		{FF8F88E4-6B68-4CA3-90CD-7ABD5F75CFED}.Release|x86.Build.0 = Release|Any CPU
-		{EFA80174-13CB-4280-8E23-02DF4E2C4EAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EFA80174-13CB-4280-8E23-02DF4E2C4EAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EFA80174-13CB-4280-8E23-02DF4E2C4EAA}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{EFA80174-13CB-4280-8E23-02DF4E2C4EAA}.Debug|x64.Build.0 = Debug|Any CPU
-		{EFA80174-13CB-4280-8E23-02DF4E2C4EAA}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{EFA80174-13CB-4280-8E23-02DF4E2C4EAA}.Debug|x86.Build.0 = Debug|Any CPU
-		{EFA80174-13CB-4280-8E23-02DF4E2C4EAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EFA80174-13CB-4280-8E23-02DF4E2C4EAA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EFA80174-13CB-4280-8E23-02DF4E2C4EAA}.Release|x64.ActiveCfg = Release|Any CPU
-		{EFA80174-13CB-4280-8E23-02DF4E2C4EAA}.Release|x64.Build.0 = Release|Any CPU
-		{EFA80174-13CB-4280-8E23-02DF4E2C4EAA}.Release|x86.ActiveCfg = Release|Any CPU
-		{EFA80174-13CB-4280-8E23-02DF4E2C4EAA}.Release|x86.Build.0 = Release|Any CPU
-		{048E2BEB-59AA-4250-94A5-354EDE0AF502}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{048E2BEB-59AA-4250-94A5-354EDE0AF502}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{048E2BEB-59AA-4250-94A5-354EDE0AF502}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{048E2BEB-59AA-4250-94A5-354EDE0AF502}.Debug|x64.Build.0 = Debug|Any CPU
-		{048E2BEB-59AA-4250-94A5-354EDE0AF502}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{048E2BEB-59AA-4250-94A5-354EDE0AF502}.Debug|x86.Build.0 = Debug|Any CPU
-		{048E2BEB-59AA-4250-94A5-354EDE0AF502}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{048E2BEB-59AA-4250-94A5-354EDE0AF502}.Release|Any CPU.Build.0 = Release|Any CPU
-		{048E2BEB-59AA-4250-94A5-354EDE0AF502}.Release|x64.ActiveCfg = Release|Any CPU
-		{048E2BEB-59AA-4250-94A5-354EDE0AF502}.Release|x64.Build.0 = Release|Any CPU
-		{048E2BEB-59AA-4250-94A5-354EDE0AF502}.Release|x86.ActiveCfg = Release|Any CPU
-		{048E2BEB-59AA-4250-94A5-354EDE0AF502}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
