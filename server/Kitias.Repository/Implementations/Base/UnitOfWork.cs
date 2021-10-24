@@ -8,15 +8,15 @@ namespace Kitias.Repository.Implementations.Base
 	public class UnitOfWork : IUnitOfWork
 	{
 		private readonly DataContext _context;
-		private IUserRepository _user;
-		private IUserRoleRepository _userRole;
-		private IRoleRepository _role;
+		private IPersonRepository _person;
+		private IStudentRepository _student;
+		private ITeacherRepository _teacher;
 
 		public UnitOfWork(DataContext context) => _context = context;
 
-		public IUserRepository User => _user ??= new UserRepository(_context);
-		public IUserRoleRepository UserRole => _userRole ??= new UserRoleRepository(_context);
-		public IRoleRepository Role => _role ??= new RoleRepository(_context);
+		public IPersonRepository Person => _person ??= new PersonRepository(_context);
+		public IStudentRepository Student => _student ??= new StudentRepository(_context);
+		public ITeacherRepository Teacher => _teacher ??= new TeacherRepository(_context);
 
 		public async Task<int> SaveChangesAsync() => await _context.SaveChangesAsync();
 	}

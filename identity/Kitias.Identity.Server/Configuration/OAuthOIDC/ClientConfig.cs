@@ -6,9 +6,9 @@ namespace Kitias.Identity.Server.OAuthOIDC.Configuration
 {
 	public static partial class Config
 	{
-		public static IEnumerable<Client> GetClients => TakeElements
-		(
-			new Client
+		public static List<Client> GetClients => new()
+		{
+			new()
 			{
 				ClientId = "Kitias.API",
 				ClientName = "ASP.Net Core Kitias Web Api",
@@ -17,6 +17,6 @@ namespace Kitias.Identity.Server.OAuthOIDC.Configuration
 				AllowedScopes = TakeElements(DATA_ACCESS_SCOPE),
 				AllowOfflineAccess = true
 			}
-		);
+		};
 	}
 }

@@ -1,5 +1,7 @@
-﻿using Kitias.Persistence;
+﻿using IdentityServer4.AccessTokenValidation;
+using Kitias.Persistence;
 using Kitias.Persistence.Models;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Kitias.API.Extensions
@@ -8,11 +10,14 @@ namespace Kitias.API.Extensions
 	{
 		public static IServiceCollection AddIdentityProps(this IServiceCollection services)
 		{
-			services.AddIdentityCore<User>(o =>
-			{
-				o.Password.RequireNonAlphanumeric = false;
-				o.SignIn.RequireConfirmedEmail = false;
-			}).AddEntityFrameworkStores<DataContext>();
+			var bearer = IdentityServerAuthenticationDefaults.AuthenticationScheme;
+
+			services.AddAuthentication(bearer)
+				.AddIdentityServerAuthentication(bearer, options =>
+				{
+					options.ApiName = "kitiasApi";
+					options.Authority = "https://localhost:44389/";
+				});
 			return services;
 		}
 	}

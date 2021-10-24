@@ -6,9 +6,9 @@ namespace Kitias.Identity.Server.OAuthOIDC.Configuration
 {
 	public static partial class Config
 	{
-		public static IEnumerable<ApiResource> GetApiResources => TakeElements
-		(
-			new ApiResource
+		public static List<ApiResource> GetApiResources => new()
+		{
+			new()
 			{
 				Name = API_RESOURCE,
 				DisplayName = "Kitias Web API",
@@ -16,6 +16,6 @@ namespace Kitias.Identity.Server.OAuthOIDC.Configuration
 				Scopes = TakeElements(DATA_ACCESS_SCOPE),
 				ApiSecrets = TakeElements(new Secret(KITIAS_API_SECRET.Sha256()))
 			}
-		);
+		};
 	}
 }

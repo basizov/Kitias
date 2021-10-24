@@ -6,9 +6,9 @@ namespace Kitias.Identity.Server.OAuthOIDC.Configuration
 {
 	public static partial class Config
 	{
-		public static IEnumerable<ApiScope> GetApiScopes => TakeElements
-		(
-			new ApiScope
+		public static List<ApiScope> GetApiScopes => new()
+		{
+			new()
 			{
 				Name = DATA_ACCESS_SCOPE,
 				Description = "Get access to data from Kitias",
@@ -18,6 +18,7 @@ namespace Kitias.Identity.Server.OAuthOIDC.Configuration
 					JwtClaimTypes.Role,
 					JwtClaimTypes.Name
 				)
-			});
+			}
+		};
 	}
 }

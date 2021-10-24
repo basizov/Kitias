@@ -6,12 +6,12 @@ namespace Kitias.Identity.Server.OAuthOIDC.Configuration
 {
 	public static partial class Config
 	{
-		public static IEnumerable<IdentityResource> GetIdentityResources => TakeElements
-		(
+		public static List<IdentityResource> GetIdentityResources => new()
+		{
 			new IdentityResources.OpenId(),
 			new IdentityResources.Profile(),
 			new IdentityResources.Email(),
-			new IdentityResource(IDENTITY_CLAIMS_RESOURCE, TakeElements(JwtClaimTypes.Name, JwtClaimTypes.Role))
-		);
+			new (IDENTITY_CLAIMS_RESOURCE, TakeElements(JwtClaimTypes.Name, JwtClaimTypes.Role))
+		};
 	}
 }

@@ -11,7 +11,7 @@ namespace Kitias.Providers
 	{
 		public MappingProfile()
 		{
-			CreateMap<User, UserDto>();
+			CreateMap<Person, PersonDto>();
 			CreateMap<Group, GroupDto>()
 				.ForMember(g => g.EducationType, o => o.MapFrom(g => GetEnumMemberAttrValue(g.EducationType)))
 				.ForMember(g => g.Speciality, o => o.MapFrom(g => GetEnumMemberAttrValue(g.Speciality)));

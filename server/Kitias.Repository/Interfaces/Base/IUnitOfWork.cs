@@ -4,9 +4,9 @@ namespace Kitias.Repository.Interfaces.Base
 {
 	public interface IUnitOfWork
 	{
-		IUserRepository User { get; }
-		IUserRoleRepository UserRole { get; }
-		IRoleRepository Role { get; }
+		IPersonRepository Person { get; }
+		IStudentRepository Student { get; }
+		ITeacherRepository Teacher { get; }
 
 		Task<int> SaveChangesAsync();
 	}
