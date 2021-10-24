@@ -2,10 +2,10 @@
 
 namespace Kitias.Persistence.Models
 {
-	public class Teacher
+	public record Teacher
 	{
-		public Guid Id { get; set; }
-		public Guid PersonId { get; set; }
-		public Person Person { get; set; }
+		public Guid Id { get; init; }
+		public Guid PersonId { get; init; }
+		public Person Person { get; init; }
 	}
 }

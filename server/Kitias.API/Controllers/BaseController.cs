@@ -1,10 +1,12 @@
 ﻿using Kitias.Providers.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kitias.API.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
+	[Authorize]
 	public class BaseController : ControllerBase
 	{
 		public IActionResult HandleResult<T>(Result<T> result)

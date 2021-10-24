@@ -3,16 +3,16 @@ using System;
 
 namespace Kitias.Persistence.Models
 {
-	public class Subject
+	public record Subject
 	{
-		public Guid Id { get; set; }
-		public Guid GroupId { get; set; }
-		public Group Group { get; set; }
-		public string Name { get; set; }
-		public SubjectType Type { get; set; }
-		public TimeSpan Time { get; set; }
-		public DateTime? Date { get; set; }
-		public Week Week { get; set; }
-		public DayWeek Day { get; set; }
+		public Guid Id { get; init; }
+		public Guid GroupId { get; init; }
+		public Group Group { get; init; }
+		public string Name { get; init; }
+		public SubjectType Type { get; init; }
+		public TimeSpan Time { get; init; }
+		public DateTime? Date { get; init; }
+		public Week Week { get; init; }
+		public DayWeek Day { get; init; }
 	}
 }

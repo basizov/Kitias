@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
 using Kitias.Persistence.DTOs;
 using Kitias.Repository.Interfaces.Base;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
 namespace Kitias.API.Controllers
 {
-	[Authorize]
 	public class PersonController : BaseController
 	{
 		private readonly IUnitOfWork _unitOfWork;

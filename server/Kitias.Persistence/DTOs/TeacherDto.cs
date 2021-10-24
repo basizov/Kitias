@@ -2,7 +2,7 @@
 
 namespace Kitias.Persistence.DTOs
 {
-	public class TeacherDto
+	public record TeacherDto
 	{
 		public Guid Id { get; init; }
 		public string Email { get; init; }

@@ -4,15 +4,15 @@ using System.Collections.Generic;
 
 namespace Kitias.Persistence.Models
 {
-	public class Group
+	public record Group
 	{
-		public Guid Id { get; set; }
-		public byte Course { get; set; }
-		public string Number { get; set; }
-		public EducationType EducationType { get; set; }
-		public Speciality Speciality { get; set; }
-		public DateTime ReceiptDate { get; set; }
-		public DateTime IssueDate { get; set; }
-		public ICollection<Student> Students { get; set; }
+		public Guid Id { get; init; }
+		public byte Course { get; init; }
+		public string Number { get; init; }
+		public EducationType EducationType { get; init; }
+		public Speciality Speciality { get; init; }
+		public DateTime ReceiptDate { get; init; }
+		public DateTime IssueDate { get; init; }
+		public ICollection<Student> Students { get; init; }
 	}
 }
