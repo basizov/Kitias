@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Kitias.Identity.Server.Models
+namespace Kitias.Identity.Server.Models.RequestModels
 {
-	public record RegisterModel
+	public record RegisterRequestModel
 	{
 		public string UserName { get; init; }
 		public string Email { get; init; }

@@ -1,16 +1,19 @@
 ﻿using IdentityModel.Client;
 using IdentityServer4.AccessTokenValidation;
-using Kitias.Identity.Server.Models;
+using Kitias.Identity.Server.Models.RequestModels;
 using Kitias.Identity.Server.Models.DTOs;
 using Kitias.Identity.Server.Models.Entities;
+using Kitias.Identity.Server.Persistence;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
+using Kitias.Identity.Server.Models.ResponseModels;
 
 namespace Kitias.Identity.Server.Controllers
 {
@@ -22,19 +25,21 @@ namespace Kitias.Identity.Server.Controllers
 		private readonly ILogger _logger;
 		private readonly UserManager<User> _userManager;
 		private readonly SignInManager<User> _signinManager;
+		private readonly DataContext _dataContext;
 		private readonly IHttpClientFactory _clientFactory;
 
-		public AuthController(ILogger<AuthController> logger, UserManager<User> userManager, SignInManager<User> signinManager, IHttpClientFactory clientFactory)
+		public AuthController(ILogger<AuthController> logger, UserManager<User> userManager, SignInManager<User> signinManager, IHttpClientFactory clientFactory, DataContext dataContext)
 		{
 			_logger = logger;
 			_userManager = userManager;
 			_signinManager = signinManager;
 			_clientFactory = clientFactory;
+			_dataContext = dataContext;
 		}
 
 		[HttpPost("register")]
 		[Authorize(Roles = "Admin")]
-		public async Task<IActionResult> RegisterUser([FromBody] RegisterModel model)
+		public async Task<IActionResult> RegisterUser([FromBody] RegisterRequestModel model)
 		{
 			if (await _userManager.Users.AnyAsync(u => u.Email == model.Email))
 				return BadRequestWithLogger($"User with email: {model.Email} is existed");
@@ -54,7 +59,7 @@ namespace Kitias.Identity.Server.Controllers
 
 		[HttpPost("signin")]
 		[AllowAnonymous]
-		public async Task<IActionResult> Signin([FromBody] SigninModel model)
+		public async Task<IActionResult> Signin([FromBody] SigninRequestModel model)
 		{
 			var user = await _userManager.FindByNameAsync(model.UserName);
 
@@ -79,18 +84,104 @@ namespace Kitias.Identity.Server.Controllers
 			if (tokenResponse.IsError)
 				return UnauthorizedtWithLogger("Uncorrect user data");
 			_logger.LogInformation($"Get tokens from identity server");
-			var accessToken = tokenResponse.AccessToken;
-			var refreshToken = tokenResponse.RefreshToken;
+			var token = HttpContext.Request.Cookies[".AspNetCore.Application.Guid"];
+
+			if (token == null)
+			{
+				var userToken = new UserToken
+				{
+					UserId = user.Id,
+					Name = "refresh_token",
+					Value = tokenResponse.RefreshToken,
+					LoginProvider = disco.TokenEndpoint
+				};
+
+				_dataContext.UserTokens.Add(userToken);
+				var isSaved = await _dataContext.SaveChangesAsync();
+
+				if (isSaved <= 0)
+					return BadRequestWithLogger("Couldn't create refresh token");
+			}
+			else
+			{
+				var userToken = await _dataContext.UserTokens
+					.SingleOrDefaultAsync(t => t.Value == token);
+
+				if (userToken == null)
+					return BadRequestWithLogger("You couldn't get new token");
+				userToken.Value = tokenResponse.RefreshToken;
+				_dataContext.UserTokens.Update(userToken);
+				var isSaved = await _dataContext.SaveChangesAsync();
+
+				if (isSaved <= 0)
+					return BadRequestWithLogger("Couldn't create refresh token");
+			}
 			var result = new UserDto
 			{
 				Email = user.Email,
 				UserName = user.UserName,
-				AccessToken = accessToken,
-				RefreshToken = refreshToken
+				AccessToken = tokenResponse.AccessToken,
+				RefreshToken = tokenResponse.RefreshToken
 			};
 
 			_logger.LogInformation($"User {user.Email} was successfully authenticeted");
+			HttpContext.Response.Cookies.Append(
+				".AspNetCore.Application.Guid",
+				tokenResponse.RefreshToken,
+				new CookieOptions
+				{
+					MaxAge = TimeSpan.FromDays(7),
+					Domain = ".localhost",
+					Path = "/auth"
+				}
+			);
 			return Ok(result);
+		}
+
+		[HttpPost("refresh")]
+		[AllowAnonymous]
+		public async Task<IActionResult> RefreshToken(TokenRequestModel model)
+		{
+			// TODO: Add unique token to fluent validation
+			var token = HttpContext.Request.Cookies[".AspNetCore.Application.Guid"];
+			var userToken = await _dataContext.UserTokens
+				.SingleOrDefaultAsync(t => t.Value == token);
+
+			if (userToken == null)
+				return BadRequestWithLogger("You couldn't get new token");
+			var client = _clientFactory.CreateClient();
+			var disco = await client.GetDiscoveryDocumentAsync(@"https://localhost:44389");
+			var tokenResponse = await client.RequestRefreshTokenAsync(new()
+			{
+				Address = disco.TokenEndpoint,
+				ClientId = model.ClientId,
+				ClientSecret = model.ClientSecret,
+				RefreshToken = token
+			});
+
+			if (tokenResponse.IsError)
+				return BadRequestWithLogger("Uncorrect token");
+			userToken.Value = tokenResponse.RefreshToken;
+			_dataContext.UserTokens.Update(userToken);
+			var	isSaved = await _dataContext.SaveChangesAsync();
+
+			if (isSaved <= 0)
+				return BadRequestWithLogger("Couldn't update token");
+			HttpContext.Response.Cookies.Append(
+				".AspNetCore.Application.Guid",
+				tokenResponse.RefreshToken,
+				new CookieOptions
+				{
+					MaxAge = TimeSpan.FromDays(7),
+					Domain = ".localhost",
+					Path = "/auth"
+				}
+			);
+			return Ok(new TokenResponseModel
+			{
+				AccessToken = tokenResponse.AccessToken,
+				RefreshToken = tokenResponse.RefreshToken
+			});
 		}
 
 		private IActionResult BadRequestWithLogger(string message)

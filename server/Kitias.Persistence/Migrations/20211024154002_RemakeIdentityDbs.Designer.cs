@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Kitias.Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20211024063749_RemakeIdentityDbs")]
+    [Migration("20211024154002_RemakeIdentityDbs")]
     partial class RemakeIdentityDbs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -69,6 +69,11 @@ namespace Kitias.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
                     b.Property<string>("FullName")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("text")
@@ -91,6 +96,13 @@ namespace Kitias.Persistence.Migrations
                         .HasColumnType("character varying(30)");
 
                     b.HasKey("Id");
+
+                    b.HasAlternateKey("Email");
+
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasDatabaseName("PersonEmailIndex")
+                        .HasFilter("\"Email\" IS NOT NULL");
 
                     b.ToTable("Persons");
                 });

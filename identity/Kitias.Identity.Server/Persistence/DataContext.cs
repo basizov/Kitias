@@ -27,6 +27,7 @@ namespace Kitias.Identity.Server.Persistence
 				.ToTable("UserTokens");
 			builder.ApplyConfiguration(new UserConfiguration());
 			builder.ApplyConfiguration(new RoleConfiguration());
+			builder.ApplyConfiguration(new TokenConfiguration());
 		}
 	}
 }

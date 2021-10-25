@@ -26,6 +26,7 @@ namespace Kitias.Identity.Server
 
 		public void Configure(IApplicationBuilder app)
 		{
+			app.UseDeveloperExceptionPage();
 			app.UseHttpsRedirection();
 			app.UseRouting();
 			app.UseIdentityServer();

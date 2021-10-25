@@ -14,7 +14,7 @@ namespace Kitias.Repository.Implementations.Base
 
 		public Repository(DataContext dbContext) => _dbContext = dbContext;
 
-		public virtual void Create(T entity) => _dbContext.Set<T>().Add(entity);
+		public virtual T Create(T entity) => _dbContext.Set<T>().Add(entity).Entity;
 
 		public virtual void Update(T entity)
 		{
@@ -22,7 +22,14 @@ namespace Kitias.Repository.Implementations.Base
 			_dbContext.Entry(entity).State = EntityState.Modified;
 		}
 
-		public virtual void Delete(T entity) => throw new NotImplementedException();
+		public virtual void Delete(T entity)
+		{
+			var dbSet = _dbContext.Set<T>();
+
+			if (_dbContext.Entry(entity).State == EntityState.Detached)
+				dbSet.Attach(entity);
+			dbSet.Remove(entity);
+		}
 
 		public IQueryable<T> FindBy(Expression<Func<T, bool>> expression) => _dbContext.Set<T>().Where(expression).AsNoTracking();
 

@@ -12,7 +12,7 @@ namespace Kitias.Identity.Server.OAuthOIDC.Configuration
 			{
 				ClientId = "Kitias.API",
 				ClientName = "ASP.Net Core Kitias Web Api",
-				AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
+				AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
 				ClientSecrets = TakeElements(new Secret(KITIAS_API_SECRET.Sha256())),
 				AllowedScopes = TakeElements(DATA_ACCESS_SCOPE),
 				AllowOfflineAccess = true

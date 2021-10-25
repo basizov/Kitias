@@ -67,6 +67,11 @@ namespace Kitias.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
                     b.Property<string>("FullName")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("text")
@@ -89,6 +94,13 @@ namespace Kitias.Persistence.Migrations
                         .HasColumnType("character varying(30)");
 
                     b.HasKey("Id");
+
+                    b.HasAlternateKey("Email");
+
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasDatabaseName("PersonEmailIndex")
+                        .HasFilter("\"Email\" IS NOT NULL");
 
                     b.ToTable("Persons");
                 });

@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Kitias.Identity.Server.Migrations.Data
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20211024070238_AddTokenLogic")]
+    [Migration("20211024151244_AddTokenLogic")]
     partial class AddTokenLogic
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -208,15 +208,6 @@ namespace Kitias.Identity.Server.Migrations.Data
 
                     b.Property<DateTime>("Expires")
                         .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("FingerPrint")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Ip")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Token")
-                        .HasColumnType("text");
 
                     b.Property<string>("Value")
                         .HasColumnType("text");

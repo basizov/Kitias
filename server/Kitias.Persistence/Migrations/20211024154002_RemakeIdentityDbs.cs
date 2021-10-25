@@ -68,12 +68,21 @@ namespace Kitias.Persistence.Migrations
                     Name = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     Surname = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
                     Patronymic = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: true, defaultValue: ""),
-                    FullName = table.Column<string>(type: "text", nullable: true, computedColumnSql: "trim(\"Surname\" || ' ' || \"Name\" || ' ' || \"Patronymic\")", stored: true)
+                    FullName = table.Column<string>(type: "text", nullable: true, computedColumnSql: "trim(\"Surname\" || ' ' || \"Name\" || ' ' || \"Patronymic\")", stored: true),
+                    Email = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Persons", x => x.Id);
+                    table.UniqueConstraint("AK_Persons_Email", x => x.Email);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "PersonEmailIndex",
+                table: "Persons",
+                column: "Email",
+                unique: true,
+                filter: "\"Email\" IS NOT NULL");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Students_Persons_PersonId",

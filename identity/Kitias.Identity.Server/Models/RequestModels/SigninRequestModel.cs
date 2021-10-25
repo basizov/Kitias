@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Kitias.Identity.Server.Models
+namespace Kitias.Identity.Server.Models.RequestModels
 {
-	public record SigninModel
+	public record SigninRequestModel
 	{
 		public string UserName { get; init; }
 		public string Password { get; init; }
