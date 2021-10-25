@@ -10,6 +10,11 @@ namespace Kitias.Identity.Server.Configuration.FluentValidation
 		{
 			builder.ToTable("UserTokens");
 			builder.HasKey(ut => ut.Id);
+			//builder.HasAlternateKey(ut => ut.Value);
+			//builder.HasIndex(ut => ut.Value)
+			//	.IsUnique()
+			//	.HasFilter(@"""Value"" IS NOT NULL")
+			//	.HasDatabaseName("RefreshTokenIndex");
 		}
 	}
 }

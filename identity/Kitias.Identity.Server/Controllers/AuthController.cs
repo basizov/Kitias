@@ -1,8 +1,9 @@
 ﻿using IdentityModel.Client;
 using IdentityServer4.AccessTokenValidation;
-using Kitias.Identity.Server.Models.RequestModels;
 using Kitias.Identity.Server.Models.DTOs;
 using Kitias.Identity.Server.Models.Entities;
+using Kitias.Identity.Server.Models.RequestModels;
+using Kitias.Identity.Server.Models.ResponseModels;
 using Kitias.Identity.Server.Persistence;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -13,7 +14,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Kitias.Identity.Server.Models.ResponseModels;
 
 namespace Kitias.Identity.Server.Controllers
 {
@@ -37,9 +37,9 @@ namespace Kitias.Identity.Server.Controllers
 			_dataContext = dataContext;
 		}
 
-		[HttpPost("register")]
+		[HttpPost("signUp")]
 		[Authorize(Roles = "Admin")]
-		public async Task<IActionResult> RegisterUser([FromBody] RegisterRequestModel model)
+		public async Task<IActionResult> SignUp([FromBody] RegisterRequestModel model)
 		{
 			if (await _userManager.Users.AnyAsync(u => u.Email == model.Email))
 				return BadRequestWithLogger($"User with email: {model.Email} is existed");
@@ -57,9 +57,9 @@ namespace Kitias.Identity.Server.Controllers
 			return Ok("User was successfully created");
 		}
 
-		[HttpPost("signin")]
+		[HttpPost("signIn")]
 		[AllowAnonymous]
-		public async Task<IActionResult> Signin([FromBody] SigninRequestModel model)
+		public async Task<IActionResult> SignIn([FromBody] SigninRequestModel model)
 		{
 			var user = await _userManager.FindByNameAsync(model.UserName);
 
@@ -128,11 +128,12 @@ namespace Kitias.Identity.Server.Controllers
 			HttpContext.Response.Cookies.Append(
 				".AspNetCore.Application.Guid",
 				tokenResponse.RefreshToken,
-				new CookieOptions
+				new()
 				{
 					MaxAge = TimeSpan.FromDays(7),
 					Domain = ".localhost",
-					Path = "/auth"
+					Path = "/auth",
+					HttpOnly = true
 				}
 			);
 			return Ok(result);
@@ -140,9 +141,8 @@ namespace Kitias.Identity.Server.Controllers
 
 		[HttpPost("refresh")]
 		[AllowAnonymous]
-		public async Task<IActionResult> RefreshToken(TokenRequestModel model)
+		public async Task<IActionResult> RefreshTokens(ClientCredentioalsRequest model)
 		{
-			// TODO: Add unique token to fluent validation
 			var token = HttpContext.Request.Cookies[".AspNetCore.Application.Guid"];
 			var userToken = await _dataContext.UserTokens
 				.SingleOrDefaultAsync(t => t.Value == token);
@@ -163,18 +163,19 @@ namespace Kitias.Identity.Server.Controllers
 				return BadRequestWithLogger("Uncorrect token");
 			userToken.Value = tokenResponse.RefreshToken;
 			_dataContext.UserTokens.Update(userToken);
-			var	isSaved = await _dataContext.SaveChangesAsync();
+			var isSaved = await _dataContext.SaveChangesAsync();
 
 			if (isSaved <= 0)
 				return BadRequestWithLogger("Couldn't update token");
 			HttpContext.Response.Cookies.Append(
 				".AspNetCore.Application.Guid",
 				tokenResponse.RefreshToken,
-				new CookieOptions
+				new()
 				{
 					MaxAge = TimeSpan.FromDays(7),
 					Domain = ".localhost",
-					Path = "/auth"
+					Path = "/auth",
+					HttpOnly = true
 				}
 			);
 			return Ok(new TokenResponseModel
@@ -182,6 +183,43 @@ namespace Kitias.Identity.Server.Controllers
 				AccessToken = tokenResponse.AccessToken,
 				RefreshToken = tokenResponse.RefreshToken
 			});
+		}
+
+		[HttpPost("logout")]
+		public async Task<IActionResult> Logout(ClientCredentioalsRequest model)
+		{
+			var token = HttpContext.Request.Cookies[".AspNetCore.Application.Guid"];
+			var userToken = await _dataContext.UserTokens
+				.SingleOrDefaultAsync(t => t.Value == token);
+
+			if (userToken == null)
+				return BadRequestWithLogger("You couldn't get new token");
+			var client = _clientFactory.CreateClient();
+			var disco = await client.GetDiscoveryDocumentAsync(@"https://localhost:44389");
+			var tokenResponse = await client.RevokeTokenAsync(new()
+			{
+				Address = disco.RevocationEndpoint,
+				ClientId = model.ClientId,
+				ClientSecret = model.ClientSecret,
+				Token = token,
+				TokenTypeHint = "refresh_token"
+			});
+
+			if (tokenResponse.IsError)
+				return BadRequestWithLogger("Uncorrect token");
+			_dataContext.UserTokens.Remove(userToken);
+			var isSaved = await _dataContext.SaveChangesAsync();
+
+			if (isSaved <= 0)
+				return BadRequestWithLogger("Couldn't revoke token");
+			HttpContext.Response.Cookies.Append(".AspNetCore.Application.Guid", "", new()
+			{
+				Expires = DateTime.Now.AddDays(-1),
+				Domain = ".localhost",
+				Path = "/auth",
+				HttpOnly = true
+			});
+			return Ok("Successfully logout");
 		}
 
 		private IActionResult BadRequestWithLogger(string message)

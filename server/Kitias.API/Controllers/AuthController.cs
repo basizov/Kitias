@@ -3,11 +3,13 @@ using Kitias.Repository.Interfaces.Base;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -17,19 +19,19 @@ namespace Kitias.API.Controllers
 	public class AuthController : BaseController
 	{
 		private readonly ILogger _logger;
-		private readonly IHttpClientFactory _clientFactory;
 		private readonly IUnitOfWork _unitOfWork;
+		private readonly IHttpClientFactory _clientFactory;
 
-		public AuthController(ILogger<AuthController> logger, IHttpClientFactory clientFactory, IUnitOfWork unitOfWork)
+		public AuthController(ILogger<AuthController> logger, IUnitOfWork unitOfWork, IHttpClientFactory clientFactory)
 		{
 			_logger = logger;
-			_clientFactory = clientFactory;
 			_unitOfWork = unitOfWork;
+			_clientFactory = clientFactory;
 		}
 
-		[HttpPost("register/student")]
+		[HttpPost("signUp")]
 		[Authorize(Roles = "Admin")]
-		public async Task<IActionResult> Register([FromBody] RegisterModel model)
+		public async Task<IActionResult> SignUp([FromBody] RegisterModel model)
 		{
 			var newPerson = _unitOfWork.Person.Create(new()
 			{
@@ -39,80 +41,148 @@ namespace Kitias.API.Controllers
 				Email = model.Email
 			});
 
-			await _unitOfWork.SaveChangesAsync();
-			_logger.LogInformation($"Student {model.Email} was created, by doesn't saved");
-			var client = _clientFactory.CreateClient();
-			HttpContext.Request.Headers.TryGetValue("Authorization", out var authHeader);
-			var tokenSplit = authHeader.ToString().Split(" ");
-
-			if (tokenSplit.Length != 2)
-				return UnauthorizedtWithLogger("Token is invalid");
-			_logger.LogInformation("Access token is valid");
-			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(tokenSplit[0], tokenSplit[1]);
-			var content = new StringContent(JsonSerializer.Serialize(new
+			try
 			{
-				model.Email,
-				model.UserName,
-				model.Password,
-				model.RolesIds
-			}), Encoding.UTF8, "application/json");
-			var identityResponse = await client.PostAsync(@"https://localhost:44389/auth/register", content);
-
-			if (identityResponse.StatusCode != HttpStatusCode.OK)
+				await _unitOfWork.SaveChangesAsync();
+				_logger.LogInformation($"Student {model.Email} was created, but doesn't saved");
+				await TakeIdentityResponseAsync<string>(new
+				{
+					model.Email,
+					model.UserName,
+					model.Password,
+					model.RolesIds
+				}, @"https://localhost:44389/auth/signUp");
+				_logger.LogInformation($"User {model.Email} was successfully created");
+				_logger.LogInformation($"Student {model.Email} was successfully created");
+				return Ok("Student was successfully created");
+			}
+			catch (Exception ex)
 			{
 				_unitOfWork.Person.Delete(newPerson);
 				await _unitOfWork.SaveChangesAsync();
-				return BadRequestWithLogger("Couldn't create user");
+				_logger.LogError(ex, ex.Message);
+				return BadRequest(ex.Message);
 			}
-			_logger.LogInformation($"User {model.Email} was successfully created");
-			_logger.LogInformation($"Student {model.Email} was successfully created");
-			return Ok("Student was successfully created");
 		}
 
-		[HttpPost("login")]
+		[HttpPost("signIn")]
 		[AllowAnonymous]
-		public async Task<IActionResult> Login([FromBody] LoginModel model)
+		public async Task<IActionResult> SignIn([FromBody] LoginModel model)
 		{
-			var client = _clientFactory.CreateClient();
-			var content = new StringContent(JsonSerializer.Serialize(new
+			try
 			{
-				model.UserName,
-				model.Password,
-				ClientId = "Kitias.API",
-				ClientSecret = "|||uqpySecret!"
-			}), Encoding.UTF8, "application/json");
-			var	identityResponse = await client.PostAsync(@"https://localhost:44389/auth/signin", content);
-			var resultJson = await identityResponse.Content.ReadAsStringAsync();
+				var	result = await TakeIdentityResponseAsync<SignInResponse>(new
+				{
+					model.UserName,
+					model.Password,
+					ClientId = "Kitias.API",
+					ClientSecret = "|||uqpySecret!"
+				}, @"https://localhost:44389/auth/signIn");
 
-			_logger.LogInformation($"USer {model.UserName} was successfully authorized");
-			return Ok(JsonSerializer.Deserialize(resultJson, typeof(object)));
+				SetAccessTokenToCookies(result.AccessToken);
+				_logger.LogInformation($"User {model.UserName} was successfully authorized");
+				return Ok("User is successfully authorized");
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, ex.Message);
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpPost("refresh")]
 		[AllowAnonymous]
-		public async Task<IActionResult> RefreshToken()
+		public async Task<IActionResult> RefreshTokens()
+		{
+			try
+			{
+				var result = await TakeIdentityResponseAsync<TokenResponse>(new
+				{
+					ClientId = "Kitias.API",
+					ClientSecret = "|||uqpySecret!"
+				}, @"https://localhost:44389/auth/refresh");
+
+				SetAccessTokenToCookies(result.AccessToken);
+				_logger.LogInformation($"Take a new tokens pair {result}");
+				return Ok("Create new tokens");
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, ex.Message);
+				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpPost("logout")]
+		public async Task<IActionResult> Logout()
+		{
+			try
+			{
+				await TakeIdentityResponseAsync<string>(new
+				{
+					ClientId = "Kitias.API",
+					ClientSecret = "|||uqpySecret!"
+				}, @"https://localhost:44389/auth/logout");
+
+				_logger.LogInformation($"User was successfully logout");
+				return Ok("Successfully logout");
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, ex.Message);
+				return BadRequest(ex.Message);
+			}
+		}
+
+		private async Task<T> TakeIdentityResponseAsync<T>(object data, string url)
+			where T : class
 		{
 			var client = _clientFactory.CreateClient();
-			var content = new StringContent(JsonSerializer.Serialize(new
-			{
-				ClientId = "Kitias.API",
-				ClientSecret = "|||uqpySecret!"
-			}), Encoding.UTF8, "application/json");
-			var	identityResponse = await client.PostAsync(@"https://localhost:44389/auth/refresh", content);
-			var resultJson = await identityResponse.Content.ReadAsStringAsync();
+			_logger.LogInformation($"Create a httpClient = {client}");
+			(var sheme, var token) = TakeTokenFromHeader();
 
-			return Ok(JsonSerializer.Deserialize(resultJson, typeof(object)));
-		}
+			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(sheme, token);
+			_logger.LogInformation($"Create authorization header {sheme} {token}");
+			var content = new StringContent(
+				JsonConvert.SerializeObject(data),
+				Encoding.UTF8,
+				"application/json"
+			);
+			_logger.LogInformation($"Create a request content {content}");
+			var identityResponse = await client.PostAsync(url, content);
+			var jsonData = await identityResponse.Content.ReadAsStringAsync();
 
-		private IActionResult BadRequestWithLogger(string message)
-		{
-			_logger.LogError(message);
-			return BadRequest(message);
+			_logger.LogInformation($"Take identity response {jsonData}");
+			if (identityResponse.StatusCode != HttpStatusCode.OK)
+				throw new BadHttpRequestException(jsonData);
+			else if (jsonData is T)
+				return jsonData as T;
+			return JsonConvert.DeserializeObject<T>(jsonData);
 		}
-		private IActionResult UnauthorizedtWithLogger(string message)
+		private (string, string) TakeTokenFromHeader()
 		{
-			_logger.LogError(message);
-			return Unauthorized(message);
+			HttpContext.Request.Headers.TryGetValue("Authorization", out var authHeader);
+			_logger.LogInformation($"Take authorization header ${authHeader}");
+			var tokenSplit = authHeader.ToString().Split(" ");
+
+			if (tokenSplit.Length != 2)
+				return ("", "");
+			_logger.LogInformation($"Took authorization sheme ${tokenSplit[0]} and token {tokenSplit[1]}");
+			return (tokenSplit[0], tokenSplit[1]);
+		}
+		private void SetAccessTokenToCookies(string token)
+		{
+			HttpContext.Response.Cookies.Append(
+				".AspNetCore.Application.Guid",
+				token,
+				new()
+				{
+					MaxAge = TimeSpan.FromDays(7),
+					Domain = ".localhost",
+					Path = "/",
+					HttpOnly = true
+				}
+			);
 		}
 	}
 }
