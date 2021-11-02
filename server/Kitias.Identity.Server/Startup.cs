@@ -7,21 +7,36 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Kitias.Identity.Server
 {
+	/// <summary>
+	/// Startup class for run the app
+	/// </summary>
 	public class Startup
 	{
 		private readonly IConfiguration _config;
 
+		/// <summary>
+		/// Constructor for additing neccesary fields
+		/// </summary>
+		/// <param name="config">Get the app config file</param>
 		public Startup(IConfiguration config) => _config = config;
 
+		/// <summary>
+		/// Configure all neccessary services
+		/// </summary>
+		/// <param name="services">Initial services</param>
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddControllers();
 			services.AddIdentityDb(_config);
 			services.AddOwnIdentityServer();
-			services.AddOpenApi();
+			services.AddControllers();
+			services.AddOpenAPI();
 			services.AddScoped<IAuthProvider, AuthProvider>();
 		}
 
+		/// <summary>
+		/// Configure all neccessary middlewares
+		/// </summary>
+		/// <param name="app">Generate app piplines</param>
 		public void Configure(IApplicationBuilder app)
 		{
 			app.UseSwagger();
@@ -32,6 +47,7 @@ namespace Kitias.Identity.Server
 			});
 			app.UseRouting();
 			app.UseIdentityServer();
+			app.UseAuthorization();
 			app.UseEndpoints(endpoints => endpoints.MapControllers());
 		}
 	}

@@ -1,190 +1,71 @@
-﻿using Kitias.API.Models;
-using Kitias.Repository.Interfaces.Base;
+﻿using IdentityModel.Client;
+using Kitias.Persistence.Entities.Default;
+using Kitias.Providers.Models.Request;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System;
-using System.Net;
+using Microsoft.Extensions.Options;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Kitias.API.Controllers
 {
+	/// <summary>
+	/// Authorization endpoint
+	/// </summary>
 	public class AuthController : BaseController
 	{
-		private readonly ILogger _logger;
-		private readonly IUnitOfWork _unitOfWork;
 		private readonly IHttpClientFactory _clientFactory;
+		private readonly IOptions<ISSecure> _secureOptions;
 
-		public AuthController(ILogger<AuthController> logger, IUnitOfWork unitOfWork, IHttpClientFactory clientFactory)
-		{
-			_logger = logger;
-			_unitOfWork = unitOfWork;
-			_clientFactory = clientFactory;
-		}
+		/// <summary>
+		/// Add services to controller
+		/// </summary>
+		/// <param name="logger">Logging</param>
+		/// <param name="clientFactory">Client factory to create clients</param>
+		public AuthController(ILogger<AuthController> logger, IHttpClientFactory clientFactory, IOptions<ISSecure> secureOptions) : base(logger) => (_clientFactory, _secureOptions)  = (clientFactory, secureOptions);
 
-		[HttpPost("signUp")]
-		[Authorize(Roles = "Admin")]
-		public async Task<IActionResult> SignUp([FromBody] RegisterModel model)
-		{
-			var newPerson = _unitOfWork.Person.Create(new()
-			{
-				Name = model.Name,
-				Surname = model.Surname,
-				Patronymic = model.Patronymic,
-				Email = model.Email
-			});
-
-			try
-			{
-				await _unitOfWork.SaveChangesAsync();
-				_logger.LogInformation($"Student {model.Email} was created, but doesn't saved");
-				await TakeIdentityResponseAsync<string>(new
-				{
-					model.Email,
-					model.UserName,
-					model.Password,
-					model.RolesIds
-				}, @"https://localhost:44389/auth/signUp");
-				_logger.LogInformation($"User {model.Email} was successfully created");
-				_logger.LogInformation($"Student {model.Email} was successfully created");
-				return Ok("Student was successfully created");
-			}
-			catch (Exception ex)
-			{
-				_unitOfWork.Person.Delete(newPerson);
-				await _unitOfWork.SaveChangesAsync();
-				_logger.LogError(ex, ex.Message);
-				return BadRequest(ex.Message);
-			}
-		}
-
+		/// <summary>
+		/// Login user
+		/// </summary>
+		/// <param name="model">Model with user data</param>
+		/// <returns>Status info</returns>
 		[HttpPost("signIn")]
 		[AllowAnonymous]
-		public async Task<IActionResult> SignIn([FromBody] LoginModel model)
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<string>> SignIn([FromBody] SignInRequestModel model)
 		{
-			try
+			var signInClient = _clientFactory.CreateClient();
+			var discovery = await signInClient.GetDiscoveryDocumentAsync(_secureOptions.Value.Authority);
+			var response = await signInClient.RequestPasswordTokenAsync(new()
 			{
-				var	result = await TakeIdentityResponseAsync<SignInResponse>(new
-				{
-					model.UserName,
-					model.Password,
-					ClientId = "Kitias.API",
-					ClientSecret = "|||uqpySecret!"
-				}, @"https://localhost:44389/auth/signIn");
+				Address = discovery.TokenEndpoint,
+				ClientId = _secureOptions.Value.ClientId,
+				ClientSecret = _secureOptions.Value.ClientSecret,
+				UserName = model.UserName,
+				Password = model.Password
+			});
 
-				SetAccessTokenToCookies(result.AccessToken, 1);
-				_logger.LogInformation($"User {model.UserName} was successfully authorized");
-				return Ok("User is successfully authorized");
-			}
-			catch (Exception ex)
+			if (response.IsError)
 			{
-				_logger.LogError(ex, ex.Message);
-				return BadRequest(ex.Message);
+				_logger.LogError("Couln't get data from identity-server");
+				return BadRequest("");
 			}
-		}
-
-		[HttpPost("refresh")]
-		[AllowAnonymous]
-		public async Task<IActionResult> RefreshTokens()
-		{
-			try
-			{
-				var result = await TakeIdentityResponseAsync<TokenResponse>(new
-				{
-					ClientId = "Kitias.API",
-					ClientSecret = "|||uqpySecret!"
-				}, @"https://localhost:44389/auth/refresh");
-
-				SetAccessTokenToCookies(result.AccessToken, 1);
-				_logger.LogInformation($"Take a new tokens pair {result}");
-				return Ok("Create new tokens");
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex, ex.Message);
-				return BadRequest(ex.Message);
-			}
-		}
-
-		[HttpPost("logout")]
-		public async Task<IActionResult> Logout()
-		{
-			try
-			{
-				await TakeIdentityResponseAsync<string>(new
-				{
-					ClientId = "Kitias.API",
-					ClientSecret = "|||uqpySecret!"
-				}, @"https://localhost:44389/auth/logout");
-
-				_logger.LogInformation($"User was successfully logout");
-				SetAccessTokenToCookies("", -1);
-				return Ok("Successfully logout");
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex, ex.Message);
-				return BadRequest(ex.Message);
-			}
-		}
-
-		private async Task<T> TakeIdentityResponseAsync<T>(object data, string url)
-			where T : class
-		{
-			var client = _clientFactory.CreateClient();
-			_logger.LogInformation($"Create a httpClient = {client}");
-			(var sheme, var token) = TakeTokenFromHeader();
-
-			if (!string.IsNullOrEmpty(sheme) && !string.IsNullOrEmpty(token))
-			{
-				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(sheme, token);
-				_logger.LogInformation($"Create authorization header {sheme} {token}");
-			}
-			var content = new StringContent(
-				JsonConvert.SerializeObject(data),
-				Encoding.UTF8,
-				"application/json"
-			);
-			_logger.LogInformation($"Create a request content {content}");
-			var identityResponse = await client.PostAsync(url, content);
-			var jsonData = await identityResponse.Content.ReadAsStringAsync();
-
-			_logger.LogInformation($"Take identity response {jsonData}");
-			if (identityResponse.StatusCode != HttpStatusCode.OK)
-				throw new BadHttpRequestException(jsonData);
-			else if (jsonData is T)
-				return jsonData as T;
-			return JsonConvert.DeserializeObject<T>(jsonData);
-		}
-		private (string, string) TakeTokenFromHeader()
-		{
-			HttpContext.Request.Headers.TryGetValue("Authorization", out var authHeader);
-			_logger.LogInformation($"Take authorization header ${authHeader}");
-			var tokenSplit = authHeader.ToString().Split(" ");
-
-			if (tokenSplit.Length != 2)
-				return ("", "");
-			_logger.LogInformation($"Took authorization sheme ${tokenSplit[0]} and token {tokenSplit[1]}");
-			return (tokenSplit[0], tokenSplit[1]);
-		}
-		private void SetAccessTokenToCookies(string token, int days)
-		{
-			HttpContext.Response.Cookies.Append(
+			//HttpContext.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+			//HttpContext.Response.Headers.Add("X-Xss-Protection", "1");
+			//HttpContext.Response.Headers.Add("X-Frame-Options", "DENY");
+			Response.Cookies.Append(
 				".AspNetCore.Application.Guid",
-				token,
+				$"{response.AccessToken}",
 				new()
 				{
-					MaxAge = TimeSpan.FromHours(days),
-					Domain = ".localhost",
-					Path = "/api",
 					HttpOnly = true
 				}
 			);
+			return Ok(response.AccessToken);
 		}
 	}
 }

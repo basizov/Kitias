@@ -4,22 +4,22 @@
         <name>Kitias.Providers</name>
     </assembly>
     <members>
-        <member name="T:Kitias.Providers.Models.SignUpRequestModel">
+        <member name="T:Kitias.Providers.Models.Request.SignUpRequestModel">
             <summary>
             Model for registration user
             </summary>
         </member>
-        <member name="P:Kitias.Providers.Models.SignUpRequestModel.Email">
+        <member name="P:Kitias.Providers.Models.Request.SignUpRequestModel.Email">
             <summary>
             New user email
             </summary>
         </member>
-        <member name="P:Kitias.Providers.Models.SignUpRequestModel.UserName">
+        <member name="P:Kitias.Providers.Models.Request.SignUpRequestModel.UserName">
             <summary>
             New user username
             </summary>
         </member>
-        <member name="P:Kitias.Providers.Models.SignUpRequestModel.Password">
+        <member name="P:Kitias.Providers.Models.Request.SignUpRequestModel.Password">
             <summary>
             New user password
             </summary>

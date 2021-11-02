@@ -6,9 +6,17 @@ using System.Reflection;
 
 namespace Kitias.API.Extensions
 {
-	public static class SwaggerExtension
+	/// <summary>
+	/// Extension to plug providers
+	/// </summary>
+	public static class OpenAPIExtension
 	{
-		public static IServiceCollection AddSwagger(this IServiceCollection services)
+		/// <summary>
+		/// Add open api service
+		/// </summary>
+		/// <param name="services">List services</param>
+		/// <returns>List services with new service</returns>
+		public static IServiceCollection AddOpenAPI(this IServiceCollection services)
 		{
 			services.AddSwaggerGen(o =>
 			{

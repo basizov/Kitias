@@ -4,6 +4,26 @@
         <name>Kitias.Identity.Server</name>
     </assembly>
     <members>
+        <member name="T:Kitias.Identity.Server.Config.OAuthOIDCConfig">
+            <summary>
+            Config for OAuth 2.0 and Open Id
+            </summary>
+        </member>
+        <member name="F:Kitias.Identity.Server.Config.OAuthOIDCConfig.TakeAPIResources">
+            <summary>
+            Initial api resources
+            </summary>
+        </member>
+        <member name="F:Kitias.Identity.Server.Config.OAuthOIDCConfig.TakeScopes">
+            <summary>
+            Initial api scopes
+            </summary>
+        </member>
+        <member name="F:Kitias.Identity.Server.Config.OAuthOIDCConfig.TakeClients">
+            <summary>
+            Initial api clients
+            </summary>
+        </member>
         <member name="T:Kitias.Identity.Server.Controllers.AuthController">
             <summary>
             Controller to make authorization with db
@@ -15,7 +35,7 @@
             </summary>
             <param name="authProvider">Provider for working user with db</param>
         </member>
-        <member name="M:Kitias.Identity.Server.Controllers.AuthController.SignUpAsync(Kitias.Providers.Models.SignUpRequestModel)">
+        <member name="M:Kitias.Identity.Server.Controllers.AuthController.SignUpAsync(Kitias.Providers.Models.Request.SignUpRequestModel)">
             <summary>
             Sign up method to register user
             </summary>
@@ -23,6 +43,85 @@
             <returns>Status string</returns>
             <response code="200">Success pesponse about user creation</response>
             <response code="400">Failure during registration a user</response>
+        </member>
+        <member name="T:Kitias.Identity.Server.Extensions.IdentityDbContextExtension">
+            <summary>
+            Extension for identity db connection
+            </summary>
+        </member>
+        <member name="M:Kitias.Identity.Server.Extensions.IdentityDbContextExtension.AddIdentityDb(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Method which add identity db context service
+            </summary>
+            <param name="services">All services</param>
+            <param name="config">App config</param>
+            <returns>List config with new service</returns>
+        </member>
+        <member name="T:Kitias.Identity.Server.Extensions.IdentityServerExtension">
+            <summary>
+            Extension for adding identity server
+            </summary>
+        </member>
+        <member name="M:Kitias.Identity.Server.Extensions.IdentityServerExtension.AddOwnIdentityServer(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Method which add identity server service
+            </summary>
+            <param name="services">All services</param>
+            <returns>List config with new service</returns>
+        </member>
+        <member name="T:Kitias.Identity.Server.Extensions.OpenApiExtension">
+            <summary>
+            Extension dor adding open api service
+            </summary>
+        </member>
+        <member name="M:Kitias.Identity.Server.Extensions.OpenApiExtension.AddOpenAPI(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Method which add OpenApi service
+            </summary>
+            <param name="services">All services</param>
+            <returns>List config with new service</returns>
+        </member>
+        <member name="T:Kitias.Identity.Server.Program">
+            <summary>
+            Start point of app
+            </summary>
+        </member>
+        <member name="M:Kitias.Identity.Server.Program.Main(System.String[])">
+            <summary>
+            Startup function
+            </summary>
+            <param name="args">Neccessary args of enviroment</param>
+            <returns>Asynchronys</returns>
+        </member>
+        <member name="M:Kitias.Identity.Server.Program.CreateHostBuilder(System.String[])">
+            <summary>
+            Create programm initializer
+            </summary>
+            <param name="args">Neccessary args of enviroment</param>
+            <returns>Programm initializer</returns>
+        </member>
+        <member name="T:Kitias.Identity.Server.Startup">
+            <summary>
+            Startup class for run the app
+            </summary>
+        </member>
+        <member name="M:Kitias.Identity.Server.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Constructor for additing neccesary fields
+            </summary>
+            <param name="config">Get the app config file</param>
+        </member>
+        <member name="M:Kitias.Identity.Server.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Configure all neccessary services
+            </summary>
+            <param name="services">Initial services</param>
+        </member>
+        <member name="M:Kitias.Identity.Server.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Configure all neccessary middlewares
+            </summary>
+            <param name="app">Generate app piplines</param>
         </member>
     </members>
 </doc>

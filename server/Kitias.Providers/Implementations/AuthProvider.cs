@@ -1,6 +1,7 @@
 ﻿using Kitias.Persistence.Entities.Identity;
 using Kitias.Providers.Interfaces;
 using Kitias.Providers.Models;
+using Kitias.Providers.Models.Request;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

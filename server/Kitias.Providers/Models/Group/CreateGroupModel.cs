@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Kitias.Providers.Models
+namespace Kitias.Providers.Models.Group
 {
 	public record CreateGroupModel
 	{

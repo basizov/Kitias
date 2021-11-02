@@ -1,4 +1,4 @@
-﻿namespace Kitias.Providers.Models
+﻿namespace Kitias.Providers.Models.Request
 {
 	/// <summary>
 	/// Model for registration user

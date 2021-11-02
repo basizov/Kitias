@@ -2,6 +2,7 @@
 using Kitias.Persistence.DTOs;
 using Kitias.Providers.Interfaces;
 using Kitias.Providers.Models;
+using Kitias.Providers.Models.Group;
 using Kitias.Repository.Interfaces.Base;
 using Microsoft.Extensions.Logging;
 using System;

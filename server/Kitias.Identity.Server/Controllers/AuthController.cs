@@ -3,6 +3,7 @@ using Kitias.Providers.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Kitias.Providers.Models.Request;
 
 namespace Kitias.Identity.Server.Controllers
 {

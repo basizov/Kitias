@@ -4,23 +4,205 @@
         <name>Kitias.API</name>
     </assembly>
     <members>
-        <member name="M:Kitias.API.Controllers.PersonController.GetPersons">
+        <member name="T:Kitias.API.Controllers.AuthController">
             <summary>
-            Get all persong of this application
+            Authorization endpoint
             </summary>
-            <returns>Persons</returns>
         </member>
-        <member name="M:Kitias.API.Controllers.PersonController.GetStudents">
+        <member name="M:Kitias.API.Controllers.AuthController.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.API.Controllers.AuthController},System.Net.Http.IHttpClientFactory,Microsoft.Extensions.Options.IOptions{Kitias.Persistence.Entities.Default.ISSecure})">
             <summary>
-            Get only students of this application
+            Add services to controller
             </summary>
-            <returns>Students</returns>
+            <param name="logger">Logging</param>
+            <param name="clientFactory">Client factory to create clients</param>
         </member>
-        <member name="M:Kitias.API.Controllers.PersonController.GetTeachers">
+        <member name="M:Kitias.API.Controllers.AuthController.SignIn(Kitias.Providers.Models.Request.SignInRequestModel)">
             <summary>
-            Get only teachers of this application
+            Login user
             </summary>
-            <returns>Teachers</returns>
+            <param name="model">Model with user data</param>
+            <returns>Status info</returns>
+        </member>
+        <member name="T:Kitias.API.Controllers.BaseController">
+            <summary>
+            Base controller
+            </summary>
+        </member>
+        <member name="M:Kitias.API.Controllers.BaseController.#ctor(Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            Add basic services
+            </summary>
+            <param name="logger">logging service</param>
+        </member>
+        <member name="T:Kitias.API.Controllers.GroupController">
+            <summary>
+            Controller to work with groups
+            </summary>
+        </member>
+        <member name="M:Kitias.API.Controllers.GroupController.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.API.Controllers.GroupController},Kitias.Providers.Interfaces.IGroupProvider)">
+            <summary>
+            Add services to the app
+            </summary>
+            <param name="logger">Logging</param>
+            <param name="groupProvider">Provider to work with groups</param>
+        </member>
+        <member name="M:Kitias.API.Controllers.GroupController.TakeGroups">
+            <summary>
+            Take all groups from db
+            </summary>
+            <returns>Groups</returns>
+        </member>
+        <member name="T:Kitias.API.Controllers.PersonController">
+            <summary>
+            Controller to work with persons
+            </summary>
+        </member>
+        <member name="M:Kitias.API.Controllers.PersonController.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.API.Controllers.PersonController})">
+            <summary>
+            Add neccessary services
+            </summary>
+            <param name="logger">Logging</param>
+        </member>
+        <member name="T:Kitias.API.Extensions.AuthorixationExtension">
+            <summary>
+            Extension to authenticate token
+            </summary>
+        </member>
+        <member name="M:Kitias.API.Extensions.AuthorixationExtension.AddOwnAuthorization(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Add authrization service
+            </summary>
+            <param name="services">List services</param>
+            <returns>Services with new one</returns>
+        </member>
+        <member name="T:Kitias.API.Extensions.AutoMapperExtension">
+            <summary>
+            Extension to add automapper service
+            </summary>
+        </member>
+        <member name="M:Kitias.API.Extensions.AutoMapperExtension.AddMappingProfile(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Add automapper service
+            </summary>
+            <param name="services">List services</param>
+            <returns>List services with new service</returns>
+        </member>
+        <member name="T:Kitias.API.Extensions.DbConnectionExtension">
+            <summary>
+            Extension to add database connection service
+            </summary>
+        </member>
+        <member name="M:Kitias.API.Extensions.DbConnectionExtension.AddDbConnection(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Add data base connection service
+            </summary>
+            <param name="services">List services</param>
+            <param name="config">App config</param>
+            <returns>List services with new service</returns>
+        </member>
+        <member name="T:Kitias.API.Extensions.OpenAPIExtension">
+            <summary>
+            Extension to plug providers
+            </summary>
+        </member>
+        <member name="M:Kitias.API.Extensions.OpenAPIExtension.AddOpenAPI(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Add open api service
+            </summary>
+            <param name="services">List services</param>
+            <returns>List services with new service</returns>
+        </member>
+        <member name="T:Kitias.API.Extensions.ProvidersExtension">
+            <summary>
+            Extension to plug providers
+            </summary>
+        </member>
+        <member name="M:Kitias.API.Extensions.ProvidersExtension.AddProviders(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Add providers
+            </summary>
+            <param name="services">List services</param>
+            <returns>List services with new service</returns>
+        </member>
+        <member name="T:Kitias.API.Middlewares.AuthenticationMiddleware">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Kitias.API.Middlewares.AuthenticationMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Logging.ILogger{Kitias.API.Middlewares.AuthenticationMiddleware})">
+            <summary>
+            Take neccasary services
+            </summary>
+            <param name="next">Next action</param>
+            <param name="logger">Logginh</param>
+        </member>
+        <member name="M:Kitias.API.Middlewares.AuthenticationMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Use middleware
+            </summary>
+            <param name="context">Http context</param>
+            <returns>Next pipeline</returns>
+        </member>
+        <member name="T:Kitias.API.Middlewares.ErrorHandlerMiddleware">
+            <summary>
+            Middleware for catch errors
+            </summary>
+        </member>
+        <member name="M:Kitias.API.Middlewares.ErrorHandlerMiddleware.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.API.Middlewares.ErrorHandlerMiddleware},Microsoft.AspNetCore.Http.RequestDelegate)">
+            <summary>
+            Take neccasary services
+            </summary>
+            <param name="logger">Logging</param>
+            <param name="next">Next action</param>
+        </member>
+        <member name="M:Kitias.API.Middlewares.ErrorHandlerMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Use middleware
+            </summary>
+            <param name="context">Http context</param>
+            <returns>Next piplene</returns>
+        </member>
+        <member name="T:Kitias.API.Program">
+            <summary>
+            Start point of app
+            </summary>
+        </member>
+        <member name="M:Kitias.API.Program.Main(System.String[])">
+            <summary>
+            Startup function
+            </summary>
+            <param name="args">Neccessary args of enviroment</param>
+            <returns>Asynchronys</returns>
+        </member>
+        <member name="M:Kitias.API.Program.CreateHostBuilder(System.String[])">
+            <summary>
+            Create programm initializer
+            </summary>
+            <param name="args">Neccessary args of enviroment</param>
+            <returns>Programm initializer</returns>
+        </member>
+        <member name="T:Kitias.API.Startup">
+            <summary>
+            Startup class for run the app
+            </summary>
+        </member>
+        <member name="M:Kitias.API.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Constructor for additing neccesary fields
+            </summary>
+            <param name="config">Get the app config file</param>
+        </member>
+        <member name="M:Kitias.API.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Configure all neccessary services
+            </summary>
+            <param name="services">Initial services</param>
+        </member>
+        <member name="M:Kitias.API.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Configure all neccessary middlewares
+            </summary>
+            <param name="app">Generate app piplines</param>
         </member>
     </members>
 </doc>

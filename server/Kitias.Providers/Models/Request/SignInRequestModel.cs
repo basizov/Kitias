@@ -1,6 +1,6 @@
-﻿namespace Kitias.API.Models
+﻿namespace Kitias.Providers.Models.Request
 {
-	public record LoginModel
+	public record SignInRequestModel
 	{
 		public string UserName { get; init; }
 		public string Password { get; init; }

@@ -5,9 +5,17 @@ using System.Reflection;
 
 namespace Kitias.Identity.Server.Extensions
 {
+	/// <summary>
+	/// Extension dor adding open api service
+	/// </summary>
 	public static class OpenApiExtension
 	{
-		public static IServiceCollection AddOpenApi(this IServiceCollection services)
+		/// <summary>
+		/// Method which add OpenApi service
+		/// </summary>
+		/// <param name="services">All services</param>
+		/// <returns>List config with new service</returns>
+		public static IServiceCollection AddOpenAPI(this IServiceCollection services)
 		{
 			services.AddSwaggerGen(o =>
 			{

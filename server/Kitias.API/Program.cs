@@ -7,12 +7,19 @@ using System.Threading.Tasks;
 
 namespace Kitias.API
 {
+	/// <summary>
+	/// Start point of app
+	/// </summary>
 	public class Program
 	{
+		/// <summary>
+		/// Startup function
+		/// </summary>
+		/// <param name="args">Neccessary args of enviroment</param>
+		/// <returns>Asynchronys</returns>
 		public async static Task Main(string[] args)
 		{
 			var host = CreateHostBuilder(args).Build();
-
 			using var scope = host.Services.CreateScope();
 			var services = scope.ServiceProvider;
 			var dbContext = services.GetRequiredService<DataContext>();
@@ -21,6 +28,11 @@ namespace Kitias.API
 			await host.RunAsync();
 		}
 
+		/// <summary>
+		/// Create programm initializer
+		/// </summary>
+		/// <param name="args">Neccessary args of enviroment</param>
+		/// <returns>Programm initializer</returns>
 		public static IHostBuilder CreateHostBuilder(string[] args) =>
 		  Host.CreateDefaultBuilder(args)
 			.ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());

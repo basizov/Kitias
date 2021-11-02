@@ -1,5 +1,6 @@
 ﻿using Kitias.Persistence.DTOs;
 using Kitias.Providers.Models;
+using Kitias.Providers.Models.Group;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
