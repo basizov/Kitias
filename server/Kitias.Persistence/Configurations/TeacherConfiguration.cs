@@ -1,4 +1,4 @@
-﻿using Kitias.Persistence.Models;
+﻿using Kitias.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

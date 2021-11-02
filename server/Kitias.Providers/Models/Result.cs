@@ -6,15 +6,20 @@
 		public T Value { get; init; }
 		public bool IsSuccess { get; init; }
 		public string Error { get; init; }
+	}
 
-		public static Result<T> OnSuccess(T value) => new()
+	public static class ResultHandler
+	{
+		public static Result<T> OnSuccess<T>(T value)
+			where T : class => new()
 		{
 			Error = null,
 			IsSuccess = true,
 			Value = value
 		};
 
-		public static Result<T> OnError(string error) => new()
+		public static Result<T> OnFailure<T>(string error)
+			where T : class => new()
 		{
 			Error = error,
 			IsSuccess = false,

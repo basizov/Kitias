@@ -19,7 +19,7 @@ namespace Kitias.Persistence.Migrations
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-            modelBuilder.Entity("Kitias.Persistence.Models.Group", b =>
+            modelBuilder.Entity("Kitias.Persistence.Entities.Group", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -61,7 +61,7 @@ namespace Kitias.Persistence.Migrations
                     b.ToTable("Groups");
                 });
 
-            modelBuilder.Entity("Kitias.Persistence.Models.Person", b =>
+            modelBuilder.Entity("Kitias.Persistence.Entities.Person", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -105,7 +105,7 @@ namespace Kitias.Persistence.Migrations
                     b.ToTable("Persons");
                 });
 
-            modelBuilder.Entity("Kitias.Persistence.Models.Student", b =>
+            modelBuilder.Entity("Kitias.Persistence.Entities.Student", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -126,7 +126,7 @@ namespace Kitias.Persistence.Migrations
                     b.ToTable("Students");
                 });
 
-            modelBuilder.Entity("Kitias.Persistence.Models.Subject", b =>
+            modelBuilder.Entity("Kitias.Persistence.Entities.Subject", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -176,7 +176,7 @@ namespace Kitias.Persistence.Migrations
                     b.ToTable("Subjects");
                 });
 
-            modelBuilder.Entity("Kitias.Persistence.Models.Teacher", b =>
+            modelBuilder.Entity("Kitias.Persistence.Entities.Teacher", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -192,15 +192,15 @@ namespace Kitias.Persistence.Migrations
                     b.ToTable("Teachers");
                 });
 
-            modelBuilder.Entity("Kitias.Persistence.Models.Student", b =>
+            modelBuilder.Entity("Kitias.Persistence.Entities.Student", b =>
                 {
-                    b.HasOne("Kitias.Persistence.Models.Group", "Group")
+                    b.HasOne("Kitias.Persistence.Entities.Group", "Group")
                         .WithMany("Students")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Kitias.Persistence.Models.Person", "Person")
+                    b.HasOne("Kitias.Persistence.Entities.Person", "Person")
                         .WithMany()
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -211,9 +211,9 @@ namespace Kitias.Persistence.Migrations
                     b.Navigation("Person");
                 });
 
-            modelBuilder.Entity("Kitias.Persistence.Models.Subject", b =>
+            modelBuilder.Entity("Kitias.Persistence.Entities.Subject", b =>
                 {
-                    b.HasOne("Kitias.Persistence.Models.Group", "Group")
+                    b.HasOne("Kitias.Persistence.Entities.Group", "Group")
                         .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -222,9 +222,9 @@ namespace Kitias.Persistence.Migrations
                     b.Navigation("Group");
                 });
 
-            modelBuilder.Entity("Kitias.Persistence.Models.Teacher", b =>
+            modelBuilder.Entity("Kitias.Persistence.Entities.Teacher", b =>
                 {
-                    b.HasOne("Kitias.Persistence.Models.Person", "Person")
+                    b.HasOne("Kitias.Persistence.Entities.Person", "Person")
                         .WithMany()
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -233,7 +233,7 @@ namespace Kitias.Persistence.Migrations
                     b.Navigation("Person");
                 });
 
-            modelBuilder.Entity("Kitias.Persistence.Models.Group", b =>
+            modelBuilder.Entity("Kitias.Persistence.Entities.Group", b =>
                 {
                     b.Navigation("Students");
                 });

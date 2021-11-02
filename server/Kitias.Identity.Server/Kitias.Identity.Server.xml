@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Kitias.Identity.Server</name>
+    </assembly>
+    <members>
+        <member name="T:Kitias.Identity.Server.Controllers.AuthController">
+            <summary>
+            Controller to make authorization with db
+            </summary>
+        </member>
+        <member name="M:Kitias.Identity.Server.Controllers.AuthController.#ctor(Kitias.Providers.Interfaces.IAuthProvider)">
+            <summary>
+            Constructor for authorization controller
+            </summary>
+            <param name="authProvider">Provider for working user with db</param>
+        </member>
+        <member name="M:Kitias.Identity.Server.Controllers.AuthController.SignUpAsync(Kitias.Providers.Models.SignUpRequestModel)">
+            <summary>
+            Sign up method to register user
+            </summary>
+            <param name="model">Sign up model</param>
+            <returns>Status string</returns>
+            <response code="200">Success pesponse about user creation</response>
+            <response code="400">Failure during registration a user</response>
+        </member>
+    </members>
+</doc>

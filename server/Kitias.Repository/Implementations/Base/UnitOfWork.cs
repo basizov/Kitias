@@ -11,12 +11,14 @@ namespace Kitias.Repository.Implementations.Base
 		private IPersonRepository _person;
 		private IStudentRepository _student;
 		private ITeacherRepository _teacher;
+		private IGroupRepository _group;
 
 		public UnitOfWork(DataContext context) => _context = context;
 
 		public IPersonRepository Person => _person ??= new PersonRepository(_context);
 		public IStudentRepository Student => _student ??= new StudentRepository(_context);
 		public ITeacherRepository Teacher => _teacher ??= new TeacherRepository(_context);
+		public IGroupRepository Group => _group ??= new GroupRepository(_context);
 
 		public async Task<int> SaveChangesAsync() => await _context.SaveChangesAsync();
 	}

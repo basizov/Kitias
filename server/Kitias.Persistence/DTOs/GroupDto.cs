@@ -10,8 +10,8 @@ namespace Kitias.Persistence.DTOs
 		public string Number { get; init; }
 		public string EducationType { get; init; }
 		public string Speciality { get; init; }
-		public DateTime ReceiptDate { get; init; }
-		public DateTime IssueDate { get; init; }
+		public string ReceiptDate { get; init; }
+		public string IssueDate { get; init; }
 		public ICollection<StudentDto> Students { get; init; }
 	}
 }

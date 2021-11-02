@@ -21,7 +21,7 @@ namespace Kitias.Persistence.Migrations
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-            modelBuilder.Entity("Kitias.Persistence.Models.Group", b =>
+            modelBuilder.Entity("Kitias.Persistence.Entities.Group", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -44,7 +44,7 @@ namespace Kitias.Persistence.Migrations
                     b.ToTable("Groups");
                 });
 
-            modelBuilder.Entity("Kitias.Persistence.Models.RefreshToken", b =>
+            modelBuilder.Entity("Kitias.Persistence.Entities.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -72,7 +72,7 @@ namespace Kitias.Persistence.Migrations
                     b.ToTable("RefreshTokens");
                 });
 
-            modelBuilder.Entity("Kitias.Persistence.Models.Role", b =>
+            modelBuilder.Entity("Kitias.Persistence.Entities.Role", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -99,7 +99,7 @@ namespace Kitias.Persistence.Migrations
                     b.ToTable("AspNetRoles");
                 });
 
-            modelBuilder.Entity("Kitias.Persistence.Models.Student", b =>
+            modelBuilder.Entity("Kitias.Persistence.Entities.Student", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -120,7 +120,7 @@ namespace Kitias.Persistence.Migrations
                     b.ToTable("Students");
                 });
 
-            modelBuilder.Entity("Kitias.Persistence.Models.Subject", b =>
+            modelBuilder.Entity("Kitias.Persistence.Entities.Subject", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -154,7 +154,7 @@ namespace Kitias.Persistence.Migrations
                     b.ToTable("Subjects");
                 });
 
-            modelBuilder.Entity("Kitias.Persistence.Models.Teacher", b =>
+            modelBuilder.Entity("Kitias.Persistence.Entities.Teacher", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -170,7 +170,7 @@ namespace Kitias.Persistence.Migrations
                     b.ToTable("Teachers");
                 });
 
-            modelBuilder.Entity("Kitias.Persistence.Models.User", b =>
+            modelBuilder.Entity("Kitias.Persistence.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -345,9 +345,9 @@ namespace Kitias.Persistence.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Kitias.Persistence.Models.RefreshToken", b =>
+            modelBuilder.Entity("Kitias.Persistence.Entities.RefreshToken", b =>
                 {
-                    b.HasOne("Kitias.Persistence.Models.User", "User")
+                    b.HasOne("Kitias.Persistence.Entities.User", "User")
                         .WithMany("RefreshTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -356,15 +356,15 @@ namespace Kitias.Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Kitias.Persistence.Models.Student", b =>
+            modelBuilder.Entity("Kitias.Persistence.Entities.Student", b =>
                 {
-                    b.HasOne("Kitias.Persistence.Models.Group", "Group")
+                    b.HasOne("Kitias.Persistence.Entities.Group", "Group")
                         .WithMany("Students")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Kitias.Persistence.Models.User", "User")
+                    b.HasOne("Kitias.Persistence.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -375,9 +375,9 @@ namespace Kitias.Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Kitias.Persistence.Models.Subject", b =>
+            modelBuilder.Entity("Kitias.Persistence.Entities.Subject", b =>
                 {
-                    b.HasOne("Kitias.Persistence.Models.Group", "Group")
+                    b.HasOne("Kitias.Persistence.Entities.Group", "Group")
                         .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -386,9 +386,9 @@ namespace Kitias.Persistence.Migrations
                     b.Navigation("Group");
                 });
 
-            modelBuilder.Entity("Kitias.Persistence.Models.Teacher", b =>
+            modelBuilder.Entity("Kitias.Persistence.Entities.Teacher", b =>
                 {
-                    b.HasOne("Kitias.Persistence.Models.User", "User")
+                    b.HasOne("Kitias.Persistence.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -399,7 +399,7 @@ namespace Kitias.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Kitias.Persistence.Models.Role", null)
+                    b.HasOne("Kitias.Persistence.Entities.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -408,7 +408,7 @@ namespace Kitias.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Kitias.Persistence.Models.User", null)
+                    b.HasOne("Kitias.Persistence.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -417,7 +417,7 @@ namespace Kitias.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("Kitias.Persistence.Models.User", null)
+                    b.HasOne("Kitias.Persistence.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -426,13 +426,13 @@ namespace Kitias.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("Kitias.Persistence.Models.Role", null)
+                    b.HasOne("Kitias.Persistence.Entities.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Kitias.Persistence.Models.User", null)
+                    b.HasOne("Kitias.Persistence.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -441,19 +441,19 @@ namespace Kitias.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("Kitias.Persistence.Models.User", null)
+                    b.HasOne("Kitias.Persistence.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Kitias.Persistence.Models.Group", b =>
+            modelBuilder.Entity("Kitias.Persistence.Entities.Group", b =>
                 {
                     b.Navigation("Students");
                 });
 
-            modelBuilder.Entity("Kitias.Persistence.Models.User", b =>
+            modelBuilder.Entity("Kitias.Persistence.Entities.User", b =>
                 {
                     b.Navigation("RefreshTokens");
                 });

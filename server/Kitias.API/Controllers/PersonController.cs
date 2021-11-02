@@ -3,6 +3,7 @@ using Kitias.Persistence.DTOs;
 using Kitias.Repository.Interfaces.Base;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 
 namespace Kitias.API.Controllers
 {
@@ -17,28 +18,40 @@ namespace Kitias.API.Controllers
 			_mapper = mapper;
 		}
 
+		/// <summary>
+		/// Get all persong of this application
+		/// </summary>
+		/// <returns>Persons</returns>
 		[HttpGet]
-		public IActionResult GetPersons()
+		public ActionResult<IEnumerable<PersonDto>> GetPersons()
 		{
 			var users = _unitOfWork.Person.GetAll();
 
-			return Ok(_mapper.Map<IList<PersonDto>>(users));
+			return Ok(_mapper.Map<IEnumerable<PersonDto>>(users));
 		}
 
+		/// <summary>
+		/// Get only students of this application
+		/// </summary>
+		/// <returns>Students</returns>
 		[HttpGet("students")]
-		public IActionResult GetStudents()
+		public ActionResult<IEnumerable<StudentDto>> GetStudents()
 		{
 			var users = _unitOfWork.Student.GetAll();
 
-			return Ok(_mapper.Map<IList<StudentDto>>(users));
+			return Ok(_mapper.Map<IEnumerable<StudentDto>>(users));
 		}
 
+		/// <summary>
+		/// Get only teachers of this application
+		/// </summary>
+		/// <returns>Teachers</returns>
 		[HttpGet("teachers")]
-		public IActionResult GetTeachers()
+		public ActionResult<IEnumerable<TeacherDto>> GetTeachers()
 		{
 			var users = _unitOfWork.Teacher.GetAll();
 
-			return Ok(_mapper.Map<IList<TeacherDto>>(users));
+			return Ok(_mapper.Map<IEnumerable<TeacherDto>>(users));
 		}
 	}
 }

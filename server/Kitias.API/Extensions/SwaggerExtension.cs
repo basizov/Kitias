@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System;
+using System.IO;
+using System.Reflection;
 
 namespace Kitias.API.Extensions
 {
@@ -10,21 +12,35 @@ namespace Kitias.API.Extensions
 		{
 			services.AddSwaggerGen(o =>
 			{
-				o.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+				o.SwaggerDoc("v1", new()
+				{
+					Title = "Kitias",
+					Version = "v1",
+					Description = "Единая информационная система для студентов отделений среднего профессионального образования КИТ.",
+					Contact = new()
+					{
+						Name = "Sizov Boris",
+						Email = "boris.sizov.2001@mail.ru",
+						Url = new(@"https://github.com/borissizov")
+					}
+				});
+
+				o.AddSecurityDefinition("Bearer", new()
 				{
 					Name = "Authorization",
 					Type = SecuritySchemeType.ApiKey,
 					Scheme = "Bearer",
 					BearerFormat = "JWT",
 					In = ParameterLocation.Header,
-					Description = "JWT Authorization header using the Bearer scheme"
+					Description = "JWT Authorization header using the Bearer scheme."
 				});
-				o.AddSecurityRequirement(new OpenApiSecurityRequirement
+
+				o.AddSecurityRequirement(new()
 				{
 					{
-						new OpenApiSecurityScheme
+						new()
 						{
-							Reference = new OpenApiReference
+							Reference = new()
 							{
 								Id = "Bearer",
 								Type = ReferenceType.SecurityScheme
@@ -33,6 +49,8 @@ namespace Kitias.API.Extensions
 						Array.Empty<string>()
 					}
 				});
+
+				o.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
 			});
 			return services;
 		}

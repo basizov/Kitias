@@ -6,15 +6,11 @@ namespace Kitias.Providers
 {
 	public class Provider
 	{
-		private readonly IMapper _mapper;
-		private readonly ILogger _logger;
-		private readonly IUnitOfWork _unitOfWork;
+		protected readonly IMapper _mapper;
+		protected readonly ILogger _logger;
+		protected readonly IUnitOfWork _unitOfWork;
 
-		public Provider(IMapper mapper, IUnitOfWork unitOfWork, ILogger logger)
-		{
-			_mapper = mapper;
-			_unitOfWork = unitOfWork;
-			_logger = logger;
-		}
+		public Provider(IMapper mapper, ILogger<Provider> logger, IUnitOfWork unitOfWork) =>
+			(_mapper, _logger, _unitOfWork) = (mapper, logger, unitOfWork);
 	}
 }

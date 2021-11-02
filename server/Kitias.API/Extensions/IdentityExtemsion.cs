@@ -1,6 +1,4 @@
 ﻿using IdentityServer4.AccessTokenValidation;
-using Kitias.Persistence;
-using Kitias.Persistence.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 

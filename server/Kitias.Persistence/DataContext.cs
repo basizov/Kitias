@@ -1,5 +1,5 @@
 using Kitias.Persistence.Configurations;
-using Kitias.Persistence.Models;
+using Kitias.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Kitias.Persistence

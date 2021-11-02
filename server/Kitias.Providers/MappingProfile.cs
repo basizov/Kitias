@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Kitias.Persistence.DTOs;
-using Kitias.Persistence.Models;
+using Kitias.Persistence.Entities;
 using System;
 using System.Linq;
 using System.Runtime.Serialization;

@@ -1,4 +1,5 @@
-﻿using Kitias.Providers.Models;
+﻿using IdentityServer4.AccessTokenValidation;
+using Kitias.Providers.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,10 +7,10 @@ namespace Kitias.API.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	[Authorize]
+	[Authorize(AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme)]
 	public class BaseController : ControllerBase
 	{
-		public IActionResult HandleResult<T>(Result<T> result)
+		public ActionResult<T> HandleResult<T>(Result<T> result)
 			where T : class
 		{
 			if (result == null)

@@ -1,5 +1,5 @@
 ﻿using Kitias.Persistence;
-using Kitias.Persistence.Models;
+using Kitias.Persistence.Entities;
 using Kitias.Repository.Implementations.Base;
 using Kitias.Repository.Interfaces;
 

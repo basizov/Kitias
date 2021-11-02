@@ -9,9 +9,7 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security.Claims;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Kitias.API.Controllers
@@ -79,7 +77,7 @@ namespace Kitias.API.Controllers
 					ClientSecret = "|||uqpySecret!"
 				}, @"https://localhost:44389/auth/signIn");
 
-				SetAccessTokenToCookies(result.AccessToken);
+				SetAccessTokenToCookies(result.AccessToken, 1);
 				_logger.LogInformation($"User {model.UserName} was successfully authorized");
 				return Ok("User is successfully authorized");
 			}
@@ -102,7 +100,7 @@ namespace Kitias.API.Controllers
 					ClientSecret = "|||uqpySecret!"
 				}, @"https://localhost:44389/auth/refresh");
 
-				SetAccessTokenToCookies(result.AccessToken);
+				SetAccessTokenToCookies(result.AccessToken, 1);
 				_logger.LogInformation($"Take a new tokens pair {result}");
 				return Ok("Create new tokens");
 			}
@@ -125,6 +123,7 @@ namespace Kitias.API.Controllers
 				}, @"https://localhost:44389/auth/logout");
 
 				_logger.LogInformation($"User was successfully logout");
+				SetAccessTokenToCookies("", -1);
 				return Ok("Successfully logout");
 			}
 			catch (Exception ex)
@@ -141,8 +140,11 @@ namespace Kitias.API.Controllers
 			_logger.LogInformation($"Create a httpClient = {client}");
 			(var sheme, var token) = TakeTokenFromHeader();
 
-			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(sheme, token);
-			_logger.LogInformation($"Create authorization header {sheme} {token}");
+			if (!string.IsNullOrEmpty(sheme) && !string.IsNullOrEmpty(token))
+			{
+				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(sheme, token);
+				_logger.LogInformation($"Create authorization header {sheme} {token}");
+			}
 			var content = new StringContent(
 				JsonConvert.SerializeObject(data),
 				Encoding.UTF8,
@@ -170,16 +172,16 @@ namespace Kitias.API.Controllers
 			_logger.LogInformation($"Took authorization sheme ${tokenSplit[0]} and token {tokenSplit[1]}");
 			return (tokenSplit[0], tokenSplit[1]);
 		}
-		private void SetAccessTokenToCookies(string token)
+		private void SetAccessTokenToCookies(string token, int days)
 		{
 			HttpContext.Response.Cookies.Append(
 				".AspNetCore.Application.Guid",
 				token,
 				new()
 				{
-					MaxAge = TimeSpan.FromDays(7),
+					MaxAge = TimeSpan.FromHours(days),
 					Domain = ".localhost",
-					Path = "/",
+					Path = "/api",
 					HttpOnly = true
 				}
 			);

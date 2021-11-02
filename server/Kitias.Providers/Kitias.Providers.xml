@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Kitias.Providers</name>
+    </assembly>
+    <members>
+        <member name="T:Kitias.Providers.Models.SignUpRequestModel">
+            <summary>
+            Model for registration user
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.SignUpRequestModel.Email">
+            <summary>
+            New user email
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.SignUpRequestModel.UserName">
+            <summary>
+            New user username
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.SignUpRequestModel.Password">
+            <summary>
+            New user password
+            </summary>
+        </member>
+    </members>
+</doc>
