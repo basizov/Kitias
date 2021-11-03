@@ -36,6 +36,9 @@ namespace Kitias.API.Middlewares
 			{
 				_logger.LogInformation($"Got token from cookies: {token}");
 				context.Request.Headers.Add("Authorization", $"Bearer {token}");
+				//HttpContext.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+				//HttpContext.Response.Headers.Add("X-Xss-Protection", "1");
+				//HttpContext.Response.Headers.Add("X-Frame-Options", "DENY");
 				_logger.LogInformation("Created neccessary headers for protection and autentication");
 			}
 			await _next(context);

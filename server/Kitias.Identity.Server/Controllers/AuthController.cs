@@ -1,9 +1,10 @@
 ﻿using Kitias.Providers.Interfaces;
-using Kitias.Providers.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Kitias.Providers.Models.Request;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using System;
+using System.Threading.Tasks;
 
 namespace Kitias.Identity.Server.Controllers
 {
@@ -15,13 +16,18 @@ namespace Kitias.Identity.Server.Controllers
 	public class AuthController : ControllerBase
 	{
 		private readonly IAuthProvider _authProvider;
+		private readonly IConfiguration _config;
 
 		/// <summary>
 		/// Constructor for authorization controller
 		/// </summary>
 		/// <param name="authProvider">Provider for working user with db</param>
-		public AuthController(IAuthProvider authProvider) =>
+		/// <param name="config">Config to get domain</param>
+		public AuthController(IAuthProvider authProvider, IConfiguration config)
+		{
 			_authProvider = authProvider;
+			_config = config;
+		}
 
 		/// <summary>
 		/// Sign up method to register user
@@ -41,6 +47,80 @@ namespace Kitias.Identity.Server.Controllers
 			if (!result.IsSuccess)
 				return BadRequest(result.Error);
 			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Save refresh token method
+		/// </summary>
+		/// <param name="model">Model to save token for user</param>
+		/// <returns>Status message</returns>
+		[HttpPost("token")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<string>> SaveTokenAsync(TokenRequestModel model)
+		{
+			var result = await _authProvider.TokenSaveAsync(model);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			Response.Cookies.Append(
+				".AspNetCore.Application.Guid",
+				$"{model.Token}",
+				new()
+				{
+					HttpOnly = true,
+					Path = "/auth",
+					Expires = DateTime.UtcNow.AddDays(7),
+					MaxAge = TimeSpan.FromDays(7)
+				}
+			);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Update refresh token controller
+		/// </summary>
+		/// <param name="model">Model to update token</param>
+		/// <returns>Status message</returns>
+		[HttpPut("token")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<string>> UpdateTokenAsync([FromBody] UpdateTokenRequestModel model)
+		{
+			var result = await _authProvider.TokenUpdateAsync(model);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			var domain = _config.GetConnectionString("ServerDomain");
+
+			Response.Cookies.Append(
+				".AspNetCore.Application.Guid",
+				$"{model.NewToken}",
+				new()
+				{
+					HttpOnly = true,
+					Path = "/auth",
+					Expires = DateTime.UtcNow.AddDays(7),
+					MaxAge = TimeSpan.FromDays(7)
+				}
+			);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Take refresh token from cookies
+		/// </summary>
+		/// <returns>Refresh token</returns>
+		[HttpGet("token")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public ActionResult<string> TakeToken()
+		{
+			if (!Request.Cookies.TryGetValue(".AspNetCore.Application.Guid", out var refreshToken))
+				return BadRequest("Token doesn't existed");
+			return Ok(refreshToken);
 		}
 	}
 }

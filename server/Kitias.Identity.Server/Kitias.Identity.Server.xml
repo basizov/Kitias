@@ -29,11 +29,12 @@
             Controller to make authorization with db
             </summary>
         </member>
-        <member name="M:Kitias.Identity.Server.Controllers.AuthController.#ctor(Kitias.Providers.Interfaces.IAuthProvider)">
+        <member name="M:Kitias.Identity.Server.Controllers.AuthController.#ctor(Kitias.Providers.Interfaces.IAuthProvider,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
             Constructor for authorization controller
             </summary>
             <param name="authProvider">Provider for working user with db</param>
+            <param name="config">Config to get domain</param>
         </member>
         <member name="M:Kitias.Identity.Server.Controllers.AuthController.SignUpAsync(Kitias.Providers.Models.Request.SignUpRequestModel)">
             <summary>
@@ -43,6 +44,26 @@
             <returns>Status string</returns>
             <response code="200">Success pesponse about user creation</response>
             <response code="400">Failure during registration a user</response>
+        </member>
+        <member name="M:Kitias.Identity.Server.Controllers.AuthController.SaveTokenAsync(Kitias.Providers.Models.Request.TokenRequestModel)">
+            <summary>
+            Save refresh token method
+            </summary>
+            <param name="model">Model to save token for user</param>
+            <returns>Status message</returns>
+        </member>
+        <member name="M:Kitias.Identity.Server.Controllers.AuthController.UpdateTokenAsync(Kitias.Providers.Models.Request.UpdateTokenRequestModel)">
+            <summary>
+            Update refresh token controller
+            </summary>
+            <param name="model">Model to update token</param>
+            <returns>Status message</returns>
+        </member>
+        <member name="M:Kitias.Identity.Server.Controllers.AuthController.TakeToken">
+            <summary>
+            Take refresh token from cookies
+            </summary>
+            <returns>Refresh token</returns>
         </member>
         <member name="T:Kitias.Identity.Server.Extensions.IdentityDbContextExtension">
             <summary>

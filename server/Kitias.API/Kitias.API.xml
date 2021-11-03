@@ -9,19 +9,27 @@
             Authorization endpoint
             </summary>
         </member>
-        <member name="M:Kitias.API.Controllers.AuthController.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.API.Controllers.AuthController},System.Net.Http.IHttpClientFactory,Microsoft.Extensions.Options.IOptions{Kitias.Persistence.Entities.Default.ISSecure})">
+        <member name="M:Kitias.API.Controllers.AuthController.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.API.Controllers.AuthController},System.Net.Http.IHttpClientFactory,Microsoft.Extensions.Options.IOptions{Kitias.Persistence.Entities.Default.ISSecure},Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
             Add services to controller
             </summary>
             <param name="logger">Logging</param>
             <param name="clientFactory">Client factory to create clients</param>
+            <param name="secureOptions">Config for identity server</param>
+            <param name="config">Config to get domain</param>
         </member>
         <member name="M:Kitias.API.Controllers.AuthController.SignIn(Kitias.Providers.Models.Request.SignInRequestModel)">
             <summary>
             Login user
             </summary>
             <param name="model">Model with user data</param>
-            <returns>Status info</returns>
+            <returns>Access token</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.AuthController.TakeNewToken">
+            <summary>
+            Update token
+            </summary>
+            <returns>New access token</returns>
         </member>
         <member name="T:Kitias.API.Controllers.BaseController">
             <summary>

@@ -4,6 +4,45 @@
         <name>Kitias.Providers</name>
     </assembly>
     <members>
+        <member name="T:Kitias.Providers.Implementations.AuthProvider">
+            <summary>
+            Main authorization provider
+            </summary>
+        </member>
+        <member name="M:Kitias.Providers.Implementations.AuthProvider.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.Providers.Implementations.AuthProvider},Microsoft.AspNetCore.Identity.UserManager{Kitias.Persistence.Entities.Identity.User},Kitias.Persistence.IdentityDataContext)">
+            <summary>
+            Constructor for take neccasary services
+            </summary>
+            <param name="logger">Logging</param>
+            <param name="userManager">Manager for create and check user</param>
+            <param name="dataContext">Manager for CRUD identity dbs</param>
+        </member>
+        <member name="T:Kitias.Providers.Interfaces.IAuthProvider">
+            <summary>
+            USer authorization methods
+            </summary>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IAuthProvider.SignUpAsync(Kitias.Providers.Models.Request.SignUpRequestModel)">
+            <summary>
+            Register new user
+            </summary>
+            <param name="model">Register model</param>
+            <returns>Statuse message</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IAuthProvider.TokenSaveAsync(Kitias.Providers.Models.Request.TokenRequestModel)">
+            <summary>
+            Save refresh token to db
+            </summary>
+            <param name="model">Token save model</param>
+            <returns>Status message</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IAuthProvider.TokenUpdateAsync(Kitias.Providers.Models.Request.UpdateTokenRequestModel)">
+            <summary>
+            Update refresh token to db
+            </summary>
+            <param name="oldToken">Old token</param>
+            <returns>Status message</returns>
+        </member>
         <member name="T:Kitias.Providers.Models.Request.SignUpRequestModel">
             <summary>
             Model for registration user
@@ -22,6 +61,36 @@
         <member name="P:Kitias.Providers.Models.Request.SignUpRequestModel.Password">
             <summary>
             New user password
+            </summary>
+        </member>
+        <member name="T:Kitias.Providers.Models.Request.TokenRequestModel">
+            <summary>
+            Save token model
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Request.TokenRequestModel.Token">
+            <summary>
+            Refresh token
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Request.TokenRequestModel.UserName">
+            <summary>
+            User e-mail
+            </summary>
+        </member>
+        <member name="T:Kitias.Providers.Models.Request.UpdateTokenRequestModel">
+            <summary>
+            Model to update old token
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Request.UpdateTokenRequestModel.OldToken">
+            <summary>
+            Old token
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Request.UpdateTokenRequestModel.NewToken">
+            <summary>
+            New token
             </summary>
         </member>
     </members>
