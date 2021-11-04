@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Kitias.Persistence.Configurations.Identity
 {
+	/// <summary>
+	/// Fluent Validtion for role
+	/// </summary>
 	public class RoleConfiguration : IEntityTypeConfiguration<Role>
 	{
 		public void Configure(EntityTypeBuilder<Role> builder)

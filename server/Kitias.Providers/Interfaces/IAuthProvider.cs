@@ -22,10 +22,16 @@ namespace Kitias.Providers.Interfaces
 		/// <returns>Status message</returns>
 		Task<Result<string>> TokenSaveAsync(TokenRequestModel model);
 		/// <summary>
-		/// Update refresh token to db
+		/// Update refresh token
 		/// </summary>
-		/// <param name="oldToken">Old token</param>
+		/// <param name="model">Model to update token</param>
 		/// <returns>Status message</returns>
 		Task<Result<string>> TokenUpdateAsync(UpdateTokenRequestModel model);
+		/// <summary>
+		/// Delete refresh token from db
+		/// </summary>
+		/// <param name="refreshToken">Token to delete UserToken</param>
+		/// <returns>Status message</returns>
+		Task<Result<string>> LogoutAsync(string refreshToken);
 	}
 }

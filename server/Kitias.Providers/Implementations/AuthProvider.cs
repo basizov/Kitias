@@ -75,7 +75,6 @@ namespace Kitias.Providers.Implementations
 		public async Task<Result<string>> TokenUpdateAsync(UpdateTokenRequestModel model)
 		{
 			var userToken = await _dataContext.UserTokens
-				.Include(ut => ut.User)
 				.SingleOrDefaultAsync(ut => ut.Value == model.OldToken);
 
 			if (userToken == null)
@@ -88,6 +87,21 @@ namespace Kitias.Providers.Implementations
 			if (isSaved <= 0)
 				return ReturnFailureResult<string>("Couldn't update token");
 			return ResultHandler.OnSuccess("Token was successfully updated");
+		}
+
+		public async Task<Result<string>> LogoutAsync(string refreshToken)
+		{
+			var userToken = await _dataContext.UserTokens
+				.SingleOrDefaultAsync(ut => ut.Value == refreshToken);
+
+			if (userToken == null)
+				return ReturnFailureResult<string>($"UserToken with token: {refreshToken} doesn't existed");
+			_dataContext.UserTokens.Remove(userToken);
+			var isSaved = await _dataContext.SaveChangesAsync();
+
+			if (isSaved <= 0)
+				return ReturnFailureResult<string>("Couldn't delete token");
+			return ResultHandler.OnSuccess("Token was successfully deleted");
 		}
 
 		private Result<T> ReturnFailureResult<T>(string errorMessage)

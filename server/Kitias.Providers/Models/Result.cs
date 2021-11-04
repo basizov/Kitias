@@ -1,5 +1,9 @@
 ﻿namespace Kitias.Providers.Models
 {
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
 	public record Result<T>
 		where T : class
 	{

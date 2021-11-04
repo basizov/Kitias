@@ -38,9 +38,16 @@
         </member>
         <member name="M:Kitias.Providers.Interfaces.IAuthProvider.TokenUpdateAsync(Kitias.Providers.Models.Request.UpdateTokenRequestModel)">
             <summary>
-            Update refresh token to db
+            Update refresh token
             </summary>
-            <param name="oldToken">Old token</param>
+            <param name="model">Model to update token</param>
+            <returns>Status message</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IAuthProvider.LogoutAsync(System.String)">
+            <summary>
+            Delete refresh token from db
+            </summary>
+            <param name="refreshToken">Token to delete UserToken</param>
             <returns>Status message</returns>
         </member>
         <member name="T:Kitias.Providers.Models.Request.SignUpRequestModel">

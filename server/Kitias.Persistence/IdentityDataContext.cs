@@ -6,9 +6,16 @@ using System;
 
 namespace Kitias.Persistence
 {
+	/// <summary>
+	/// Context to store identity types
+	/// </summary>
 	public class IdentityDataContext : IdentityDbContext<
 		User, Role, Guid, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>
 	{
+		/// <summary>
+		/// Constructor to get connection
+		/// </summary>
+		/// <param name="options">Optios to get connection info</param>
 		public IdentityDataContext(DbContextOptions<IdentityDataContext> options) : base(options) { }
 
 		protected override void OnModelCreating(ModelBuilder builder)

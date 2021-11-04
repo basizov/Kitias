@@ -18,18 +18,24 @@
             <param name="secureOptions">Config for identity server</param>
             <param name="config">Config to get domain</param>
         </member>
-        <member name="M:Kitias.API.Controllers.AuthController.SignIn(Kitias.Providers.Models.Request.SignInRequestModel)">
+        <member name="M:Kitias.API.Controllers.AuthController.SignInAsync(Kitias.Providers.Models.Request.SignInRequestModel)">
             <summary>
             Login user
             </summary>
             <param name="model">Model with user data</param>
             <returns>Access token</returns>
         </member>
-        <member name="M:Kitias.API.Controllers.AuthController.TakeNewToken">
+        <member name="M:Kitias.API.Controllers.AuthController.TakeNewTokenAsync">
             <summary>
             Update token
             </summary>
             <returns>New access token</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.AuthController.LogoutAsync">
+            <summary>
+            Logout user from system
+            </summary>
+            <returns>Status message</returns>
         </member>
         <member name="T:Kitias.API.Controllers.BaseController">
             <summary>

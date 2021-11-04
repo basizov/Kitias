@@ -7,8 +7,14 @@ using System.Runtime.Serialization;
 
 namespace Kitias.Providers
 {
+	/// <summary>
+	/// Service ti map entites
+	/// </summary>
 	public class MappingProfile : Profile
 	{
+		/// <summary>
+		/// Configure all entites
+		/// </summary>
 		public MappingProfile()
 		{
 			CreateMap<Person, PersonDto>();

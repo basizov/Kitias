@@ -44,7 +44,7 @@ namespace Kitias.API.Controllers
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-		public async Task<ActionResult<string>> SignIn([FromBody] SignInRequestModel model)
+		public async Task<ActionResult<string>> SignInAsync([FromBody] SignInRequestModel model)
 		{
 			var signInClient = _clientFactory.CreateClient();
 			var discovery = await signInClient.GetDiscoveryDocumentAsync(_secureOptions.Value.Authority);
@@ -98,11 +98,12 @@ namespace Kitias.API.Controllers
 		/// </summary>
 		/// <returns>New access token</returns>
 		[HttpPost("token")]
+		[AllowAnonymous]
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
-		public async Task<ActionResult<string>> TakeNewToken()
+		public async Task<ActionResult<string>> TakeNewTokenAsync()
 		{
 			var identityDomain = _config.GetConnectionString("IdentityServerDomain");
 			var refreshClient = _clientFactory.CreateClient();
@@ -156,6 +157,37 @@ namespace Kitias.API.Controllers
 				}
 			);
 			return Ok(tokenResponse.AccessToken);
+		}
+
+		/// <summary>
+		/// Logout user from system
+		/// </summary>
+		/// <returns>Status message</returns>
+		[HttpGet("logout")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+		public async Task<ActionResult<string>> LogoutAsync()
+		{
+			var identityDomain = _config.GetConnectionString("IdentityServerDomain");
+			var logoutClient = _clientFactory.CreateClient();
+			var newRefreshResponse = await logoutClient.GetAsync($"{identityDomain}/auth/logout");
+
+			if (newRefreshResponse.StatusCode != HttpStatusCode.OK)
+			{
+				_logger.LogError("Couln't take old refreshToken");
+				return Unauthorized("Please enter to the app");
+			}
+			Response.Cookies.Append(
+				".AspNetCore.Application.Guid",
+				"",
+				new()
+				{
+					HttpOnly = true,
+					Path = "/api",
+					Expires = DateTime.UtcNow.AddDays(-1)
+				}
+			);
+			return Ok("Successfully logout");
 		}
 	}
 }

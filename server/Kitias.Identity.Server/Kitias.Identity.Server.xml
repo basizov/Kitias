@@ -65,6 +65,12 @@
             </summary>
             <returns>Refresh token</returns>
         </member>
+        <member name="M:Kitias.Identity.Server.Controllers.AuthController.Logout">
+            <summary>
+            Logout from accout
+            </summary>
+            <returns>Status message</returns>
+        </member>
         <member name="T:Kitias.Identity.Server.Extensions.IdentityDbContextExtension">
             <summary>
             Extension for identity db connection

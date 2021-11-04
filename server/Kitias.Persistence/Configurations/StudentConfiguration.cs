@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Kitias.Persistence.Configurations
 {
+	/// <summary>
+	/// Fluent Validtion for student
+	/// </summary>
 	public class StudentConfiguration : IEntityTypeConfiguration<Student>
 	{
 		public void Configure(EntityTypeBuilder<Student> builder) { }

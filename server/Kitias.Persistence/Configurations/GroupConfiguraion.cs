@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Kitias.Persistence.Configurations
 {
+	/// <summary>
+	/// Fluent Validtion for group
+	/// </summary>
 	public class GroupConfiguraion : IEntityTypeConfiguration<Group>
 	{
 		public void Configure(EntityTypeBuilder<Group> builder)
