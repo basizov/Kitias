@@ -1,0 +1,275 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Kitias.Persistence</name>
+    </assembly>
+    <members>
+        <member name="T:Kitias.Persistence.Configurations.GroupConfiguraion">
+            <summary>
+            Fluent Validtion for group
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Configurations.Identity.RoleConfiguration">
+            <summary>
+            Fluent Validtion for role
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Configurations.Identity.TokenConfiguration">
+            <summary>
+            Fluent Validtion for userToken
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Configurations.Identity.UserConfiguration">
+            <summary>
+            Fluent Validtion for user
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Configurations.PersonConfiguration">
+            <summary>
+            Fluent Validtion for person
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Configurations.StudentConfiguration">
+            <summary>
+            Fluent Validtion for student
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Configurations.SubjectConfiguration">
+            <summary>
+            Fluent Validtion for subject
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Configurations.TeacherConfiguration">
+            <summary>
+            Fluent Validtion for teacher
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.DataContext">
+            <summary>
+            Default context for simple entities
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DataContext.Persons">
+            <summary>
+            Working with Person
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DataContext.Groups">
+            <summary>
+            Working with Groups
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DataContext.Students">
+            <summary>
+            Working with Students
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DataContext.Subjects">
+            <summary>
+            Working with Subjects
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DataContext.Teachers">
+            <summary>
+            Working with Teachers
+            </summary>
+        </member>
+        <member name="M:Kitias.Persistence.DataContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{Kitias.Persistence.DataContext})">
+            <summary>
+            Constructor to get connetion
+            </summary>
+            <param name="options">Infoi about connection</param>
+        </member>
+        <member name="T:Kitias.Persistence.DTOs.GroupDto">
+            <summary>
+            Group data transfer object
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.GroupDto.Id">
+            <summary>
+            Group identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.GroupDto.Course">
+            <summary>
+            Group course
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.GroupDto.Number">
+            <summary>
+            Group number
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.GroupDto.EducationType">
+            <summary>
+            Group education type
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.GroupDto.Speciality">
+            <summary>
+            Group speciality
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.GroupDto.ReceiptDate">
+            <summary>
+            Group receipt date
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.GroupDto.IssueDate">
+            <summary>
+            Group issue date
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.GroupDto.Students">
+            <summary>
+            Group students
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.DTOs.PersonDto">
+            <summary>
+            Person data transfer object
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.PersonDto.Id">
+            <summary>
+            Person identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.PersonDto.Email">
+            <summary>
+            Person e-mail
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.PersonDto.FullName">
+            <summary>
+            Person FIO
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.DTOs.StudentDto">
+            <summary>
+            Student data transfer object
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.StudentDto.Id">
+            <summary>
+            Student identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.StudentDto.Email">
+            <summary>
+            Student e-mail
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.StudentDto.FullName">
+            <summary>
+            Student FIO
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.StudentDto.Course">
+            <summary>
+            Student course
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.StudentDto.GroupNumber">
+            <summary>
+            Student group number
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.StudentDto.EducationType">
+            <summary>
+            Student education type
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.StudentDto.Speciality">
+            <summary>
+            Student speciality
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.DTOs.SubjectDto">
+            <summary>
+            Subject data transfer object
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.SubjectDto.Id">
+            <summary>
+            Subject identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.SubjectDto.Name">
+            <summary>
+            Subject name
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.SubjectDto.Type">
+            <summary>
+            Subject type
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.SubjectDto.Time">
+            <summary>
+            Subject time
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.SubjectDto.Date">
+            <summary>
+            Subject date
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.SubjectDto.Week">
+            <summary>
+            Subject week
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.SubjectDto.Day">
+            <summary>
+            Subject day
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.SubjectDto.Course">
+            <summary>
+            Subject course
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.SubjectDto.GroupNumber">
+            <summary>
+            Subject group number
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.SubjectDto.Speciality">
+            <summary>
+            Subject speciality
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.DTOs.TeacherDto">
+            <summary>
+            Teacher data transfer object
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.TeacherDto.Id">
+            <summary>
+            Teacher identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.TeacherDto.Email">
+            <summary>
+            Teacher e-mail
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.TeacherDto.FullName">
+            <summary>
+            Teacher FIO
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.IdentityDataContext">
+            <summary>
+            Context to store identity types
+            </summary>
+        </member>
+        <member name="M:Kitias.Persistence.IdentityDataContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{Kitias.Persistence.IdentityDataContext})">
+            <summary>
+            Constructor to get connection
+            </summary>
+            <param name="options">Optios to get connection info</param>
+        </member>
+    </members>
+</doc>

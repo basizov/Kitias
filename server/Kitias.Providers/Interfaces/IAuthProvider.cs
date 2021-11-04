@@ -1,4 +1,5 @@
-﻿using Kitias.Providers.Models;
+﻿using Kitias.Persistence.Entities.Identity;
+using Kitias.Providers.Models;
 using Kitias.Providers.Models.Request;
 using System.Threading.Tasks;
 
@@ -33,5 +34,18 @@ namespace Kitias.Providers.Interfaces
 		/// <param name="refreshToken">Token to delete UserToken</param>
 		/// <returns>Status message</returns>
 		Task<Result<string>> LogoutAsync(string refreshToken);
+		/// <summary>
+		/// Send verify email method
+		/// </summary>
+		/// <param name="email">User email</param>
+		/// <returns>Status message</returns>
+		Task<Result<string>> SendVerifyEmailAsync(string email);
+		/// <summary>
+		/// Confirm verify email method
+		/// </summary>
+		/// <param name="token">Email confirmation token</param>
+		/// <param name="email">User email</param>
+		/// <returns>Status message</returns>
+		Task<Result<string>> ConfirmVerifyEmailAsync(string token, string email);
 	}
 }

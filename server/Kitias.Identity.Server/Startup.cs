@@ -1,6 +1,7 @@
 using Kitias.Identity.Server.Extensions;
 using Kitias.Providers.Implementations;
 using Kitias.Providers.Interfaces;
+using Kitias.Providers.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +31,7 @@ namespace Kitias.Identity.Server
 			services.AddOwnIdentityServer();
 			services.AddControllers();
 			services.AddOpenAPI();
+			services.AddScoped<EmailSender>();
 			services.AddScoped<IAuthProvider, AuthProvider>();
 		}
 

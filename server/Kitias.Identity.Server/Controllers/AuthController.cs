@@ -21,7 +21,6 @@ namespace Kitias.Identity.Server.Controllers
 		/// Constructor for authorization controller
 		/// </summary>
 		/// <param name="authProvider">Provider for working user with db</param>
-		/// <param name="config">Config to get domain</param>
 		public AuthController(IAuthProvider authProvider) => _authProvider = authProvider;
 
 		/// <summary>
@@ -32,7 +31,7 @@ namespace Kitias.Identity.Server.Controllers
 		/// <response code="200">Success pesponse about user creation</response>
 		/// <response code="400">Failure during registration a user</response>
 		[HttpPost("signUp")]
-		[Authorize(Roles = "Admin")]
+		[AllowAnonymous]
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -140,6 +139,43 @@ namespace Kitias.Identity.Server.Controllers
 				}
 			);
 			return Ok("User was successfully logout");
+		}
+
+		/// <summary>
+		/// Verify email from token
+		/// </summary>
+		/// <param name="token">Token to verify email</param>
+		/// <param name="email">Receiver email</param>
+		/// <returns>Status message</returns>
+		[HttpGet("verifyEmail")]
+		[AllowAnonymous]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<string>> ConfirmVerifyEmailAsync([FromQuery] string token, [FromQuery] string email)
+		{
+			var result = await _authProvider.ConfirmVerifyEmailAsync(token, email);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Resendv verify token email
+		/// </summary>
+		/// <param name="email">Receiver email</param>
+		/// <returns>Status message</returns>
+		[HttpGet("verifyEmail/resend")]
+		[AllowAnonymous]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<string>> ResendVerifyEmailAsync([FromQuery] string email)
+		{
+			var result = await _authProvider.SendVerifyEmailAsync(email);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
 		}
 	}
 }

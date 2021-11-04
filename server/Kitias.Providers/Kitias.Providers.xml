@@ -4,18 +4,40 @@
         <name>Kitias.Providers</name>
     </assembly>
     <members>
+        <member name="T:Kitias.Providers.ExceptionModel">
+            <summary>
+            Model to view for user
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.ExceptionModel.StatusCode">
+            <summary>
+            Error status code
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.ExceptionModel.Message">
+            <summary>
+            Error message
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.ExceptionModel.From">
+            <summary>
+            Stack trace
+            </summary>
+        </member>
         <member name="T:Kitias.Providers.Implementations.AuthProvider">
             <summary>
             Main authorization provider
             </summary>
         </member>
-        <member name="M:Kitias.Providers.Implementations.AuthProvider.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.Providers.Implementations.AuthProvider},Microsoft.AspNetCore.Identity.UserManager{Kitias.Persistence.Entities.Identity.User},Kitias.Persistence.IdentityDataContext)">
+        <member name="M:Kitias.Providers.Implementations.AuthProvider.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.Providers.Implementations.AuthProvider},Microsoft.AspNetCore.Identity.UserManager{Kitias.Persistence.Entities.Identity.User},Kitias.Persistence.IdentityDataContext,Kitias.Providers.Services.EmailSender,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
             Constructor for take neccasary services
             </summary>
             <param name="logger">Logging</param>
             <param name="userManager">Manager for create and check user</param>
             <param name="dataContext">Manager for CRUD identity dbs</param>
+            <param name="emailSender">Service to send emails</param>
+            <param name="config">Config to get nessary values</param>
         </member>
         <member name="T:Kitias.Providers.Interfaces.IAuthProvider">
             <summary>
@@ -49,6 +71,51 @@
             </summary>
             <param name="refreshToken">Token to delete UserToken</param>
             <returns>Status message</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IAuthProvider.SendVerifyEmailAsync(System.String)">
+            <summary>
+            Send verify email method
+            </summary>
+            <param name="email">User email</param>
+            <returns>Status message</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IAuthProvider.ConfirmVerifyEmailAsync(System.String,System.String)">
+            <summary>
+            Confirm verify email method
+            </summary>
+            <param name="token">Email confirmation token</param>
+            <param name="email">User email</param>
+            <returns>Status message</returns>
+        </member>
+        <member name="T:Kitias.Providers.MappingProfile">
+            <summary>
+            Service ti map entites
+            </summary>
+        </member>
+        <member name="M:Kitias.Providers.MappingProfile.#ctor">
+            <summary>
+            Configure all entites
+            </summary>
+        </member>
+        <member name="T:Kitias.Providers.Models.EmailRequestModel">
+            <summary>
+            Model to send emails
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.EmailRequestModel.To">
+            <summary>
+            Email recipient's address
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.EmailRequestModel.Subject">
+            <summary>
+            Email subject
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.EmailRequestModel.Message">
+            <summary>
+            Email body message
+            </summary>
         </member>
         <member name="T:Kitias.Providers.Models.Request.SignUpRequestModel">
             <summary>
@@ -99,6 +166,43 @@
             <summary>
             New token
             </summary>
+        </member>
+        <member name="T:Kitias.Providers.Models.Result`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:Kitias.Providers.Provider">
+            <summary>
+            Base provider
+            </summary>
+        </member>
+        <member name="M:Kitias.Providers.Provider.#ctor(AutoMapper.IMapper,Microsoft.Extensions.Logging.ILogger{Kitias.Providers.Provider},Kitias.Repository.Interfaces.Base.IUnitOfWork)">
+            <summary>
+            Map neccassary services
+            </summary>
+            <param name="mapper">Mapper service</param>
+            <param name="logger">Logging</param>
+            <param name="unitOfWork">Take info about entities</param>
+        </member>
+        <member name="T:Kitias.Providers.Services.EmailSender">
+            <summary>
+            Service to send email confirmation to user
+            </summary>
+        </member>
+        <member name="M:Kitias.Providers.Services.EmailSender.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Constructor to take nessasary services
+            </summary>
+            <param name="config">Config</param>
+        </member>
+        <member name="M:Kitias.Providers.Services.EmailSender.SendEmailAsync(Kitias.Providers.Models.EmailRequestModel)">
+            <summary>
+            Send email method
+            </summary>
+            <param name="model">Email sender settings</param>
+            <returns>Asynchorys</returns>
         </member>
     </members>
 </doc>

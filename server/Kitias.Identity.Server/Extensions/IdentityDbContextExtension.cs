@@ -25,8 +25,18 @@ namespace Kitias.Identity.Server.Extensions
 			services.AddDbContext<IdentityDataContext>(
 				o => o.UseNpgsql(pgAdminConnectionString)
 			);
-			services.AddIdentity<User, Role>()
+			services.AddIdentity<User, Role>(o =>
+				{
+					o.Password.RequiredLength = 8;
+					o.Password.RequireLowercase = true;
+					o.Password.RequireNonAlphanumeric = true;
+					o.Password.RequireDigit = true;
+					o.Password.RequireUppercase = true;
+					// TODO: Uncommitted after sign up into SendGrid
+					//o.SignIn.RequireConfirmedEmail = true;
+				})
 				.AddEntityFrameworkStores<IdentityDataContext>()
+				.AddSignInManager<SignInManager<User>>()
 				.AddDefaultTokenProviders();
 			return services;
 		}

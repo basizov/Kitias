@@ -29,12 +29,11 @@
             Controller to make authorization with db
             </summary>
         </member>
-        <member name="M:Kitias.Identity.Server.Controllers.AuthController.#ctor(Kitias.Providers.Interfaces.IAuthProvider,Microsoft.Extensions.Configuration.IConfiguration)">
+        <member name="M:Kitias.Identity.Server.Controllers.AuthController.#ctor(Kitias.Providers.Interfaces.IAuthProvider)">
             <summary>
             Constructor for authorization controller
             </summary>
             <param name="authProvider">Provider for working user with db</param>
-            <param name="config">Config to get domain</param>
         </member>
         <member name="M:Kitias.Identity.Server.Controllers.AuthController.SignUpAsync(Kitias.Providers.Models.Request.SignUpRequestModel)">
             <summary>
@@ -69,6 +68,21 @@
             <summary>
             Logout from accout
             </summary>
+            <returns>Status message</returns>
+        </member>
+        <member name="M:Kitias.Identity.Server.Controllers.AuthController.ConfirmVerifyEmailAsync(System.String,System.String)">
+            <summary>
+            Verify email from token
+            </summary>
+            <param name="token">Token to verify email</param>
+            <param name="email">Receiver email</param>
+            <returns>Status message</returns>
+        </member>
+        <member name="M:Kitias.Identity.Server.Controllers.AuthController.ResendVerifyEmailAsync(System.String)">
+            <summary>
+            Resendv verify token email
+            </summary>
+            <param name="email">Receiver email</param>
             <returns>Status message</returns>
         </member>
         <member name="T:Kitias.Identity.Server.Extensions.IdentityDbContextExtension">

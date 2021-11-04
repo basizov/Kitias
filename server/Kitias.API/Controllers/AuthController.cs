@@ -35,7 +35,7 @@ namespace Kitias.API.Controllers
 		public AuthController(ILogger<AuthController> logger, IHttpClientFactory clientFactory, IOptions<ISSecure> secureOptions, IConfiguration config) : base(logger) => (_clientFactory, _secureOptions, _config) = (clientFactory, secureOptions, config);
 
 		/// <summary>
-		/// Login user
+		/// Sign in endpoint for user
 		/// </summary>
 		/// <param name="model">Model with user data</param>
 		/// <returns>Access token</returns>
@@ -90,11 +90,11 @@ namespace Kitias.API.Controllers
 					MaxAge = TimeSpan.FromHours(1)
 				}
 			);
-			return Ok(tokenResponse.AccessToken);
+			return Ok("User was successfully logged in");
 		}
 
 		/// <summary>
-		/// Update token
+		/// Update old refresh token
 		/// </summary>
 		/// <returns>New access token</returns>
 		[HttpPost("token")]
@@ -156,7 +156,7 @@ namespace Kitias.API.Controllers
 					MaxAge = TimeSpan.FromHours(1)
 				}
 			);
-			return Ok(tokenResponse.AccessToken);
+			return Ok("User was successfully reconnected");
 		}
 
 		/// <summary>

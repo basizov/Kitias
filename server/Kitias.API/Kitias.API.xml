@@ -20,14 +20,14 @@
         </member>
         <member name="M:Kitias.API.Controllers.AuthController.SignInAsync(Kitias.Providers.Models.Request.SignInRequestModel)">
             <summary>
-            Login user
+            Sign in endpoint for user
             </summary>
             <param name="model">Model with user data</param>
             <returns>Access token</returns>
         </member>
         <member name="M:Kitias.API.Controllers.AuthController.TakeNewTokenAsync">
             <summary>
-            Update token
+            Update old refresh token
             </summary>
             <returns>New access token</returns>
         </member>
