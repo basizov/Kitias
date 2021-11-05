@@ -5,8 +5,15 @@ using Kitias.Repository.Interfaces;
 
 namespace Kitias.Repository.Implementations
 {
+	/// <summary>
+	/// Repository to work with student db
+	/// </summary>
 	public class StudentRepository : Repository<Student>, IStudentRepository
 	{
+		/// <summary>
+		/// Constructor to get requred services
+		/// </summary>
+		/// <param name="context">Context service</param>
 		public StudentRepository(DataContext context) : base(context) { }
 	}
 }

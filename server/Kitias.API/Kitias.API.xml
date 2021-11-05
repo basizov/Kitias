@@ -66,6 +66,35 @@
             </summary>
             <returns>Groups</returns>
         </member>
+        <member name="M:Kitias.API.Controllers.GroupController.TakeGroupByIdAsync(System.Guid)">
+            <summary>
+            Take group from db by id
+            </summary>
+            <param name="id">Id of group</param>
+            <returns>Group</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.GroupController.CreateGroupAsync(Kitias.Providers.Models.Group.CreateGroupModel)">
+            <summary>
+            Create new group
+            </summary>
+            <param name="model">Model to create group</param>
+            <returns>New group</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.GroupController.CreateGroupAsync(System.Guid,Kitias.Providers.Models.Group.UpdateGroupModel)">
+            <summary>
+            Update group by id
+            </summary>
+            <param name="id">Existed group id</param>
+            <param name="model">Model to create group</param>
+            <returns>Updated group</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.GroupController.DeleteGroupAsync(System.Guid)">
+            <summary>
+            Delete group by id
+            </summary>
+            <param name="id">Existed group id</param>
+            <returns>Status message</returns>
+        </member>
         <member name="T:Kitias.API.Controllers.PersonController">
             <summary>
             Controller to work with persons

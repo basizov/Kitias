@@ -260,6 +260,106 @@
             Teacher FIO
             </summary>
         </member>
+        <member name="T:Kitias.Persistence.Entities.Group">
+            <summary>
+            Group model
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Group.Id">
+            <summary>
+            Group identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Group.Course">
+            <summary>
+            Group course
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Group.Number">
+            <summary>
+            Group number
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Group.EducationType">
+            <summary>
+            Group education type
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Group.Speciality">
+            <summary>
+            Group speciality
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Group.ReceiptDate">
+            <summary>
+            Group receipt date
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Group.IssueDate">
+            <summary>
+            Group issue date
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Group.Students">
+            <summary>
+            Group students
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Entities.Student">
+            <summary>
+            Student entity
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Student.Id">
+            <summary>
+            Student identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Student.PersonId">
+            <summary>
+            Person id
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Student.Person">
+            <summary>
+            Person
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Student.GroupId">
+            <summary>
+            Group id
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Student.Group">
+            <summary>
+            Student group
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Enums.EducationType">
+            <summary>
+            Type of colldege education
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.EducationType.Full">
+            <summary>
+            5 time for week
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.EducationType.Part">
+            <summary>
+            2 month for 6 months
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Enums.Speciality">
+            <summary>
+            Specialities of the colldes
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.Speciality.Programmers">
+            <summary>
+            Programming in computer systems
+            </summary>
+        </member>
         <member name="T:Kitias.Persistence.IdentityDataContext">
             <summary>
             Context to store identity types

@@ -39,6 +39,19 @@
             <param name="emailSender">Service to send emails</param>
             <param name="config">Config to get nessary values</param>
         </member>
+        <member name="T:Kitias.Providers.Implementations.GroupProvider">
+            <summary>
+            Provider to work with group entity
+            </summary>
+        </member>
+        <member name="M:Kitias.Providers.Implementations.GroupProvider.#ctor(AutoMapper.IMapper,Microsoft.Extensions.Logging.ILogger{Kitias.Providers.Implementations.GroupProvider},Kitias.Repository.Interfaces.Base.IUnitOfWork)">
+            <summary>
+            Configure all necessary services
+            </summary>
+            <param name="mapper">Mapper</param>
+            <param name="logger">Logging</param>
+            <param name="unitOfWork">Working with different dbs</param>
+        </member>
         <member name="T:Kitias.Providers.Interfaces.IAuthProvider">
             <summary>
             USer authorization methods
@@ -87,6 +100,46 @@
             <param name="email">User email</param>
             <returns>Status message</returns>
         </member>
+        <member name="T:Kitias.Providers.Interfaces.IGroupProvider">
+            <summary>
+            Provider to work with group
+            </summary>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IGroupProvider.TakeGroups">
+            <summary>
+            Take all groups from db
+            </summary>
+            <returns>Groups</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IGroupProvider.TakeGroupByIdAsync(System.Guid)">
+            <summary>
+            Take only one group from db
+            </summary>
+            <param name="id">Id of the group to take</param>
+            <returns>Group</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IGroupProvider.CreateGroupAsync(Kitias.Providers.Models.Group.CreateGroupModel)">
+            <summary>
+            Create group
+            </summary>
+            <param name="group">Model to create a group</param>
+            <returns>New group</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IGroupProvider.UpdateGroupAsync(System.Guid,Kitias.Providers.Models.Group.UpdateGroupModel)">
+            <summary>
+            Update group by id
+            </summary>
+            <param name="id">Id of the group</param>
+            <param name="group">Group update model</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IGroupProvider.DeleteGroupAsync(System.Guid)">
+            <summary>
+            Delete group from db
+            </summary>
+            <param name="id">Id of the group</param>
+            <returns>Status message</returns>
+        </member>
         <member name="T:Kitias.Providers.MappingProfile">
             <summary>
             Service ti map entites
@@ -115,6 +168,66 @@
         <member name="P:Kitias.Providers.Models.EmailRequestModel.Message">
             <summary>
             Email body message
+            </summary>
+        </member>
+        <member name="T:Kitias.Providers.Models.Group.CreateGroupModel">
+            <summary>
+            Group model to create new instance
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Group.CreateGroupModel.Course">
+            <summary>
+            Group course
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Group.CreateGroupModel.Number">
+            <summary>
+            Group number
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Group.CreateGroupModel.EducationType">
+            <summary>
+            Group education type
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Group.CreateGroupModel.Speciality">
+            <summary>
+            Group speciality
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Group.CreateGroupModel.ReceiptDate">
+            <summary>
+            Group receipt date
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Group.CreateGroupModel.IssueDate">
+            <summary>
+            Grou issue date
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Group.CreateGroupModel.StudentsIds">
+            <summary>
+            Group students
+            </summary>
+        </member>
+        <member name="T:Kitias.Providers.Models.Group.UpdateGroupModel">
+            <summary>
+            Model to update the exsisted group
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Group.UpdateGroupModel.Course">
+            <summary>
+            New course of the group
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Group.UpdateGroupModel.Number">
+            <summary>
+            New group number
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Group.UpdateGroupModel.StudentsIds">
+            <summary>
+            New students of the group
             </summary>
         </member>
         <member name="T:Kitias.Providers.Models.Request.SignUpRequestModel">
