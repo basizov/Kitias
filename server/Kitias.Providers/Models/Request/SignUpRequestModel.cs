@@ -1,4 +1,6 @@
-﻿namespace Kitias.Providers.Models.Request
+﻿using System.Collections.Generic;
+
+namespace Kitias.Providers.Models.Request
 {
 	/// <summary>
 	/// Model for registration user
@@ -17,5 +19,9 @@
 		/// New user password
 		/// </summary>
 		public string Password { get; init; }
+		/// <summary>
+		/// User roles
+		/// </summary>
+		public IEnumerable<string> Roles { get; init; }
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using Kitias.Persistence.Entities.Identity;
 using Kitias.Providers.Models;
 using Kitias.Providers.Models.Request;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Kitias.Providers.Interfaces
@@ -47,5 +48,17 @@ namespace Kitias.Providers.Interfaces
 		/// <param name="email">User email</param>
 		/// <returns>Status message</returns>
 		Task<Result<string>> ConfirmVerifyEmailAsync(string token, string email);
+		/// <summary>
+		/// Register new roles to db
+		/// </summary>
+		/// <param name="roles">New roles</param>
+		/// <returns>Status message</returns>
+		Task<Result<string>> RegisterNewRolesAsync(IEnumerable<string> roles);
+		/// <summary>
+		/// Add new roles to user
+		/// </summary>
+		/// <param name="model">Model to create new UserRole</param>
+		/// <returns>Status message</returns>
+		Task<Result<string>> AddRolesToUserAsync(RolesToUserRequestModel model);
 	}
 }

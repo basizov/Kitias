@@ -1,5 +1,6 @@
 ﻿using Kitias.Persistence;
 using Kitias.Persistence.Entities.Identity;
+using Kitias.Persistence.Enums;
 using Kitias.Providers.Interfaces;
 using Kitias.Providers.Models;
 using Kitias.Providers.Models.Request;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,6 +23,7 @@ namespace Kitias.Providers.Implementations
 	{
 		private readonly ILogger _logger;
 		private readonly IConfiguration _config;
+		private readonly RoleManager<Role> _roleManager;
 		private readonly UserManager<User> _userManager;
 		private readonly IdentityDataContext _dataContext;
 		private readonly EmailSender _emailSender;
@@ -33,14 +36,8 @@ namespace Kitias.Providers.Implementations
 		/// <param name="dataContext">Manager for CRUD identity dbs</param>
 		/// <param name="emailSender">Service to send emails</param>
 		/// <param name="config">Config to get nessary values</param>
-		public AuthProvider(ILogger<AuthProvider> logger, UserManager<User> userManager, IdentityDataContext dataContext, EmailSender emailSender, IConfiguration config)
-		{
-			_logger = logger;
-			_userManager = userManager;
-			_dataContext = dataContext;
-			_emailSender = emailSender;
-			_config = config;
-		}
+		/// <param name="roleManager">Manager to work with roles</param>
+		public AuthProvider(ILogger<AuthProvider> logger, UserManager<User> userManager, IdentityDataContext dataContext, EmailSender emailSender, IConfiguration config, RoleManager<Role> roleManager) => (_logger, _userManager, _dataContext, _emailSender, _config, _roleManager) = (logger, userManager, dataContext, emailSender, config, roleManager);
 
 		public async Task<Result<string>> SignUpAsync(SignUpRequestModel model)
 		{
@@ -48,6 +45,8 @@ namespace Kitias.Providers.Implementations
 				return ReturnFailureResult<string>($"User with email: {model.Email} is existed");
 			else if (await _userManager.Users.AnyAsync(u => u.UserName == model.UserName))
 				return ReturnFailureResult<string>($"User with username: {model.UserName} is existed");
+			else if (model.Roles == null)
+				return ReturnFailureResult<string>("Please indicate roles");
 			var user = new User
 			{
 				Email = model.Email,
@@ -58,7 +57,26 @@ namespace Kitias.Providers.Implementations
 			if (!result.Succeeded)
 				return ReturnFailureResult<string>("Couldn't create user during registration");
 			_logger.LogInformation($"User with email {model.Email} was successfully created");
-			await SendVerifyEmailToUserAsync(user);
+			foreach (var role in model.Roles)
+			{
+				var roleEntity = await _dataContext.Roles
+					.SingleOrDefaultAsync(r => r.Name == role);
+
+				if (roleEntity == null)
+					return ReturnFailureResult<string>("There aren't this role");
+				_dataContext.UserRoles.Add(new()
+				{
+					UserId = user.Id,
+					RoleId = roleEntity.Id
+				});
+				_logger.LogInformation($"Add new role {role} to user {user.Email}");
+			}
+			var isSaved = await _dataContext.SaveChangesAsync();
+
+			if (isSaved <= 0)
+				throw new ApplicationException("Couldn't create user role entities");
+			// TODO: Uncommitted after sign up into SendGrid
+			//await SendVerifyEmailToUserAsync(user);
 			return ResultHandler.OnSuccess("User was successfully created");
 		}
 
@@ -75,11 +93,10 @@ namespace Kitias.Providers.Implementations
 				Name = "refresh_token",
 				UserId = user.Id
 			});
-
-			var	isSaved = await _dataContext.SaveChangesAsync();
+			var isSaved = await _dataContext.SaveChangesAsync();
 
 			if (isSaved <= 0)
-				return ReturnFailureResult<string>("Couldn't save token");
+				throw new ApplicationException("Couldn't save token");
 			return ResultHandler.OnSuccess("UserToken was successfully saved");
 		}
 
@@ -93,10 +110,10 @@ namespace Kitias.Providers.Implementations
 			userToken.Value = model.NewToken;
 			userToken.Expires = DateTime.UtcNow.AddDays(7);
 			_dataContext.UserTokens.Update(userToken);
-			var	isSaved = await _dataContext.SaveChangesAsync();
+			var isSaved = await _dataContext.SaveChangesAsync();
 
 			if (isSaved <= 0)
-				return ReturnFailureResult<string>("Couldn't update token");
+				throw new ApplicationException("Couldn't update token");
 			return ResultHandler.OnSuccess("Token was successfully updated");
 		}
 
@@ -111,7 +128,7 @@ namespace Kitias.Providers.Implementations
 			var isSaved = await _dataContext.SaveChangesAsync();
 
 			if (isSaved <= 0)
-				return ReturnFailureResult<string>("Couldn't delete token");
+				throw new ApplicationException("Couldn't delete token");
 			return ResultHandler.OnSuccess("Token was successfully deleted");
 		}
 
@@ -137,11 +154,68 @@ namespace Kitias.Providers.Implementations
 
 			_logger.LogInformation("Successfully decode token");
 			if (!result.Succeeded)
-				return ReturnFailureResult<string>($"Invalid token of user: {email}");
+				throw new ApplicationException($"Invalid token of user: {email}");
 			_logger.LogInformation("Successfully confirmation token");
 			return ResultHandler.OnSuccess($"Successfully conformed email");
 		}
 
+		public async Task<Result<string>> RegisterNewRolesAsync(IEnumerable<string> roles)
+		{
+			try
+			{
+				foreach (var role in roles)
+				{
+					var checkedRole = Helpers.GetEnumMemberFromString<RoleTypes>(role);
+
+					if (await _roleManager.Roles.AnyAsync(r => r.Name == role))
+						return ReturnFailureResult<string>($"Role {role} is existed");
+					await _roleManager.CreateAsync(new()
+					{
+						Name = role,
+						NormalizedName = checkedRole.ToString()
+					});
+					_logger.LogInformation($"Role {role} wass successfully added");
+				}
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, ex.Message);
+				return ReturnFailureResult<string>("Rundim role was defined");
+			}
+			return ResultHandler.OnSuccess($"Roles was successfully added");
+		}
+
+		public async Task<Result<string>> AddRolesToUserAsync(RolesToUserRequestModel model)
+		{
+			var user = await _userManager.FindByEmailAsync(model.Email);
+
+			if (user == null)
+				return ReturnFailureResult<string>($"Invalid user email: {model.Email}");
+			foreach (var role in model.Roles)
+			{
+				var roleEntity = await _dataContext.Roles
+					.SingleOrDefaultAsync(r => r.Name == role);
+
+				if (roleEntity == null)
+					return ReturnFailureResult<string>("There aren't this role");
+				var userRoleEntity = await _dataContext.UserRoles
+					.SingleOrDefaultAsync(r => r.RoleId == roleEntity.Id && r.UserId == user.Id);
+
+				if (userRoleEntity != null)
+					return ReturnFailureResult<string>($"{user.Email} have {role} role");
+				_dataContext.UserRoles.Add(new()
+				{
+					UserId = user.Id,
+					RoleId = roleEntity.Id
+				});
+				var isSaved = await _dataContext.SaveChangesAsync();
+
+				if (isSaved <= 0)
+					throw new ApplicationException($"Couldn't add new role to {model.Email}");
+				_logger.LogInformation($"Add new role {role} to user {user.Email}");
+			}
+			return ResultHandler.OnSuccess($"Add roles to {model.Email}");
+		}
 
 		private async Task SendVerifyEmailToUserAsync(User user)
 		{

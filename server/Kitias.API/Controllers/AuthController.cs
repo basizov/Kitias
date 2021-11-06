@@ -1,5 +1,10 @@
 ﻿using IdentityModel.Client;
+using Kitias.Persistence.DTOs;
 using Kitias.Persistence.Entities.Default;
+using Kitias.Persistence.Enums;
+using Kitias.Providers;
+using Kitias.Providers.Interfaces;
+using Kitias.Providers.Models;
 using Kitias.Providers.Models.Request;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -8,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -22,6 +28,7 @@ namespace Kitias.API.Controllers
 	public class AuthController : BaseController
 	{
 		private readonly IHttpClientFactory _clientFactory;
+		private readonly IStudentProvider _studentProvider;
 		private readonly IOptions<ISSecure> _secureOptions;
 		private readonly IConfiguration _config;
 
@@ -32,13 +39,73 @@ namespace Kitias.API.Controllers
 		/// <param name="clientFactory">Client factory to create clients</param>
 		/// <param name="secureOptions">Config for identity server</param>
 		/// <param name="config">Config to get domain</param>
-		public AuthController(ILogger<AuthController> logger, IHttpClientFactory clientFactory, IOptions<ISSecure> secureOptions, IConfiguration config) : base(logger) => (_clientFactory, _secureOptions, _config) = (clientFactory, secureOptions, config);
+		/// <param name="studentProvider">Provider to work with student db</param>
+		public AuthController(ILogger<AuthController> logger, IHttpClientFactory clientFactory, IOptions<ISSecure> secureOptions, IConfiguration config, IStudentProvider studentProvider) : base(logger) => (_clientFactory, _secureOptions, _config, _studentProvider) = (clientFactory, secureOptions, config, studentProvider);
+
+		/// <summary>
+		/// Sign up endpoint for new user
+		/// </summary>
+		/// <param name="model">Model with user and student data</param>
+		/// <returns>Status message</returns>
+		[HttpPost("signUp")]
+		[Authorize(Roles = RolesNames.ADMIN_ROLE)]
+		[Produces("application/json")]
+		[ProducesResponseType(typeof(IEnumerable<StudentDto>), StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<IActionResult> SignUpAsync([FromBody] SignUpRegisterModel model)
+		{
+			object returnResult;
+
+			if (model.PersonType == RolesNames.STUDENT_ROLE)
+			{
+				var result = await _studentProvider.CreateStudentAsync(new()
+				{
+					Email = model.Email,
+					GroupNumber = model.GroupNumber,
+					Name = model.Name,
+					Patronymic = model.Patronymic,
+					Surname = model.Surname
+				});
+
+				if (!result.IsSuccess)
+					return BadRequest(result.Error);
+				returnResult = result.Value;
+			}
+			else
+			{
+				_logger.LogError($"Couldn't find the same role {model.PersonType}");
+				return BadRequest($"Invalid user type {model.PersonType}");
+			}
+			var signUpClient = _clientFactory.CreateClient();
+			var identityDomain = _config.GetConnectionString("IdentityServerDomain");
+			var token = Request.Cookies[".AspNetCore.Application.Guid"];
+			signUpClient.SetBearerToken(token);
+			var signUpResponse = await signUpClient.PostAsync($"{identityDomain}/auth/signUp", new StringContent
+			(
+				JsonSerializer.Serialize(new SignUpRequestModel
+				{
+					UserName = model.UserName,
+					Email = model.Email,
+					Password = model.Password,
+					Roles = model.Roles
+				}),
+				Encoding.UTF8,
+				"application/json"
+			));
+
+			if (signUpResponse.StatusCode != HttpStatusCode.OK)
+			{
+				_logger.LogError("Couln't sign up in identity-db");
+				return BadRequest(await signUpResponse.Content.ReadAsStringAsync());
+			}
+			return Ok(returnResult);
+		}
 
 		/// <summary>
 		/// Sign in endpoint for user
 		/// </summary>
 		/// <param name="model">Model with user data</param>
-		/// <returns>Access token</returns>
+		/// <returns>Status message</returns>
 		[HttpPost("signIn")]
 		[AllowAnonymous]
 		[Produces("application/json")]

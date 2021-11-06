@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace Kitias.API.Middlewares
 {
 	/// <summary>
-	/// 
+	/// Middleware to set access_token to header
 	/// </summary>
 	public class AuthenticationMiddleware
 	{

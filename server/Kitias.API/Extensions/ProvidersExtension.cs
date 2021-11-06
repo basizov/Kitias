@@ -17,6 +17,7 @@ namespace Kitias.API.Extensions
 		public static IServiceCollection AddProviders(this IServiceCollection services)
 		{
 			services.AddScoped<IGroupProvider, GroupProvider>();
+			services.AddScoped<IStudentProvider, StudentProvider>();
 			return services;
 		}
 	}

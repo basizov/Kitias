@@ -9,7 +9,7 @@
             Authorization endpoint
             </summary>
         </member>
-        <member name="M:Kitias.API.Controllers.AuthController.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.API.Controllers.AuthController},System.Net.Http.IHttpClientFactory,Microsoft.Extensions.Options.IOptions{Kitias.Persistence.Entities.Default.ISSecure},Microsoft.Extensions.Configuration.IConfiguration)">
+        <member name="M:Kitias.API.Controllers.AuthController.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.API.Controllers.AuthController},System.Net.Http.IHttpClientFactory,Microsoft.Extensions.Options.IOptions{Kitias.Persistence.Entities.Default.ISSecure},Microsoft.Extensions.Configuration.IConfiguration,Kitias.Providers.Interfaces.IStudentProvider)">
             <summary>
             Add services to controller
             </summary>
@@ -17,13 +17,21 @@
             <param name="clientFactory">Client factory to create clients</param>
             <param name="secureOptions">Config for identity server</param>
             <param name="config">Config to get domain</param>
+            <param name="studentProvider">Provider to work with student db</param>
+        </member>
+        <member name="M:Kitias.API.Controllers.AuthController.SignUpAsync(Kitias.Providers.Models.SignUpRegisterModel)">
+            <summary>
+            Sign up endpoint for new user
+            </summary>
+            <param name="model">Model with user and student data</param>
+            <returns>Status message</returns>
         </member>
         <member name="M:Kitias.API.Controllers.AuthController.SignInAsync(Kitias.Providers.Models.Request.SignInRequestModel)">
             <summary>
             Sign in endpoint for user
             </summary>
             <param name="model">Model with user data</param>
-            <returns>Access token</returns>
+            <returns>Status message</returns>
         </member>
         <member name="M:Kitias.API.Controllers.AuthController.TakeNewTokenAsync">
             <summary>
@@ -95,27 +103,42 @@
             <param name="id">Existed group id</param>
             <returns>Status message</returns>
         </member>
-        <member name="T:Kitias.API.Controllers.PersonController">
+        <member name="T:Kitias.API.Controllers.StudentController">
             <summary>
             Controller to work with persons
             </summary>
         </member>
-        <member name="M:Kitias.API.Controllers.PersonController.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.API.Controllers.PersonController})">
+        <member name="M:Kitias.API.Controllers.StudentController.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.API.Controllers.StudentController},Kitias.Providers.Interfaces.IStudentProvider)">
             <summary>
             Add neccessary services
             </summary>
             <param name="logger">Logging</param>
+            <param name="studentProvider">Student provider to work student db</param>
         </member>
-        <member name="T:Kitias.API.Extensions.AuthorixationExtension">
+        <member name="M:Kitias.API.Controllers.StudentController.TakeStudents">
+            <summary>
+            Take all students from db
+            </summary>
+            <returns>Students</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.StudentController.TakeStudentByIdAsync(System.Guid)">
+            <summary>
+            Take student from db by id
+            </summary>
+            <param name="id">Id of student</param>
+            <returns>Student</returns>
+        </member>
+        <member name="T:Kitias.API.Extensions.AuthorizationExtension">
             <summary>
             Extension to authenticate token
             </summary>
         </member>
-        <member name="M:Kitias.API.Extensions.AuthorixationExtension.AddOwnAuthorization(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+        <member name="M:Kitias.API.Extensions.AuthorizationExtension.AddOwnAuthorization(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
             Add authrization service
             </summary>
             <param name="services">List services</param>
+            <param name="config">Config to get necessary values</param>
             <returns>Services with new one</returns>
         </member>
         <member name="T:Kitias.API.Extensions.AutoMapperExtension">
@@ -169,7 +192,7 @@
         </member>
         <member name="T:Kitias.API.Middlewares.AuthenticationMiddleware">
             <summary>
-            
+            Middleware to set access_token to header
             </summary>
         </member>
         <member name="M:Kitias.API.Middlewares.AuthenticationMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Logging.ILogger{Kitias.API.Middlewares.AuthenticationMiddleware})">

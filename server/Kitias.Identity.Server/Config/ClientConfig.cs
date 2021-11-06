@@ -14,14 +14,14 @@ namespace Kitias.Identity.Server.Config
 			{
 				ClientId = KITIAS_API_ID,
 				ClientName = KITIAS_API_NAME,
-				ClientSecrets = new List<Secret>
+				ClientSecrets = new List<Secret> 
 				{
 					new(KITIAS_API_SECRET.Sha256())
 				},
 				AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
 				AllowedScopes = new List<string>
 				{
-					"kitias.data"
+					KITIAS_DATA_SCOPE
 				},
 				AllowOfflineAccess = true
 			}

@@ -260,6 +260,31 @@
             Teacher FIO
             </summary>
         </member>
+        <member name="T:Kitias.Persistence.Entities.Default.ISSecure">
+            <summary>
+            Secure entity
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Default.ISSecure.Authority">
+            <summary>
+            Authority url
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Default.ISSecure.ApiName">
+            <summary>
+            Audience name
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Default.ISSecure.ClientId">
+            <summary>
+            Client id
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Default.ISSecure.ClientSecret">
+            <summary>
+            Client secret
+            </summary>
+        </member>
         <member name="T:Kitias.Persistence.Entities.Group">
             <summary>
             Group model
@@ -305,6 +330,151 @@
             Group students
             </summary>
         </member>
+        <member name="T:Kitias.Persistence.Entities.Identity.Role">
+            <summary>
+            Role entity
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Identity.Role.Claims">
+            <summary>
+            Collection of claims
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Identity.Role.UserRoles">
+            <summary>
+            Collection of user roles
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Entities.Identity.RoleClaim">
+            <summary>
+            Role claim entity
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Identity.RoleClaim.Role">
+            <summary>
+            Claim for role
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Entities.Identity.User">
+            <summary>
+            User entity
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Identity.User.Claims">
+            <summary>
+            Collection of user claims
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Identity.User.Logins">
+            <summary>
+            Collection of user logins
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Identity.User.Tokens">
+            <summary>
+            Collection of user tokens
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Identity.User.UserRoles">
+            <summary>
+            Collection of user roles
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Entities.Identity.UserClaim">
+            <summary>
+            User claim model
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Identity.UserClaim.User">
+            <summary>
+            Claim for user
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Entities.Identity.UserLogin">
+            <summary>
+            User login model
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Identity.UserLogin.User">
+            <summary>
+            Login for user
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Entities.Identity.UserRole">
+            <summary>
+            User role entity
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Identity.UserRole.User">
+            <summary>
+            UserRole for user 
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Identity.UserRole.Role">
+            <summary>
+            UserRole for role
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Entities.Identity.UserToken">
+            <summary>
+            Token entity
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Identity.UserToken.Id">
+            <summary>
+            Token identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Identity.UserToken.User">
+            <summary>
+            Token for user
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Identity.UserToken.Expires">
+            <summary>
+            Token expires date
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Identity.UserToken.IsActive">
+            <summary>
+            True if token is active
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Entities.Person">
+            <summary>
+            Person entity
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Person.Id">
+            <summary>
+            Person identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Person.Name">
+            <summary>
+            Person name
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Person.Surname">
+            <summary>
+            Person surname
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Person.Patronymic">
+            <summary>
+            Person patronymic
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Person.FullName">
+            <summary>
+            Person fullname
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Person.Email">
+            <summary>
+            Person email
+            </summary>
+        </member>
         <member name="T:Kitias.Persistence.Entities.Student">
             <summary>
             Student entity
@@ -335,6 +505,116 @@
             Student group
             </summary>
         </member>
+        <member name="T:Kitias.Persistence.Entities.Subject">
+            <summary>
+            Subject entity
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Subject.Id">
+            <summary>
+            Subject identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Subject.GroupId">
+            <summary>
+            Subject group id
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Subject.Group">
+            <summary>
+            Subject group
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Subject.Name">
+            <summary>
+            Subject name
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Subject.Type">
+            <summary>
+            Subject type
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Subject.Time">
+            <summary>
+            Subject time
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Subject.Date">
+            <summary>
+            Subject date
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Subject.Week">
+            <summary>
+            Subject week
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Subject.Day">
+            <summary>
+            Subject day
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Entities.Teacher">
+            <summary>
+            Teacher entity
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Teacher.Id">
+            <summary>
+            Teacher identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Teacher.PersonId">
+            <summary>
+            Teacher personnility id
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Teacher.Person">
+            <summary>
+            Teacher personality
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Enums.DayWeek">
+            <summary>
+            Days of the week
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.DayWeek.Monday">
+            <summary>
+            Monday
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.DayWeek.Tuesday">
+            <summary>
+            Tuesday
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.DayWeek.Wednesday">
+            <summary>
+            Wednesday
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.DayWeek.Thursday">
+            <summary>
+            Thursday
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.DayWeek.Friday">
+            <summary>
+            Friday
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.DayWeek.Saturday">
+            <summary>
+            Saturday
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.DayWeek.Sunday">
+            <summary>
+            Sunday
+            </summary>
+        </member>
         <member name="T:Kitias.Persistence.Enums.EducationType">
             <summary>
             Type of colldege education
@@ -350,6 +630,56 @@
             2 month for 6 months
             </summary>
         </member>
+        <member name="T:Kitias.Persistence.Enums.RoleTypes">
+            <summary>
+            Role different types
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.RoleTypes.Admin">
+            <summary>
+            Admin user
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.RoleTypes.Student">
+            <summary>
+            Student user
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.RoleTypes.Teacher">
+            <summary>
+            Teacher user
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.RoleTypes.SuperAdmin">
+            <summary>
+            SuperAdmin user
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Enums.RolesNames">
+            <summary>
+            Class which stored all roles names
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.RolesNames.ADMIN_ROLE">
+            <summary>
+            Admin role value
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.RolesNames.STUDENT_ROLE">
+            <summary>
+            Student role value
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.RolesNames.TEACHER_ROLE">
+            <summary>
+            Teacher role value
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.RolesNames.SUPER_ADMIN_ROLE">
+            <summary>
+            SuperAdmin role value
+            </summary>
+        </member>
         <member name="T:Kitias.Persistence.Enums.Speciality">
             <summary>
             Specialities of the colldes
@@ -358,6 +688,46 @@
         <member name="F:Kitias.Persistence.Enums.Speciality.Programmers">
             <summary>
             Programming in computer systems
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Enums.SubjectType">
+            <summary>
+            The type of subjet
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.SubjectType.Lecture">
+            <summary>
+            Lections
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.SubjectType.Practise">
+            <summary>
+            Practises
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.SubjectType.Laborotory">
+            <summary>
+            Laborotories
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Enums.Week">
+            <summary>
+            Type of the week
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.Week.Every">
+            <summary>
+            Everu week
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.Week.Even">
+            <summary>
+            Only even weeks
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.Week.Odd">
+            <summary>
+            Only odd weeks
             </summary>
         </member>
         <member name="T:Kitias.Persistence.IdentityDataContext">

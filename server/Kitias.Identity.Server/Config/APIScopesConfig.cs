@@ -13,7 +13,7 @@ namespace Kitias.Identity.Server.Config
 		{
 			new()
 			{
-				Name = "kitias.data",
+				Name = KITIAS_DATA_SCOPE,
 				Description = "Get access to data from Kitias",
 				DisplayName = "Kitias Web Api Data",
 				UserClaims = new List<string>

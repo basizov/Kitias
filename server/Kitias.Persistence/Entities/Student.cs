@@ -14,11 +14,11 @@ namespace Kitias.Persistence.Entities
 		/// <summary>
 		/// Person id
 		/// </summary>
-		public Guid PersonId { get; init; }
+		public Guid PersonId { get; set; }
 		/// <summary>
 		/// Person
 		/// </summary>
-		public Person Person { get; init; }
+		public Person Person { get; set; }
 		/// <summary>
 		/// Group id
 		/// </summary>
@@ -26,6 +26,6 @@ namespace Kitias.Persistence.Entities
 		/// <summary>
 		/// Student group
 		/// </summary>
-		public Group Group { get; init; }
+		public Group Group { get; set; }
 	}
 }

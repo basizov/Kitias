@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Kitias.Identity.Server.Controllers
@@ -28,16 +29,49 @@ namespace Kitias.Identity.Server.Controllers
 		/// </summary>
 		/// <param name="model">Sign up model</param>
 		/// <returns>Status string</returns>
-		/// <response code="200">Success pesponse about user creation</response>
-		/// <response code="400">Failure during registration a user</response>
 		[HttpPost("signUp")]
-		[AllowAnonymous]
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
 		public async Task<ActionResult<string>> SignUpAsync(SignUpRequestModel model)
 		{
 			var result = await _authProvider.SignUpAsync(model);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Register new roles method
+		/// </summary>
+		/// <param name="roles">New roles</param>
+		/// <returns>Status string</returns>
+		[HttpPost("roles")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<string>> RegisterNewRolesAsync(IEnumerable<string> roles)
+		{
+			var result = await _authProvider.RegisterNewRolesAsync(roles);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Add new roles to user method
+		/// </summary>
+		/// <param name="model">Model with roles and user email</param>
+		/// <returns>Status string</returns>
+		[HttpPost("user/roles")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<string>> AddRolesToUserAsync(RolesToUserRequestModel model)
+		{
+			var result = await _authProvider.AddRolesToUserAsync(model);
 
 			if (!result.IsSuccess)
 				return BadRequest(result.Error);

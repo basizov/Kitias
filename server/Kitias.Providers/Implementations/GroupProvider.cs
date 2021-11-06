@@ -73,7 +73,7 @@ namespace Kitias.Providers.Implementations
 				var isSave = await _unitOfWork.SaveChangesAsync();
 
 				if (isSave <= 0)
-					return ReturnFailureResult<GroupDto>("Couldn't save new group");
+					throw new ApplicationException("Couldn't save new group");
 				var result = _mapper.Map<GroupDto>(newGroup);
 
 				_logger.LogInformation($"Group with id {newGroup.Id} was successfully created");
@@ -115,7 +115,7 @@ namespace Kitias.Providers.Implementations
 				var isSave = await _unitOfWork.SaveChangesAsync();
 
 				if (isSave <= 0)
-					return ReturnFailureResult<GroupDto>($"Couldn;t update group with id ${id}", "Couldn't update group");
+					throw new ApplicationException($"Couldn;t update group with id ${id}");
 				var result = _mapper.Map<GroupDto>(updateGroup);
 
 				_logger.LogInformation($"Group with id {id} was successfully updated");
@@ -141,7 +141,7 @@ namespace Kitias.Providers.Implementations
 				var isSave = await _unitOfWork.SaveChangesAsync();
 
 				if (isSave <= 0)
-					return ReturnFailureResult<string>($"Couldn't deletes group with id ${id}", "Couldn't delete group");
+					throw new ApplicationException($"Couldn't delete group with id ${id}");
 				_logger.LogInformation($"Group with id {id} was successfully deleted");
 				return ResultHandler.OnSuccess("Group was successfully deleted");
 			}

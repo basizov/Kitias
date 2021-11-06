@@ -41,8 +41,20 @@
             </summary>
             <param name="model">Sign up model</param>
             <returns>Status string</returns>
-            <response code="200">Success pesponse about user creation</response>
-            <response code="400">Failure during registration a user</response>
+        </member>
+        <member name="M:Kitias.Identity.Server.Controllers.AuthController.RegisterNewRolesAsync(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Register new roles method
+            </summary>
+            <param name="roles">New roles</param>
+            <returns>Status string</returns>
+        </member>
+        <member name="M:Kitias.Identity.Server.Controllers.AuthController.AddRolesToUserAsync(Kitias.Providers.Models.Request.RolesToUserRequestModel)">
+            <summary>
+            Add new roles to user method
+            </summary>
+            <param name="model">Model with roles and user email</param>
+            <returns>Status string</returns>
         </member>
         <member name="M:Kitias.Identity.Server.Controllers.AuthController.SaveTokenAsync(Kitias.Providers.Models.Request.TokenRequestModel)">
             <summary>

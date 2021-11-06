@@ -41,8 +41,7 @@ namespace Kitias.Providers.Services
 
 			message.AddTo(model.To);
 			message.SetClickTracking(false, false);
-			// TODO: Uncommitted after sign up into SendGrid
-			//await client.SendEmailAsync(message);
+			await client.SendEmailAsync(message);
 		}
 	}
 }

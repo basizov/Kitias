@@ -24,12 +24,33 @@
             Stack trace
             </summary>
         </member>
+        <member name="T:Kitias.Providers.Helpers">
+            <summary>
+            Helpers to work with transmiters
+            </summary>
+        </member>
+        <member name="M:Kitias.Providers.Helpers.GetEnumMemberAttrValue``1(``0)">
+            <summary>
+            Get sting from enum member
+            </summary>
+            <typeparam name="T">Enum type</typeparam>
+            <param name="payload">Enum type member</param>
+            <returns>To string type</returns>
+        </member>
+        <member name="M:Kitias.Providers.Helpers.GetEnumMemberFromString``1(System.String)">
+            <summary>
+            Get enum member from string
+            </summary>
+            <typeparam name="T">Enum type</typeparam>
+            <param name="payload">From which string</param>
+            <returns>Enum type member</returns>
+        </member>
         <member name="T:Kitias.Providers.Implementations.AuthProvider">
             <summary>
             Main authorization provider
             </summary>
         </member>
-        <member name="M:Kitias.Providers.Implementations.AuthProvider.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.Providers.Implementations.AuthProvider},Microsoft.AspNetCore.Identity.UserManager{Kitias.Persistence.Entities.Identity.User},Kitias.Persistence.IdentityDataContext,Kitias.Providers.Services.EmailSender,Microsoft.Extensions.Configuration.IConfiguration)">
+        <member name="M:Kitias.Providers.Implementations.AuthProvider.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.Providers.Implementations.AuthProvider},Microsoft.AspNetCore.Identity.UserManager{Kitias.Persistence.Entities.Identity.User},Kitias.Persistence.IdentityDataContext,Kitias.Providers.Services.EmailSender,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.AspNetCore.Identity.RoleManager{Kitias.Persistence.Entities.Identity.Role})">
             <summary>
             Constructor for take neccasary services
             </summary>
@@ -38,6 +59,7 @@
             <param name="dataContext">Manager for CRUD identity dbs</param>
             <param name="emailSender">Service to send emails</param>
             <param name="config">Config to get nessary values</param>
+            <param name="roleManager">Manager to work with roles</param>
         </member>
         <member name="T:Kitias.Providers.Implementations.GroupProvider">
             <summary>
@@ -51,6 +73,19 @@
             <param name="mapper">Mapper</param>
             <param name="logger">Logging</param>
             <param name="unitOfWork">Working with different dbs</param>
+        </member>
+        <member name="T:Kitias.Providers.Implementations.StudentProvider">
+            <summary>
+            Provider to work woth Student
+            </summary>
+        </member>
+        <member name="M:Kitias.Providers.Implementations.StudentProvider.#ctor(AutoMapper.IMapper,Microsoft.Extensions.Logging.ILogger{Kitias.Providers.Provider},Kitias.Repository.Interfaces.Base.IUnitOfWork)">
+            <summary>
+            Constructor to get services
+            </summary>
+            <param name="mapper">Mapping</param>
+            <param name="logger">Logging</param>
+            <param name="unitOfWork">Class to work with different dbs</param>
         </member>
         <member name="T:Kitias.Providers.Interfaces.IAuthProvider">
             <summary>
@@ -100,6 +135,20 @@
             <param name="email">User email</param>
             <returns>Status message</returns>
         </member>
+        <member name="M:Kitias.Providers.Interfaces.IAuthProvider.RegisterNewRolesAsync(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Register new roles to db
+            </summary>
+            <param name="roles">New roles</param>
+            <returns>Status message</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IAuthProvider.AddRolesToUserAsync(Kitias.Providers.Models.Request.RolesToUserRequestModel)">
+            <summary>
+            Add new roles to user
+            </summary>
+            <param name="model">Model to create new UserRole</param>
+            <returns>Status message</returns>
+        </member>
         <member name="T:Kitias.Providers.Interfaces.IGroupProvider">
             <summary>
             Provider to work with group
@@ -139,6 +188,31 @@
             </summary>
             <param name="id">Id of the group</param>
             <returns>Status message</returns>
+        </member>
+        <member name="T:Kitias.Providers.Interfaces.IStudentProvider">
+            <summary>
+            Provider to work with students
+            </summary>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IStudentProvider.TakeStudents">
+            <summary>
+            Take all students from db
+            </summary>
+            <returns>Students</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IStudentProvider.TakeStudentByIdAsync(System.Guid)">
+            <summary>
+            Take only one student from db
+            </summary>
+            <param name="id">Id of the student to take</param>
+            <returns>Student</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IStudentProvider.CreateStudentAsync(Kitias.Providers.Models.Student.CreateStudentModel)">
+            <summary>
+            Create student
+            </summary>
+            <param name="student">Model to create a student</param>
+            <returns>New student</returns>
         </member>
         <member name="T:Kitias.Providers.MappingProfile">
             <summary>
@@ -230,6 +304,36 @@
             New students of the group
             </summary>
         </member>
+        <member name="T:Kitias.Providers.Models.Request.RolesToUserRequestModel">
+            <summary>
+            Add roles to user
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Request.RolesToUserRequestModel.Email">
+            <summary>
+            User email
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Request.RolesToUserRequestModel.Roles">
+            <summary>
+            New roles
+            </summary>
+        </member>
+        <member name="T:Kitias.Providers.Models.Request.SignInRequestModel">
+            <summary>
+            Sign in model
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Request.SignInRequestModel.UserName">
+            <summary>
+            User username
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Request.SignInRequestModel.Password">
+            <summary>
+            User password
+            </summary>
+        </member>
         <member name="T:Kitias.Providers.Models.Request.SignUpRequestModel">
             <summary>
             Model for registration user
@@ -248,6 +352,11 @@
         <member name="P:Kitias.Providers.Models.Request.SignUpRequestModel.Password">
             <summary>
             New user password
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Request.SignUpRequestModel.Roles">
+            <summary>
+            User roles
             </summary>
         </member>
         <member name="T:Kitias.Providers.Models.Request.TokenRequestModel">
@@ -285,6 +394,122 @@
             
             </summary>
             <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:Kitias.Providers.Models.Result`1.Value">
+            <summary>
+            Succes result value
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Result`1.IsSuccess">
+            <summary>
+            True if success result
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Result`1.Error">
+            <summary>
+            Error message
+            </summary>
+        </member>
+        <member name="T:Kitias.Providers.Models.ResultHandler">
+            <summary>
+            Handler to return result
+            </summary>
+        </member>
+        <member name="M:Kitias.Providers.Models.ResultHandler.OnSuccess``1(``0)">
+            <summary>
+            Return success type
+            </summary>
+            <typeparam name="T">Return class</typeparam>
+            <param name="value">Result value</param>
+            <returns>Result</returns>
+        </member>
+        <member name="M:Kitias.Providers.Models.ResultHandler.OnFailure``1(System.String)">
+            <summary>
+            Failure result
+            </summary>
+            <typeparam name="T">Working class</typeparam>
+            <param name="error">Error message</param>
+            <returns>Result</returns>
+        </member>
+        <member name="T:Kitias.Providers.Models.Student.CreateStudentModel">
+            <summary>
+            Model to create a student
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Student.CreateStudentModel.Name">
+            <summary>
+            Person name
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Student.CreateStudentModel.Surname">
+            <summary>
+            Person surname
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Student.CreateStudentModel.Patronymic">
+            <summary>
+            Person patronymic
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Student.CreateStudentModel.Email">
+            <summary>
+            Person email
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Student.CreateStudentModel.GroupNumber">
+            <summary>
+            Student group number
+            </summary>
+        </member>
+        <member name="T:Kitias.Providers.Models.SignUpRegisterModel">
+            <summary>
+            Model for registration user and student
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.SignUpRegisterModel.PersonType">
+            <summary>
+            New user variant
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.SignUpRegisterModel.Email">
+            <summary>
+            New user email
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.SignUpRegisterModel.UserName">
+            <summary>
+            New user username
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.SignUpRegisterModel.Password">
+            <summary>
+            New user password
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.SignUpRegisterModel.Name">
+            <summary>
+            Person name
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.SignUpRegisterModel.Surname">
+            <summary>
+            Person surname
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.SignUpRegisterModel.Patronymic">
+            <summary>
+            Person patronymic
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.SignUpRegisterModel.GroupNumber">
+            <summary>
+            Student group number
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.SignUpRegisterModel.Roles">
+            <summary>
+            User roles
+            </summary>
         </member>
         <member name="T:Kitias.Providers.Provider">
             <summary>
