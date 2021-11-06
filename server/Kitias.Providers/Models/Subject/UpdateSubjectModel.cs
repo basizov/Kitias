@@ -1,16 +1,12 @@
 ﻿using System;
 
-namespace Kitias.Persistence.DTOs
+namespace Kitias.Providers.Models.Subject
 {
 	/// <summary>
-	/// Subject data transfer object
+	/// Model to update subject
 	/// </summary>
-	public record SubjectDto
+	public class UpdateSubjectModel
 	{
-		/// <summary>
-		/// Subject identifier
-		/// </summary>
-		public Guid Id { get; init; }
 		/// <summary>
 		/// Subject name
 		/// </summary>
@@ -22,7 +18,7 @@ namespace Kitias.Persistence.DTOs
 		/// <summary>
 		/// Subject time
 		/// </summary>
-		public TimeSpan Time { get; init; }
+		public TimeSpan? Time { get; init; }
 		/// <summary>
 		/// Subject date
 		/// </summary>

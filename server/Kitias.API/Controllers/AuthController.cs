@@ -29,6 +29,7 @@ namespace Kitias.API.Controllers
 	{
 		private readonly IHttpClientFactory _clientFactory;
 		private readonly IStudentProvider _studentProvider;
+		private readonly ITeacherProvider _teacherProvider;
 		private readonly IOptions<ISSecure> _secureOptions;
 		private readonly IConfiguration _config;
 
@@ -40,7 +41,8 @@ namespace Kitias.API.Controllers
 		/// <param name="secureOptions">Config for identity server</param>
 		/// <param name="config">Config to get domain</param>
 		/// <param name="studentProvider">Provider to work with student db</param>
-		public AuthController(ILogger<AuthController> logger, IHttpClientFactory clientFactory, IOptions<ISSecure> secureOptions, IConfiguration config, IStudentProvider studentProvider) : base(logger) => (_clientFactory, _secureOptions, _config, _studentProvider) = (clientFactory, secureOptions, config, studentProvider);
+		/// <param name="teacherProvider">Provider to work with teacher dbparam>
+		public AuthController(ILogger<AuthController> logger, IHttpClientFactory clientFactory, IOptions<ISSecure> secureOptions, IConfiguration config, IStudentProvider studentProvider, ITeacherProvider teacherProvider) : base(logger) => (_clientFactory, _secureOptions, _config, _studentProvider, _teacherProvider) = (clientFactory, secureOptions, config, studentProvider, teacherProvider);
 
 		/// <summary>
 		/// Sign up endpoint for new user
@@ -62,6 +64,20 @@ namespace Kitias.API.Controllers
 				{
 					Email = model.Email,
 					GroupNumber = model.GroupNumber,
+					Name = model.Name,
+					Patronymic = model.Patronymic,
+					Surname = model.Surname
+				});
+
+				if (!result.IsSuccess)
+					return BadRequest(result.Error);
+				returnResult = result.Value;
+			}
+			else if (model.PersonType == RolesNames.TEACHER_ROLE)
+			{
+				var result = await _teacherProvider.CreateTeacherAsync(new()
+				{
+					Email = model.Email,
 					Name = model.Name,
 					Patronymic = model.Patronymic,
 					Surname = model.Surname

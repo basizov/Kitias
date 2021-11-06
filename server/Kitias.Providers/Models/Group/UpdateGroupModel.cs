@@ -15,10 +15,6 @@ namespace Kitias.Providers.Models.Group
 		/// <summary>
 		/// New group number
 		/// </summary>
-		public string? Number { get; init; }
-		/// <summary>
-		/// New students of the group
-		/// </summary>
-		public IEnumerable<Guid> StudentsIds { get; init; }
+		public string Number { get; init; }
 	}
 }

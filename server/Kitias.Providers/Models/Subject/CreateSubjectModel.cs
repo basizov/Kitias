@@ -1,16 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 
-namespace Kitias.Persistence.DTOs
+namespace Kitias.Providers.Models.Subject
 {
 	/// <summary>
-	/// Subject data transfer object
+	/// Model to create subject
 	/// </summary>
-	public record SubjectDto
+	public class CreateSubjectModel
 	{
-		/// <summary>
-		/// Subject identifier
-		/// </summary>
-		public Guid Id { get; init; }
 		/// <summary>
 		/// Subject name
 		/// </summary>
@@ -35,5 +32,9 @@ namespace Kitias.Persistence.DTOs
 		/// Subject day
 		/// </summary>
 		public string Day { get; init; }
+		/// <summary>
+		/// Groups which have this subject
+		/// </summary>
+		public IEnumerable<Guid> GroupIds { get; init; }
 	}
 }

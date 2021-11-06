@@ -9,16 +9,7 @@
             Authorization endpoint
             </summary>
         </member>
-        <member name="M:Kitias.API.Controllers.AuthController.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.API.Controllers.AuthController},System.Net.Http.IHttpClientFactory,Microsoft.Extensions.Options.IOptions{Kitias.Persistence.Entities.Default.ISSecure},Microsoft.Extensions.Configuration.IConfiguration,Kitias.Providers.Interfaces.IStudentProvider)">
-            <summary>
-            Add services to controller
-            </summary>
-            <param name="logger">Logging</param>
-            <param name="clientFactory">Client factory to create clients</param>
-            <param name="secureOptions">Config for identity server</param>
-            <param name="config">Config to get domain</param>
-            <param name="studentProvider">Provider to work with student db</param>
-        </member>
+        <!-- Badly formed XML comment ignored for member "M:Kitias.API.Controllers.AuthController.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.API.Controllers.AuthController},System.Net.Http.IHttpClientFactory,Microsoft.Extensions.Options.IOptions{Kitias.Persistence.Entities.Default.ISSecure},Microsoft.Extensions.Configuration.IConfiguration,Kitias.Providers.Interfaces.IStudentProvider,Kitias.Providers.Interfaces.ITeacherProvider)" -->
         <member name="M:Kitias.API.Controllers.AuthController.SignUpAsync(Kitias.Providers.Models.SignUpRegisterModel)">
             <summary>
             Sign up endpoint for new user
@@ -81,6 +72,36 @@
             <param name="id">Id of group</param>
             <returns>Group</returns>
         </member>
+        <member name="M:Kitias.API.Controllers.GroupController.TakeGroupStudentsByIdAsync(System.Guid)">
+            <summary>
+            Take group students from db by id
+            </summary>
+            <param name="id">Id of group</param>
+            <returns>Students</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.GroupController.AddGroupStudentsByIdAsync(System.Guid,System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>
+            Add group students to db by id
+            </summary>
+            <param name="id">Id of group</param>
+            <param name="students">New students</param>
+            <returns>Students</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.GroupController.TakeGroupSubjectsByIdAsync(System.Guid)">
+            <summary>
+            Take group subjects from db by id
+            </summary>
+            <param name="id">Id of group</param>
+            <returns>Subjects</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.GroupController.AddGroupSubjectsByIdAsync(System.Guid,System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>
+            Add group subjects to db by id
+            </summary>
+            <param name="id">Id of group</param>
+            <param name="subjects">New subjects</param>
+            <returns>Students</returns>
+        </member>
         <member name="M:Kitias.API.Controllers.GroupController.CreateGroupAsync(Kitias.Providers.Models.Group.CreateGroupModel)">
             <summary>
             Create new group
@@ -88,7 +109,7 @@
             <param name="model">Model to create group</param>
             <returns>New group</returns>
         </member>
-        <member name="M:Kitias.API.Controllers.GroupController.CreateGroupAsync(System.Guid,Kitias.Providers.Models.Group.UpdateGroupModel)">
+        <member name="M:Kitias.API.Controllers.GroupController.UpdateGroupAsync(System.Guid,Kitias.Providers.Models.Group.UpdateGroupModel)">
             <summary>
             Update group by id
             </summary>
@@ -101,6 +122,22 @@
             Delete group by id
             </summary>
             <param name="id">Existed group id</param>
+            <returns>Status message</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.GroupController.DeleteGroupStudentsAsync(System.Guid,System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>
+            Delete students from the  group by id
+            </summary>
+            <param name="id">Existed group id</param>
+            <param name="students">New students</param>
+            <returns>Status message</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.GroupController.DeleteGroupSubjectsAsync(System.Guid,System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>
+            Delete subjects from the group by id
+            </summary>
+            <param name="id">Existed group id</param>
+            <param name="subjects">Deleted subjects</param>
             <returns>Status message</returns>
         </member>
         <member name="T:Kitias.API.Controllers.StudentController">
@@ -127,6 +164,78 @@
             </summary>
             <param name="id">Id of student</param>
             <returns>Student</returns>
+        </member>
+        <member name="T:Kitias.API.Controllers.SubjectController">
+            <summary>
+            Controller to work with subjecct db
+            </summary>
+        </member>
+        <member name="M:Kitias.API.Controllers.SubjectController.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.API.Controllers.SubjectController},Kitias.Providers.Interfaces.ISubjectProvider)">
+            <summary>
+            Add services to the app
+            </summary>
+            <param name="logger">Logging</param>
+            <param name="subjectProvider">Provider to work with subjects</param>
+        </member>
+        <member name="M:Kitias.API.Controllers.SubjectController.TakeSubject">
+            <summary>
+            Take all subject from db
+            </summary>
+            <returns>Subjects</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.SubjectController.TakeSubjectByIdAsync(System.Guid)">
+            <summary>
+            Take subject from db by id
+            </summary>
+            <param name="id">Id of subject</param>
+            <returns>Subject</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.SubjectController.CreateSubjectAsync(Kitias.Providers.Models.Subject.CreateSubjectModel)">
+            <summary>
+            Create new subject
+            </summary>
+            <param name="model">Model to create subject</param>
+            <returns>New subject</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.SubjectController.UpdateSubjectAsync(System.Guid,Kitias.Providers.Models.Subject.UpdateSubjectModel)">
+            <summary>
+            Update subject by id
+            </summary>
+            <param name="id">Existed subject id</param>
+            <param name="model">Model to create subject</param>
+            <returns>Updated subject</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.SubjectController.DeleteDeleteAsync(System.Guid)">
+            <summary>
+            Delete subject by id
+            </summary>
+            <param name="id">Existed subject id</param>
+            <returns>Status message</returns>
+        </member>
+        <member name="T:Kitias.API.Controllers.TeacherController">
+            <summary>
+            Controller to work with persons
+            </summary>
+        </member>
+        <member name="M:Kitias.API.Controllers.TeacherController.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.API.Controllers.TeacherController},Kitias.Providers.Interfaces.ITeacherProvider)">
+            <summary>
+            Add neccessary services
+            </summary>
+            <param name="logger">Logging</param>
+            <param name="teacherProvider">Teacher provider to work teacher db</param>
+        </member>
+        <member name="M:Kitias.API.Controllers.TeacherController.TakeStudents">
+            <summary>
+            Take all teachers from db
+            </summary>
+            <returns>Teachers</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.TeacherController.TakeStudentByIdAsync(System.Guid)">
+            <summary>
+            Take teacher from db by id
+            </summary>
+            <param name="id">Id of teacher</param>
+            <returns>Teacher</returns>
         </member>
         <member name="T:Kitias.API.Extensions.AuthorizationExtension">
             <summary>

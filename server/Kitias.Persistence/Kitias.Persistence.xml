@@ -4,9 +4,29 @@
         <name>Kitias.Persistence</name>
     </assembly>
     <members>
-        <member name="T:Kitias.Persistence.Configurations.GroupConfiguraion">
+        <member name="T:Kitias.Persistence.Configurations.Data.GroupConfiguraion">
             <summary>
             Fluent Validtion for group
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Configurations.Data.PersonConfiguration">
+            <summary>
+            Fluent Validtion for person
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Configurations.Data.StudentConfiguration">
+            <summary>
+            Fluent Validtion for student
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Configurations.Data.SubjectConfiguration">
+            <summary>
+            Fluent Validtion for subject
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Configurations.Data.TeacherConfiguration">
+            <summary>
+            Fluent Validtion for teacher
             </summary>
         </member>
         <member name="T:Kitias.Persistence.Configurations.Identity.RoleConfiguration">
@@ -22,26 +42,6 @@
         <member name="T:Kitias.Persistence.Configurations.Identity.UserConfiguration">
             <summary>
             Fluent Validtion for user
-            </summary>
-        </member>
-        <member name="T:Kitias.Persistence.Configurations.PersonConfiguration">
-            <summary>
-            Fluent Validtion for person
-            </summary>
-        </member>
-        <member name="T:Kitias.Persistence.Configurations.StudentConfiguration">
-            <summary>
-            Fluent Validtion for student
-            </summary>
-        </member>
-        <member name="T:Kitias.Persistence.Configurations.SubjectConfiguration">
-            <summary>
-            Fluent Validtion for subject
-            </summary>
-        </member>
-        <member name="T:Kitias.Persistence.Configurations.TeacherConfiguration">
-            <summary>
-            Fluent Validtion for teacher
             </summary>
         </member>
         <member name="T:Kitias.Persistence.DataContext">
@@ -72,6 +72,11 @@
         <member name="P:Kitias.Persistence.DataContext.Teachers">
             <summary>
             Working with Teachers
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DataContext.SubjectsGroups">
+            <summary>
+            Subject groups and group subjects
             </summary>
         </member>
         <member name="M:Kitias.Persistence.DataContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{Kitias.Persistence.DataContext})">
@@ -118,11 +123,6 @@
         <member name="P:Kitias.Persistence.DTOs.GroupDto.IssueDate">
             <summary>
             Group issue date
-            </summary>
-        </member>
-        <member name="P:Kitias.Persistence.DTOs.GroupDto.Students">
-            <summary>
-            Group students
             </summary>
         </member>
         <member name="T:Kitias.Persistence.DTOs.PersonDto">
@@ -225,21 +225,6 @@
             Subject day
             </summary>
         </member>
-        <member name="P:Kitias.Persistence.DTOs.SubjectDto.Course">
-            <summary>
-            Subject course
-            </summary>
-        </member>
-        <member name="P:Kitias.Persistence.DTOs.SubjectDto.GroupNumber">
-            <summary>
-            Subject group number
-            </summary>
-        </member>
-        <member name="P:Kitias.Persistence.DTOs.SubjectDto.Speciality">
-            <summary>
-            Subject speciality
-            </summary>
-        </member>
         <member name="T:Kitias.Persistence.DTOs.TeacherDto">
             <summary>
             Teacher data transfer object
@@ -328,6 +313,11 @@
         <member name="P:Kitias.Persistence.Entities.Group.Students">
             <summary>
             Group students
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Group.Groups">
+            <summary>
+            Group subjects
             </summary>
         </member>
         <member name="T:Kitias.Persistence.Entities.Identity.Role">
@@ -515,16 +505,6 @@
             Subject identifier
             </summary>
         </member>
-        <member name="P:Kitias.Persistence.Entities.Subject.GroupId">
-            <summary>
-            Subject group id
-            </summary>
-        </member>
-        <member name="P:Kitias.Persistence.Entities.Subject.Group">
-            <summary>
-            Subject group
-            </summary>
-        </member>
         <member name="P:Kitias.Persistence.Entities.Subject.Name">
             <summary>
             Subject name
@@ -553,6 +533,41 @@
         <member name="P:Kitias.Persistence.Entities.Subject.Day">
             <summary>
             Subject day
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Subject.Groups">
+            <summary>
+            Subject groups
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Entities.SubjectGroup">
+            <summary>
+            Entity to concat to entities
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.SubjectGroup.Id">
+            <summary>
+            SubjectGroup identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.SubjectGroup.GroupId">
+            <summary>
+            Subject group id
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.SubjectGroup.Group">
+            <summary>
+            Subject group
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.SubjectGroup.SubjectId">
+            <summary>
+            Group subject id
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.SubjectGroup.Subject">
+            <summary>
+            Group subject
             </summary>
         </member>
         <member name="T:Kitias.Persistence.Entities.Teacher">

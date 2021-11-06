@@ -3,10 +3,9 @@ using Kitias.Persistence.DTOs;
 using Kitias.Persistence.Entities;
 using Kitias.Persistence.Enums;
 using Kitias.Providers.Models.Group;
-using Kitias.Providers.Models.Student;
+using Kitias.Providers.Models.Person;
+using Kitias.Providers.Models.Subject;
 using System;
-using System.Linq;
-using System.Runtime.Serialization;
 
 namespace Kitias.Providers
 {
@@ -37,11 +36,10 @@ namespace Kitias.Providers
 				.ForMember(s => s.Speciality, o => o.MapFrom(s => Helpers.GetEnumMemberAttrValue(s.Group.Speciality)));
 			CreateMap<Subject, SubjectDto>()
 				.ForMember(s => s.Week, o => o.MapFrom(s => Helpers.GetEnumMemberAttrValue(s.Week)))
-				.ForMember(s => s.Day, o => o.MapFrom(s => Helpers.GetEnumMemberAttrValue(s.Day)))
-				.ForMember(s => s.Course, o => o.MapFrom(s => s.Group.Course))
-				.ForMember(s => s.GroupNumber, o => o.MapFrom(s => s.Group.Number))
-				.ForMember(s => s.Speciality, o => o.MapFrom(s => Helpers.GetEnumMemberAttrValue(s.Group.Speciality)));
-			CreateMap<Teacher, TeacherDto>();
+				.ForMember(s => s.Day, o => o.MapFrom(s => Helpers.GetEnumMemberAttrValue(s.Day)));
+			CreateMap<Teacher, TeacherDto>()
+				.ForMember(s => s.Email, o => o.MapFrom(s => s.Person.Email))
+				.ForMember(s => s.FullName, o => o.MapFrom(s => s.Person.FullName));
 
 			#endregion
 
@@ -54,6 +52,10 @@ namespace Kitias.Providers
 				.ForMember(g => g.ReceiptDate, o => o.MapFrom(g => DateTime.Parse(g.ReceiptDate)));
 			CreateMap<CreateStudentModel, Person>();
 			CreateMap<CreateStudentModel, Student>();
+			CreateMap<CreateTeacherModel, Person>();
+			CreateMap<CreateTeacherModel, Teacher>();
+			CreateMap<CreateSubjectModel, Subject>();
+			CreateMap<UpdateSubjectModel, Subject>();
 
 			#endregion
 		}

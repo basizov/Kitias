@@ -3,7 +3,7 @@ using Kitias.Persistence.DTOs;
 using Kitias.Persistence.Entities;
 using Kitias.Providers.Interfaces;
 using Kitias.Providers.Models;
-using Kitias.Providers.Models.Student;
+using Kitias.Providers.Models.Person;
 using Kitias.Repository.Interfaces.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -28,41 +28,28 @@ namespace Kitias.Providers.Implementations
 
 		public Result<IEnumerable<StudentDto>> TakeStudents()
 		{
-			try
-			{
-				var student = _unitOfWork.Student
-					.GetAllWithInclude(s => s.Group, s => s.Person);
-				var result = _mapper.Map<IEnumerable<StudentDto>>(student);
+			var student = _unitOfWork.Student
+				.GetAllWithInclude(s => s.Group, s => s.Person);
+			var result = _mapper.Map<IEnumerable<StudentDto>>(student);
 
-
-				return ResultHandler.OnSuccess(result);
-			}
-			catch (Exception ex)
-			{
-				return ResultHandler.OnFailure<IEnumerable<StudentDto>>(ex.Message);
-			}
+			_logger.LogInformation("Take all students from db");
+			return ResultHandler.OnSuccess(result);
 		}
 
 		public async Task<Result<StudentDto>> TakeStudentByIdAsync(Guid id)
 		{
-			try
-			{
-				var student = await _unitOfWork.Student
-					.FindBy(s => s.Id == id)
-					.Include(s => s.Group)
-					.Include(s => s.Person)
-					.SingleOrDefaultAsync();
+			var student = await _unitOfWork.Student
+				.FindBy(s => s.Id == id)
+				.Include(s => s.Group)
+				.Include(s => s.Person)
+				.SingleOrDefaultAsync();
 
-				if (student == null)
-					return ReturnFailureResult<StudentDto>($"Student with id ${id} doesn't existed", "Couldn't find this student");
-				var result = _mapper.Map<StudentDto>(student);
+			if (student == null)
+				return ReturnFailureResult<StudentDto>($"Student with id ${id} doesn't existed", "Couldn't find this student");
+			var result = _mapper.Map<StudentDto>(student);
 
-				return ResultHandler.OnSuccess(result);
-			}
-			catch (Exception ex)
-			{
-				return ReturnFailureResult<StudentDto>(ex.Message);
-			}
+			_logger.LogInformation($"Take student {id} from db");
+			return ResultHandler.OnSuccess(result);
 		}
 
 		public async Task<Result<StudentDto>> CreateStudentAsync(CreateStudentModel student)
@@ -75,7 +62,7 @@ namespace Kitias.Providers.Implementations
 					.FindBy(g => g.Number == student.GroupNumber)
 					.SingleOrDefaultAsync();
 
-				if (group == null)
+				if (group == null && student.GroupNumber != null)
 					return ReturnFailureResult<StudentDto>($"Couldn't find group {student.GroupNumber}");
 				_logger.LogInformation($"Find group {student.GroupNumber}");
 				var person = _mapper.Map<Person>(student);
@@ -97,6 +84,10 @@ namespace Kitias.Providers.Implementations
 
 				_logger.LogInformation($"Student with id {newStudent.Id} was successfully created");
 				return ResultHandler.OnSuccess(result);
+			}
+			catch (ApplicationException)
+			{
+				throw;
 			}
 			catch (Exception ex)
 			{

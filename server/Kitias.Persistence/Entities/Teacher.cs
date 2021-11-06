@@ -14,10 +14,10 @@ namespace Kitias.Persistence.Entities
 		/// <summary>
 		/// Teacher personnility id
 		/// </summary>
-		public Guid PersonId { get; init; }
+		public Guid PersonId { get; set; }
 		/// <summary>
 		/// Teacher personality
 		/// </summary>
-		public Person Person { get; init; }
+		public virtual Person Person { get; set; }
 	}
 }

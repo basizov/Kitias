@@ -1,4 +1,4 @@
-﻿namespace Kitias.Providers.Models.Student
+﻿namespace Kitias.Providers.Models.Person
 {
 	/// <summary>
 	/// Model to create a student

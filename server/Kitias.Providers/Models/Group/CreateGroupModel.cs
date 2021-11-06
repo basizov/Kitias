@@ -32,9 +32,5 @@ namespace Kitias.Providers.Models.Group
 		/// Grou issue date
 		/// </summary>
 		public string IssueDate { get; init; }
-		/// <summary>
-		/// Group students
-		/// </summary>
-		public IEnumerable<Guid> StudentsIds { get; init; }
 	}
 }

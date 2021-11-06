@@ -1,6 +1,8 @@
 ﻿using Kitias.Persistence.DTOs;
+using Kitias.Persistence.Enums;
 using Kitias.Providers.Interfaces;
 using Kitias.Providers.Models.Group;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -60,11 +62,86 @@ namespace Kitias.API.Controllers
 		}
 
 		/// <summary>
+		/// Take group students from db by id
+		/// </summary>
+		/// <param name="id">Id of group</param>
+		/// <returns>Students</returns>
+		[HttpGet("{id}/students")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<IEnumerable<StudentDto>>> TakeGroupStudentsByIdAsync(Guid id)
+		{
+			var result = await _groupProvider.TakeGroupStudentsAsync(id);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Add group students to db by id
+		/// </summary>
+		/// <param name="id">Id of group</param>
+		/// <param name="students">New students</param>
+		/// <returns>Students</returns>
+		[HttpPost("{id}/students")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<StudentDto>> AddGroupStudentsByIdAsync(Guid id, [FromBody] IEnumerable<Guid> students)
+		{
+			var result = await _groupProvider.CreateGroupSrudentsAsync(id, students);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Take group subjects from db by id
+		/// </summary>
+		/// <param name="id">Id of group</param>
+		/// <returns>Subjects</returns>
+		[HttpGet("{id}/subjects")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<IEnumerable<SubjectDto>>> TakeGroupSubjectsByIdAsync(Guid id)
+		{
+			var result = await _groupProvider.TakeGroupSubjectsAsync(id);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Add group subjects to db by id
+		/// </summary>
+		/// <param name="id">Id of group</param>
+		/// <param name="subjects">New subjects</param>
+		/// <returns>Students</returns>
+		[HttpPost("{id}/subjects")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<SubjectDto>> AddGroupSubjectsByIdAsync(Guid id, [FromBody] IEnumerable<Guid> subjects)
+		{
+			var result = await _groupProvider.CreateGroupSubjectsAsync(id, subjects);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
 		/// Create new group
 		/// </summary>
 		/// <param name="model">Model to create group</param>
 		/// <returns>New group</returns>
 		[HttpPost]
+		[Authorize(Roles = RolesNames.ADMIN_ROLE)]
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -84,10 +161,11 @@ namespace Kitias.API.Controllers
 		/// <param name="model">Model to create group</param>
 		/// <returns>Updated group</returns>
 		[HttpPut("{id}")]
+		[Authorize(Roles = RolesNames.ADMIN_ROLE)]
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-		public async Task<ActionResult<GroupDto>> CreateGroupAsync(Guid id, UpdateGroupModel model)
+		public async Task<ActionResult<GroupDto>> UpdateGroupAsync(Guid id, UpdateGroupModel model)
 		{
 			var result = await _groupProvider.UpdateGroupAsync(id, model);
 
@@ -102,12 +180,33 @@ namespace Kitias.API.Controllers
 		/// <param name="id">Existed group id</param>
 		/// <returns>Status message</returns>
 		[HttpDelete("{id}")]
+		[Authorize(Roles = RolesNames.ADMIN_ROLE)]
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-		public async Task<ActionResult<GroupDto>> DeleteGroupAsync(Guid id)
+		public async Task<ActionResult<string>> DeleteGroupAsync(Guid id)
 		{
 			var result = await _groupProvider.DeleteGroupAsync(id);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Delete subjects from the group by id
+		/// </summary>
+		/// <param name="id">Existed group id</param>
+		/// <param name="subjects">Deleted subjects</param>
+		/// <returns>Status message</returns>
+		[HttpDelete("{id}/subjects")]
+		[Authorize(Roles = RolesNames.ADMIN_ROLE)]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<string>> DeleteGroupSubjectsAsync(Guid id, [FromBody] IEnumerable<Guid> subjects)
+		{
+			var result = await _groupProvider.DeleteGroupSubjectsAsync(id, subjects);
 
 			if (!result.IsSuccess)
 				return BadRequest(result.Error);

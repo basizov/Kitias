@@ -12,28 +12,28 @@ namespace Kitias.API.Controllers
 	/// <summary>
 	/// Controller to work with persons
 	/// </summary>
-	public class StudentController : BaseController
+	public class TeacherController : BaseController
 	{
-		private readonly IStudentProvider _studentProvider;
+		private readonly ITeacherProvider _teacherProvider;
 
 		/// <summary>
 		/// Add neccessary services
 		/// </summary>
 		/// <param name="logger">Logging</param>
-		/// <param name="studentProvider">Student provider to work student db</param>
-		public StudentController(ILogger<StudentController> logger, IStudentProvider studentProvider) : base(logger) => _studentProvider = studentProvider;
+		/// <param name="teacherProvider">Teacher provider to work teacher db</param>
+		public TeacherController(ILogger<TeacherController> logger, ITeacherProvider teacherProvider) : base(logger) => _teacherProvider = teacherProvider;
 
 		/// <summary>
-		/// Take all students from db
+		/// Take all teachers from db
 		/// </summary>
-		/// <returns>Students</returns>
+		/// <returns>Teachers</returns>
 		[HttpGet]
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-		public ActionResult<IEnumerable<StudentDto>> TakeStudents()
+		public ActionResult<IEnumerable<TeacherDto>> TakeStudents()
 		{
-			var result = _studentProvider.TakeStudents();
+			var result = _teacherProvider.TakeTeachers();
 
 			if (!result.IsSuccess)
 				return BadRequest(result.Error);
@@ -41,17 +41,17 @@ namespace Kitias.API.Controllers
 		}
 
 		/// <summary>
-		/// Take student from db by id
+		/// Take teacher from db by id
 		/// </summary>
-		/// <param name="id">Id of student</param>
-		/// <returns>Student</returns>
+		/// <param name="id">Id of teacher</param>
+		/// <returns>Teacher</returns>
 		[HttpGet("{id}")]
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-		public async Task<ActionResult<StudentDto>> TakeStudentByIdAsync(Guid id)
+		public async Task<ActionResult<TeacherDto>> TakeStudentByIdAsync(Guid id)
 		{
-			var result = await _studentProvider.TakeStudentByIdAsync(id);
+			var result = await _teacherProvider.TakeTeacherByIdAsync(id);
 
 			if (!result.IsSuccess)
 				return BadRequest(result.Error);

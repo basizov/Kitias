@@ -18,6 +18,8 @@ namespace Kitias.API.Extensions
 		{
 			services.AddScoped<IGroupProvider, GroupProvider>();
 			services.AddScoped<IStudentProvider, StudentProvider>();
+			services.AddScoped<ITeacherProvider, TeacherProvider>();
+			services.AddScoped<ISubjectProvider, SubjectProvider>();
 			return services;
 		}
 	}

@@ -1,6 +1,6 @@
 ﻿using Kitias.Persistence.DTOs;
 using Kitias.Providers.Models;
-using Kitias.Providers.Models.Student;
+using Kitias.Providers.Models.Person;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

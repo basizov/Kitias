@@ -87,6 +87,32 @@
             <param name="logger">Logging</param>
             <param name="unitOfWork">Class to work with different dbs</param>
         </member>
+        <member name="T:Kitias.Providers.Implementations.SubjectProvider">
+            <summary>
+            Provider to work with subject db
+            </summary>
+        </member>
+        <member name="M:Kitias.Providers.Implementations.SubjectProvider.#ctor(AutoMapper.IMapper,Microsoft.Extensions.Logging.ILogger{Kitias.Providers.Provider},Kitias.Repository.Interfaces.Base.IUnitOfWork)">
+            <summary>
+            Constructor to get services
+            </summary>
+            <param name="mapper">Mapping</param>
+            <param name="logger">Logging</param>
+            <param name="unitOfWork">Pattern to get required db</param>
+        </member>
+        <member name="T:Kitias.Providers.Implementations.TeacherProvider">
+            <summary>
+            Provider to work with teacher db
+            </summary>
+        </member>
+        <member name="M:Kitias.Providers.Implementations.TeacherProvider.#ctor(AutoMapper.IMapper,Microsoft.Extensions.Logging.ILogger{Kitias.Providers.Provider},Kitias.Repository.Interfaces.Base.IUnitOfWork)">
+            <summary>
+            Constructor to get services
+            </summary>
+            <param name="mapper">Mapping</param>
+            <param name="logger">Logging</param>
+            <param name="unitOfWork">Pattern to get work with different dbs</param>
+        </member>
         <member name="T:Kitias.Providers.Interfaces.IAuthProvider">
             <summary>
             USer authorization methods
@@ -160,6 +186,20 @@
             </summary>
             <returns>Groups</returns>
         </member>
+        <member name="M:Kitias.Providers.Interfaces.IGroupProvider.TakeGroupStudentsAsync(System.Guid)">
+            <summary>
+            Take all students of the group from db
+            </summary>
+            <param name="id">Id of the group to take</param>
+            <returns>Groups</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IGroupProvider.TakeGroupSubjectsAsync(System.Guid)">
+            <summary>
+            Take all subjects of the group from db
+            </summary>
+            <param name="id">Id of the group to take</param>
+            <returns>Subjects</returns>
+        </member>
         <member name="M:Kitias.Providers.Interfaces.IGroupProvider.TakeGroupByIdAsync(System.Guid)">
             <summary>
             Take only one group from db
@@ -174,6 +214,22 @@
             <param name="group">Model to create a group</param>
             <returns>New group</returns>
         </member>
+        <member name="M:Kitias.Providers.Interfaces.IGroupProvider.CreateGroupSrudentsAsync(System.Guid,System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>
+            Create group students
+            </summary>
+            <param name="id">Id of the group to take</param>
+            <param name="students">New students to the group</param>
+            <returns>Students</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IGroupProvider.CreateGroupSubjectsAsync(System.Guid,System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>
+            Create group subjects
+            </summary>
+            <param name="id">Id of the group to take</param>
+            <param name="subjects">New subjects to the group</param>
+            <returns>Subjects</returns>
+        </member>
         <member name="M:Kitias.Providers.Interfaces.IGroupProvider.UpdateGroupAsync(System.Guid,Kitias.Providers.Models.Group.UpdateGroupModel)">
             <summary>
             Update group by id
@@ -187,6 +243,22 @@
             Delete group from db
             </summary>
             <param name="id">Id of the group</param>
+            <returns>Status message</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IGroupProvider.DeleteGroupStudentsAsync(System.Guid,System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>
+            Delete students from the group
+            </summary>
+            <param name="id">Id of the group</param>
+            <param name="students">Students to delete from the group</param>
+            <returns>Status message</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IGroupProvider.DeleteGroupSubjectsAsync(System.Guid,System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>
+            Delete ubjects from the group
+            </summary>
+            <param name="id">Id of the group</param>
+            <param name="subjects">Subjects to delete from the group</param>
             <returns>Status message</returns>
         </member>
         <member name="T:Kitias.Providers.Interfaces.IStudentProvider">
@@ -207,12 +279,77 @@
             <param name="id">Id of the student to take</param>
             <returns>Student</returns>
         </member>
-        <member name="M:Kitias.Providers.Interfaces.IStudentProvider.CreateStudentAsync(Kitias.Providers.Models.Student.CreateStudentModel)">
+        <member name="M:Kitias.Providers.Interfaces.IStudentProvider.CreateStudentAsync(Kitias.Providers.Models.Person.CreateStudentModel)">
             <summary>
             Create student
             </summary>
             <param name="student">Model to create a student</param>
             <returns>New student</returns>
+        </member>
+        <member name="T:Kitias.Providers.Interfaces.ISubjectProvider">
+            <summary>
+            Provider to work with subject db
+            </summary>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.ISubjectProvider.TakeSubjects">
+            <summary>
+            Take all subjects from db
+            </summary>
+            <returns>Subjects</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.ISubjectProvider.TakeSubjectByIdAsync(System.Guid)">
+            <summary>
+            Take only one subject from db
+            </summary>
+            <param name="id">Id of the subject to take</param>
+            <returns>Subject</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.ISubjectProvider.CreateSubjectAsync(Kitias.Providers.Models.Subject.CreateSubjectModel)">
+            <summary>
+            Create subject
+            </summary>
+            <param name="subject">Model to create a subject</param>
+            <returns>New subject</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.ISubjectProvider.UpdateSubjectAsync(System.Guid,Kitias.Providers.Models.Subject.UpdateSubjectModel)">
+            <summary>
+            Update subject by id
+            </summary>
+            <param name="id">Id of the subject</param>
+            <param name="Subject">Subject update model</param>
+            <returns>Subject</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.ISubjectProvider.DeleteSubjectAsync(System.Guid)">
+            <summary>
+            Delete subject from db
+            </summary>
+            <param name="id">Id of the subject</param>
+            <returns>Status message</returns>
+        </member>
+        <member name="T:Kitias.Providers.Interfaces.ITeacherProvider">
+            <summary>
+            Provider to work with teacher db
+            </summary>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.ITeacherProvider.TakeTeachers">
+            <summary>
+            Take all teacher from db
+            </summary>
+            <returns>Teacher</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.ITeacherProvider.TakeTeacherByIdAsync(System.Guid)">
+            <summary>
+            Take only one te teacher db
+            </summary>
+            <param name="id">Id of the teacher to take</param>
+            <returns>Teacher</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.ITeacherProvider.CreateTeacherAsync(Kitias.Providers.Models.Person.CreateTeacherModel)">
+            <summary>
+            Create teacher
+            </summary>
+            <param name="teacher">Model to create a teacher</param>
+            <returns>New teacher</returns>
         </member>
         <member name="T:Kitias.Providers.MappingProfile">
             <summary>
@@ -279,11 +416,6 @@
             Grou issue date
             </summary>
         </member>
-        <member name="P:Kitias.Providers.Models.Group.CreateGroupModel.StudentsIds">
-            <summary>
-            Group students
-            </summary>
-        </member>
         <member name="T:Kitias.Providers.Models.Group.UpdateGroupModel">
             <summary>
             Model to update the exsisted group
@@ -299,9 +431,59 @@
             New group number
             </summary>
         </member>
-        <member name="P:Kitias.Providers.Models.Group.UpdateGroupModel.StudentsIds">
+        <member name="T:Kitias.Providers.Models.Person.CreateStudentModel">
             <summary>
-            New students of the group
+            Model to create a student
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Person.CreateStudentModel.Name">
+            <summary>
+            Person name
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Person.CreateStudentModel.Surname">
+            <summary>
+            Person surname
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Person.CreateStudentModel.Patronymic">
+            <summary>
+            Person patronymic
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Person.CreateStudentModel.Email">
+            <summary>
+            Person email
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Person.CreateStudentModel.GroupNumber">
+            <summary>
+            Student group number
+            </summary>
+        </member>
+        <member name="T:Kitias.Providers.Models.Person.CreateTeacherModel">
+            <summary>
+            Model to create a teacher
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Person.CreateTeacherModel.Name">
+            <summary>
+            Person name
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Person.CreateTeacherModel.Surname">
+            <summary>
+            Person surname
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Person.CreateTeacherModel.Patronymic">
+            <summary>
+            Person patronymic
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Person.CreateTeacherModel.Email">
+            <summary>
+            Person email
             </summary>
         </member>
         <member name="T:Kitias.Providers.Models.Request.RolesToUserRequestModel">
@@ -431,34 +613,79 @@
             <param name="error">Error message</param>
             <returns>Result</returns>
         </member>
-        <member name="T:Kitias.Providers.Models.Student.CreateStudentModel">
+        <member name="T:Kitias.Providers.Models.Subject.CreateSubjectModel">
             <summary>
-            Model to create a student
+            Model to create subject
             </summary>
         </member>
-        <member name="P:Kitias.Providers.Models.Student.CreateStudentModel.Name">
+        <member name="P:Kitias.Providers.Models.Subject.CreateSubjectModel.Name">
             <summary>
-            Person name
+            Subject name
             </summary>
         </member>
-        <member name="P:Kitias.Providers.Models.Student.CreateStudentModel.Surname">
+        <member name="P:Kitias.Providers.Models.Subject.CreateSubjectModel.Type">
             <summary>
-            Person surname
+            Subject type
             </summary>
         </member>
-        <member name="P:Kitias.Providers.Models.Student.CreateStudentModel.Patronymic">
+        <member name="P:Kitias.Providers.Models.Subject.CreateSubjectModel.Time">
             <summary>
-            Person patronymic
+            Subject time
             </summary>
         </member>
-        <member name="P:Kitias.Providers.Models.Student.CreateStudentModel.Email">
+        <member name="P:Kitias.Providers.Models.Subject.CreateSubjectModel.Date">
             <summary>
-            Person email
+            Subject date
             </summary>
         </member>
-        <member name="P:Kitias.Providers.Models.Student.CreateStudentModel.GroupNumber">
+        <member name="P:Kitias.Providers.Models.Subject.CreateSubjectModel.Week">
             <summary>
-            Student group number
+            Subject week
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Subject.CreateSubjectModel.Day">
+            <summary>
+            Subject day
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Subject.CreateSubjectModel.GroupIds">
+            <summary>
+            Groups which have this subject
+            </summary>
+        </member>
+        <member name="T:Kitias.Providers.Models.Subject.UpdateSubjectModel">
+            <summary>
+            Model to update subject
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Subject.UpdateSubjectModel.Name">
+            <summary>
+            Subject name
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Subject.UpdateSubjectModel.Type">
+            <summary>
+            Subject type
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Subject.UpdateSubjectModel.Time">
+            <summary>
+            Subject time
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Subject.UpdateSubjectModel.Date">
+            <summary>
+            Subject date
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Subject.UpdateSubjectModel.Week">
+            <summary>
+            Subject week
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Subject.UpdateSubjectModel.Day">
+            <summary>
+            Subject day
             </summary>
         </member>
         <member name="T:Kitias.Providers.Models.SignUpRegisterModel">

@@ -23,6 +23,14 @@ namespace Kitias.Repository.Interfaces.Base
 		/// Group db
 		/// </summary>
 		IGroupRepository Group { get; }
+		/// <summary>
+		/// Subject db
+		/// </summary>
+		ISubjectRepository Subject { get; }
+		/// <summary>
+		/// Subject groups and group subjects
+		/// </summary>
+		ISubjectsGroupsRepository SubjectGroup { get; }
 
 		/// <summary>
 		/// Save changes in one transaction

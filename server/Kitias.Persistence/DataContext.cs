@@ -1,4 +1,4 @@
-using Kitias.Persistence.Configurations;
+using Kitias.Persistence.Configurations.Data;
 using Kitias.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,6 +29,10 @@ namespace Kitias.Persistence
 		/// Working with Teachers
 		/// </summary>
 		public DbSet<Teacher> Teachers { get; set; }
+		/// <summary>
+		/// Subject groups and group subjects
+		/// </summary>
+		public DbSet<SubjectGroup> SubjectsGroups { get; set; }
 
 		/// <summary>
 		/// Constructor to get connetion

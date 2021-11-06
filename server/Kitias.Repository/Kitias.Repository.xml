@@ -1,0 +1,189 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Kitias.Repository</name>
+    </assembly>
+    <members>
+        <member name="T:Kitias.Repository.Implementations.Base.Repository`1">
+            <summary>
+            Instance of base repository
+            </summary>
+            <typeparam name="T">Type of entity</typeparam>
+        </member>
+        <member name="M:Kitias.Repository.Implementations.Base.Repository`1.#ctor(Kitias.Persistence.DataContext)">
+            <summary>
+            Configure all necessary services
+            </summary>
+            <param name="dbContext">Db context to work of some dbs</param>
+        </member>
+        <member name="T:Kitias.Repository.Implementations.GroupRepository">
+            <summary>
+            Repository to work with group db
+            </summary>
+        </member>
+        <member name="M:Kitias.Repository.Implementations.GroupRepository.#ctor(Kitias.Persistence.DataContext)">
+            <summary>
+            Constructor to get requred services
+            </summary>
+            <param name="context">Context service</param>
+        </member>
+        <member name="T:Kitias.Repository.Implementations.PersonRepository">
+            <summary>
+            Repository to work with person db
+            </summary>
+        </member>
+        <member name="M:Kitias.Repository.Implementations.PersonRepository.#ctor(Kitias.Persistence.DataContext)">
+            <summary>
+            Constructor to get requred services
+            </summary>
+            <param name="context">Context service</param>
+        </member>
+        <member name="T:Kitias.Repository.Implementations.StudentRepository">
+            <summary>
+            Repository to work with student db
+            </summary>
+        </member>
+        <member name="M:Kitias.Repository.Implementations.StudentRepository.#ctor(Kitias.Persistence.DataContext)">
+            <summary>
+            Constructor to get requred services
+            </summary>
+            <param name="context">Context service</param>
+        </member>
+        <member name="T:Kitias.Repository.Implementations.SubjectsGroupsRepository">
+            <summary>
+            Repository to work withGsubjcetGroup db
+            </summary>
+        </member>
+        <member name="M:Kitias.Repository.Implementations.SubjectsGroupsRepository.#ctor(Kitias.Persistence.DataContext)">
+            <summary>
+            Constructor to get requred services
+            </summary>
+            <param name="dbContext">Context service</param>
+        </member>
+        <member name="T:Kitias.Repository.Implementations.TeacherRepository">
+            <summary>
+            Repository to work with teacher db
+            </summary>
+        </member>
+        <member name="M:Kitias.Repository.Implementations.TeacherRepository.#ctor(Kitias.Persistence.DataContext)">
+            <summary>
+            Constructor to get requred services
+            </summary>
+            <param name="context">Context service</param>
+        </member>
+        <member name="T:Kitias.Repository.Interfaces.Base.IRepository`1">
+            <summary>
+            Base repository to work woth db
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Kitias.Repository.Interfaces.Base.IRepository`1.Create(`0)">
+            <summary>
+            Create new db instance
+            </summary>
+            <param name="entity">Db entity</param>
+            <returns>New db entity</returns>
+        </member>
+        <member name="M:Kitias.Repository.Interfaces.Base.IRepository`1.Update(`0)">
+            <summary>
+            Update db instance
+            </summary>
+            <param name="entity">Db entity</param>
+            <returns>New db entity</returns>
+        </member>
+        <member name="M:Kitias.Repository.Interfaces.Base.IRepository`1.Delete(`0)">
+            <summary>
+            Delete entity drom db
+            </summary>
+            <param name="entity">Db entity</param>
+        </member>
+        <member name="M:Kitias.Repository.Interfaces.Base.IRepository`1.GetAll">
+            <summary>
+            Take all entities from db
+            </summary>
+            <returns>Entities</returns>
+        </member>
+        <member name="M:Kitias.Repository.Interfaces.Base.IRepository`1.GetAllWithInclude(System.Linq.Expressions.Expression{System.Func{`0,System.Object}}[])">
+            <summary>
+            Take entityes with include params
+            </summary>
+            <param name="includeProperties">Include params</param>
+            <returns>Entities</returns>
+        </member>
+        <member name="M:Kitias.Repository.Interfaces.Base.IRepository`1.FindBy(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Find by condition
+            </summary>
+            <param name="expression">Expression function</param>
+            <returns>Entities</returns>
+        </member>
+        <member name="M:Kitias.Repository.Interfaces.Base.IRepository`1.AnyAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Check entities by condition for existing
+            </summary>
+            <param name="expression">Expression function</param>
+            <returns>Is success</returns>
+        </member>
+        <member name="T:Kitias.Repository.Interfaces.Base.IUnitOfWork">
+            <summary>
+            Pattern to work with different dbs
+            </summary>
+        </member>
+        <member name="P:Kitias.Repository.Interfaces.Base.IUnitOfWork.Person">
+            <summary>
+            Person db
+            </summary>
+        </member>
+        <member name="P:Kitias.Repository.Interfaces.Base.IUnitOfWork.Student">
+            <summary>
+            Student db
+            </summary>
+        </member>
+        <member name="P:Kitias.Repository.Interfaces.Base.IUnitOfWork.Teacher">
+            <summary>
+            Techer db
+            </summary>
+        </member>
+        <member name="P:Kitias.Repository.Interfaces.Base.IUnitOfWork.Group">
+            <summary>
+            Group db
+            </summary>
+        </member>
+        <member name="P:Kitias.Repository.Interfaces.Base.IUnitOfWork.Subject">
+            <summary>
+            Subject db
+            </summary>
+        </member>
+        <member name="P:Kitias.Repository.Interfaces.Base.IUnitOfWork.SubjectGroup">
+            <summary>
+            Subject groups and group subjects
+            </summary>
+        </member>
+        <member name="M:Kitias.Repository.Interfaces.Base.IUnitOfWork.SaveChangesAsync">
+            <summary>
+            Save changes in one transaction
+            </summary>
+            <returns>Success status</returns>
+        </member>
+        <member name="T:Kitias.Repository.Interfaces.IGroupRepository">
+            <summary>
+            Repository to work with different opportunities group db
+            </summary>
+        </member>
+        <member name="T:Kitias.Repository.Interfaces.IPersonRepository">
+            <summary>
+            Repository to work with different opportunities person db
+            </summary>
+        </member>
+        <member name="T:Kitias.Repository.Interfaces.IStudentRepository">
+            <summary>
+            Repository to work with different opportunities student db
+            </summary>
+        </member>
+        <member name="T:Kitias.Repository.Interfaces.ITeacherRepository">
+            <summary>
+            Repository to work with different opportunities teacher db
+            </summary>
+        </member>
+    </members>
+</doc>

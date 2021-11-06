@@ -40,6 +40,10 @@ namespace Kitias.Persistence.Entities
 		/// <summary>
 		/// Group students
 		/// </summary>
-		public ICollection<Student> Students { get; set; }
+		public virtual ICollection<Student> Students { get; set; }
+		/// <summary>
+		/// Group subjects
+		/// </summary>
+		public virtual ICollection<SubjectGroup> Groups { get; init; }
 	}
 }

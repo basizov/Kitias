@@ -36,9 +36,5 @@ namespace Kitias.Persistence.DTOs
 		/// Group issue date
 		/// </summary>
 		public string IssueDate { get; init; }
-		/// <summary>
-		/// Group students
-		/// </summary>
-		public ICollection<StudentDto> Students { get; init; }
 	}
 }

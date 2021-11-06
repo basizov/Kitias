@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Kitias.Persistence.Configurations
+namespace Kitias.Persistence.Configurations.Data
 {
 	/// <summary>
 	/// Fluent Validtion for subject
@@ -22,10 +22,8 @@ namespace Kitias.Persistence.Configurations
 				.IsRequired()
 				.HasColumnType("time");
 			builder.Property(g => g.Date)
-				.IsRequired()
 				.HasColumnType("date");
 			builder.Property(g => g.Week)
-				.IsRequired()
 				.HasConversion<string>()
 				.HasMaxLength(20);
 			builder.Property(g => g.Day)
