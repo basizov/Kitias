@@ -45,12 +45,19 @@
             <param name="payload">From which string</param>
             <returns>Enum type member</returns>
         </member>
+        <member name="M:Kitias.Providers.Helpers.GetFileSizeFromNumber(System.Int64)">
+            <summary>
+            Get text file size
+            </summary>
+            <param name="size">Numeric size</param>
+            <returns>Normal size</returns>
+        </member>
         <member name="T:Kitias.Providers.Implementations.AuthProvider">
             <summary>
             Main authorization provider
             </summary>
         </member>
-        <member name="M:Kitias.Providers.Implementations.AuthProvider.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.Providers.Implementations.AuthProvider},Microsoft.AspNetCore.Identity.UserManager{Kitias.Persistence.Entities.Identity.User},Kitias.Persistence.IdentityDataContext,Kitias.Providers.Services.EmailSender,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.AspNetCore.Identity.RoleManager{Kitias.Persistence.Entities.Identity.Role})">
+        <member name="M:Kitias.Providers.Implementations.AuthProvider.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.Providers.Implementations.AuthProvider},Microsoft.AspNetCore.Identity.UserManager{Kitias.Persistence.Entities.Identity.User},Kitias.Persistence.Contexts.IdentityDataContext,Kitias.Providers.Services.EmailSender,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.AspNetCore.Identity.RoleManager{Kitias.Persistence.Entities.Identity.Role})">
             <summary>
             Constructor for take neccasary services
             </summary>
@@ -214,7 +221,7 @@
             <param name="group">Model to create a group</param>
             <returns>New group</returns>
         </member>
-        <member name="M:Kitias.Providers.Interfaces.IGroupProvider.CreateGroupSrudentsAsync(System.Guid,System.Collections.Generic.IEnumerable{System.Guid})">
+        <member name="M:Kitias.Providers.Interfaces.IGroupProvider.CreateGroupStudentsAsync(System.Guid,System.Collections.Generic.IEnumerable{System.Guid})">
             <summary>
             Create group students
             </summary>
@@ -243,14 +250,6 @@
             Delete group from db
             </summary>
             <param name="id">Id of the group</param>
-            <returns>Status message</returns>
-        </member>
-        <member name="M:Kitias.Providers.Interfaces.IGroupProvider.DeleteGroupStudentsAsync(System.Guid,System.Collections.Generic.IEnumerable{System.Guid})">
-            <summary>
-            Delete students from the group
-            </summary>
-            <param name="id">Id of the group</param>
-            <param name="students">Students to delete from the group</param>
             <returns>Status message</returns>
         </member>
         <member name="M:Kitias.Providers.Interfaces.IGroupProvider.DeleteGroupSubjectsAsync(System.Guid,System.Collections.Generic.IEnumerable{System.Guid})">
@@ -304,12 +303,27 @@
             <param name="id">Id of the subject to take</param>
             <returns>Subject</returns>
         </member>
+        <member name="M:Kitias.Providers.Interfaces.ISubjectProvider.TakeSubjectGroupsAsync(System.Guid)">
+            <summary>
+            Take all groups of the subject
+            </summary>
+            <param name="id">Id of the subject to take</param>
+            <returns>Groups</returns>
+        </member>
         <member name="M:Kitias.Providers.Interfaces.ISubjectProvider.CreateSubjectAsync(Kitias.Providers.Models.Subject.CreateSubjectModel)">
             <summary>
             Create subject
             </summary>
             <param name="subject">Model to create a subject</param>
             <returns>New subject</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.ISubjectProvider.CreateSubjectGroupsAsync(System.Guid,System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>
+            Create subject groups
+            </summary>
+            <param name="id">Id of the subject to take</param>
+            <param name="groups">New groups to the subject</param>
+            <returns>Groups</returns>
         </member>
         <member name="M:Kitias.Providers.Interfaces.ISubjectProvider.UpdateSubjectAsync(System.Guid,Kitias.Providers.Models.Subject.UpdateSubjectModel)">
             <summary>
@@ -325,6 +339,14 @@
             </summary>
             <param name="id">Id of the subject</param>
             <returns>Status message</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.ISubjectProvider.DeleteSubjectGroupsAsync(System.Guid,System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>
+            Delete groups from the subject
+            </summary>
+            <param name="id">Id of the subject</param>
+            <param name="groups">Groups to delete from the subject</param>
+            <returns>Groups message</returns>
         </member>
         <member name="T:Kitias.Providers.Interfaces.ITeacherProvider">
             <summary>
@@ -646,11 +668,6 @@
         <member name="P:Kitias.Providers.Models.Subject.CreateSubjectModel.Day">
             <summary>
             Subject day
-            </summary>
-        </member>
-        <member name="P:Kitias.Providers.Models.Subject.CreateSubjectModel.GroupIds">
-            <summary>
-            Groups which have this subject
             </summary>
         </member>
         <member name="T:Kitias.Providers.Models.Subject.UpdateSubjectModel">

@@ -5,7 +5,7 @@ namespace Kitias.Providers.Models.Subject
 	/// <summary>
 	/// Model to update subject
 	/// </summary>
-	public class UpdateSubjectModel
+	public record UpdateSubjectModel
 	{
 		/// <summary>
 		/// Subject name
@@ -18,7 +18,7 @@ namespace Kitias.Providers.Models.Subject
 		/// <summary>
 		/// Subject time
 		/// </summary>
-		public TimeSpan? Time { get; init; }
+		public string Time { get; init; }
 		/// <summary>
 		/// Subject date
 		/// </summary>

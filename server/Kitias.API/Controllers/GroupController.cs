@@ -91,7 +91,7 @@ namespace Kitias.API.Controllers
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
 		public async Task<ActionResult<StudentDto>> AddGroupStudentsByIdAsync(Guid id, [FromBody] IEnumerable<Guid> students)
 		{
-			var result = await _groupProvider.CreateGroupSrudentsAsync(id, students);
+			var result = await _groupProvider.CreateGroupStudentsAsync(id, students);
 
 			if (!result.IsSuccess)
 				return BadRequest(result.Error);
@@ -121,7 +121,7 @@ namespace Kitias.API.Controllers
 		/// </summary>
 		/// <param name="id">Id of group</param>
 		/// <param name="subjects">New subjects</param>
-		/// <returns>Students</returns>
+		/// <returns>Subjects</returns>
 		[HttpPost("{id}/subjects")]
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]

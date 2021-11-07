@@ -1,4 +1,4 @@
-using Kitias.Persistence;
+using Kitias.Persistence.Contexts;
 using Kitias.Repository.Implementations.Base;
 using Kitias.Repository.Interfaces.Base;
 using Microsoft.EntityFrameworkCore;

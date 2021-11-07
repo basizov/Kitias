@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Kitias.Persistence.DTOs;
-using Kitias.Persistence.Entities;
+using Kitias.Persistence.Entities.Scheduler;
+using Kitias.Persistence.Entities.People;
 using Kitias.Providers.Interfaces;
 using Kitias.Providers.Models;
 using Kitias.Providers.Models.Group;
@@ -188,7 +189,7 @@ namespace Kitias.Providers.Implementations
 				.ToListAsync();
 
 			if (subjectGroups == null)
-				return ReturnFailureResult<IEnumerable<SubjectDto>>($"Couldn;t find subject for group {id}", "There isn't this students for this group");
+				return ReturnFailureResult<IEnumerable<SubjectDto>>($"Couldn;t find subject for group {id}", "There isn't this subjects for this group");
 			try
 			{
 				foreach (var subject in subjects)
@@ -206,8 +207,8 @@ namespace Kitias.Providers.Implementations
 
 						if (subjectEntity == null)
 							return ReturnFailureResult<IEnumerable<SubjectDto>>($"Couldn't find subject with id ${subject} doesn't existed", "Couldn't find subject");
-						subjectGroup.Subject = subjectEntity;
 						_unitOfWork.SubjectGroup.Create(subjectGroup);
+						subjectGroup.Subject = subjectEntity;
 						subjectGroups.Add(subjectGroup);
 						_logger.LogInformation($"Add subject {subject} ot the group {id}");
 					}

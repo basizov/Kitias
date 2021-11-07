@@ -22,11 +22,11 @@ namespace Kitias.Persistence.DTOs
 		/// <summary>
 		/// Subject time
 		/// </summary>
-		public TimeSpan Time { get; init; }
+		public string Time { get; init; }
 		/// <summary>
 		/// Subject date
 		/// </summary>
-		public DateTime? Date { get; init; }
+		public string Date { get; init; }
 		/// <summary>
 		/// Subject week
 		/// </summary>

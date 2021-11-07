@@ -24,11 +24,24 @@ namespace Kitias.Providers.Interfaces
 		/// <returns>Subject</returns>
 		Task<Result<SubjectDto>> TakeSubjectByIdAsync(Guid id);
 		/// <summary>
+		/// Take all groups of the subject
+		/// </summary>
+		/// <param name="id">Id of the subject to take</param>
+		/// <returns>Groups</returns>
+		Task<Result<IEnumerable<GroupDto>>> TakeSubjectGroupsAsync(Guid id);
+		/// <summary>
 		/// Create subject
 		/// </summary>
 		/// <param name="subject">Model to create a subject</param>
 		/// <returns>New subject</returns>
 		Task<Result<SubjectDto>> CreateSubjectAsync(CreateSubjectModel subject);
+		/// <summary>
+		/// Create subject groups
+		/// </summary>
+		/// <param name="id">Id of the subject to take</param>
+		/// <param name="groups">New groups to the subject</param>
+		/// <returns>Groups</returns>
+		Task<Result<IEnumerable<GroupDto>>> CreateSubjectGroupsAsync(Guid id, IEnumerable<Guid> groups);
 		/// <summary>
 		/// Update subject by id
 		/// </summary>
@@ -42,5 +55,12 @@ namespace Kitias.Providers.Interfaces
 		/// <param name="id">Id of the subject</param>
 		/// <returns>Status message</returns>
 		Task<Result<string>> DeleteSubjectAsync(Guid id);
+		/// <summary>
+		/// Delete groups from the subject
+		/// </summary>
+		/// <param name="id">Id of the subject</param>
+		/// <param name="groups">Groups to delete from the subject</param>
+		/// <returns>Groups message</returns>
+		Task<Result<string>> DeleteSubjectGroupsAsync(Guid id, IEnumerable<Guid> groups);
 	}
 }

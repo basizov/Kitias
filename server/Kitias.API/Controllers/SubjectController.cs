@@ -62,6 +62,24 @@ namespace Kitias.API.Controllers
 		}
 
 		/// <summary>
+		/// Take subject groups from db by id
+		/// </summary>
+		/// <param name="id">Id of subject</param>
+		/// <returns>Groups</returns>
+		[HttpGet("{id}/groups")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<IEnumerable<GroupDto>>> TakeGroupSubjectsByIdAsync(Guid id)
+		{
+			var result = await _subjectProvider.TakeSubjectGroupsAsync(id);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
 		/// Create new subject
 		/// </summary>
 		/// <param name="model">Model to create subject</param>
@@ -74,6 +92,25 @@ namespace Kitias.API.Controllers
 		public async Task<ActionResult<GroupDto>> CreateSubjectAsync(CreateSubjectModel model)
 		{
 			var result = await _subjectProvider.CreateSubjectAsync(model);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Add subject groups to db by id
+		/// </summary>
+		/// <param name="id">Id of subject</param>
+		/// <param name="groups">New groups</param>
+		/// <returns>Groups</returns>
+		[HttpPost("{id}/groups")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<GroupDto>> AddGroupSubjectsByIdAsync(Guid id, [FromBody] IEnumerable<Guid> groups)
+		{
+			var result = await _subjectProvider.CreateSubjectGroupsAsync(id, groups);
 
 			if (!result.IsSuccess)
 				return BadRequest(result.Error);
@@ -113,6 +150,26 @@ namespace Kitias.API.Controllers
 		public async Task<ActionResult<GroupDto>> DeleteDeleteAsync(Guid id)
 		{
 			var result = await _subjectProvider.DeleteSubjectAsync(id);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Delete groups from the subject by id
+		/// </summary>
+		/// <param name="id">Existed subject id</param>
+		/// <param name="groups">Deleted groups</param>
+		/// <returns>Status message</returns>
+		[HttpDelete("{id}/groups")]
+		[Authorize(Roles = RolesNames.ADMIN_ROLE)]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<string>> DeleteGroupSubjectsAsync(Guid id, [FromBody] IEnumerable<Guid> groups)
+		{
+			var result = await _subjectProvider.DeleteSubjectGroupsAsync(id, groups);
 
 			if (!result.IsSuccess)
 				return BadRequest(result.Error);

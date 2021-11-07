@@ -10,18 +10,59 @@
             </summary>
             <typeparam name="T">Type of entity</typeparam>
         </member>
-        <member name="M:Kitias.Repository.Implementations.Base.Repository`1.#ctor(Kitias.Persistence.DataContext)">
+        <member name="M:Kitias.Repository.Implementations.Base.Repository`1.#ctor(Kitias.Persistence.Contexts.DataContext)">
             <summary>
             Configure all necessary services
             </summary>
             <param name="dbContext">Db context to work of some dbs</param>
+        </member>
+        <member name="T:Kitias.Repository.Implementations.Base.UnitOfWork">
+            <summary>
+            Pattern to work with different dbs
+            </summary>
+        </member>
+        <member name="M:Kitias.Repository.Implementations.Base.UnitOfWork.#ctor(Kitias.Persistence.Contexts.DataContext)">
+            <summary>
+            Consturctor to get neccesary services
+            </summary>
+            <param name="context">Context</param>
+        </member>
+        <member name="P:Kitias.Repository.Implementations.Base.UnitOfWork.Person">
+            <summary>
+            Repostiry to wotk with Person
+            </summary>
+        </member>
+        <member name="P:Kitias.Repository.Implementations.Base.UnitOfWork.Student">
+            <summary>
+            Repostiry to wotk with Student
+            </summary>
+        </member>
+        <member name="P:Kitias.Repository.Implementations.Base.UnitOfWork.Teacher">
+            <summary>
+            Repostiry to wotk with Teacher
+            </summary>
+        </member>
+        <member name="P:Kitias.Repository.Implementations.Base.UnitOfWork.Group">
+            <summary>
+            Repostiry to wotk with Group
+            </summary>
+        </member>
+        <member name="P:Kitias.Repository.Implementations.Base.UnitOfWork.Subject">
+            <summary>
+            Repostiry to wotk with Subject
+            </summary>
+        </member>
+        <member name="P:Kitias.Repository.Implementations.Base.UnitOfWork.SubjectGroup">
+            <summary>
+            Repostiry to wotk with SubjectGroup
+            </summary>
         </member>
         <member name="T:Kitias.Repository.Implementations.GroupRepository">
             <summary>
             Repository to work with group db
             </summary>
         </member>
-        <member name="M:Kitias.Repository.Implementations.GroupRepository.#ctor(Kitias.Persistence.DataContext)">
+        <member name="M:Kitias.Repository.Implementations.GroupRepository.#ctor(Kitias.Persistence.Contexts.DataContext)">
             <summary>
             Constructor to get requred services
             </summary>
@@ -32,7 +73,7 @@
             Repository to work with person db
             </summary>
         </member>
-        <member name="M:Kitias.Repository.Implementations.PersonRepository.#ctor(Kitias.Persistence.DataContext)">
+        <member name="M:Kitias.Repository.Implementations.PersonRepository.#ctor(Kitias.Persistence.Contexts.DataContext)">
             <summary>
             Constructor to get requred services
             </summary>
@@ -43,18 +84,29 @@
             Repository to work with student db
             </summary>
         </member>
-        <member name="M:Kitias.Repository.Implementations.StudentRepository.#ctor(Kitias.Persistence.DataContext)">
+        <member name="M:Kitias.Repository.Implementations.StudentRepository.#ctor(Kitias.Persistence.Contexts.DataContext)">
             <summary>
             Constructor to get requred services
             </summary>
             <param name="context">Context service</param>
+        </member>
+        <member name="T:Kitias.Repository.Implementations.SubjectRepository">
+            <summary>
+            Reposittory to work with subject db and postgres
+            </summary>
+        </member>
+        <member name="M:Kitias.Repository.Implementations.SubjectRepository.#ctor(Kitias.Persistence.Contexts.DataContext)">
+            <summary>
+            Constructor to get services
+            </summary>
+            <param name="dbContext">Postgre context</param>
         </member>
         <member name="T:Kitias.Repository.Implementations.SubjectsGroupsRepository">
             <summary>
             Repository to work withGsubjcetGroup db
             </summary>
         </member>
-        <member name="M:Kitias.Repository.Implementations.SubjectsGroupsRepository.#ctor(Kitias.Persistence.DataContext)">
+        <member name="M:Kitias.Repository.Implementations.SubjectsGroupsRepository.#ctor(Kitias.Persistence.Contexts.DataContext)">
             <summary>
             Constructor to get requred services
             </summary>
@@ -65,7 +117,7 @@
             Repository to work with teacher db
             </summary>
         </member>
-        <member name="M:Kitias.Repository.Implementations.TeacherRepository.#ctor(Kitias.Persistence.DataContext)">
+        <member name="M:Kitias.Repository.Implementations.TeacherRepository.#ctor(Kitias.Persistence.Contexts.DataContext)">
             <summary>
             Constructor to get requred services
             </summary>
@@ -178,6 +230,11 @@
         <member name="T:Kitias.Repository.Interfaces.IStudentRepository">
             <summary>
             Repository to work with different opportunities student db
+            </summary>
+        </member>
+        <member name="T:Kitias.Repository.Interfaces.ISubjectRepository">
+            <summary>
+            Repository to work with subject db
             </summary>
         </member>
         <member name="T:Kitias.Repository.Interfaces.ITeacherRepository">

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Kitias.Persistence.Entities
+namespace Kitias.Persistence.Entities.Scheduler
 {
 	/// <summary>
 	/// Subject entity

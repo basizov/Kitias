@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace Kitias.Persistence
+namespace Kitias.Persistence.Contexts
 {
 	/// <summary>
 	/// Context to store identity types

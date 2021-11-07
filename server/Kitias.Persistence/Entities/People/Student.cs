@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Kitias.Persistence.Entities.Scheduler;
+using System;
 
-namespace Kitias.Persistence.Entities
+namespace Kitias.Persistence.Entities.People
 {
 	/// <summary>
 	/// Student entity

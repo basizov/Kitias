@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -55,6 +56,25 @@ namespace Kitias.Providers
 					return (T)Enum.Parse(type, name);
 			}
 			throw new ArgumentException("Couldn't find fieldAttribute");
+		}
+
+		/// <summary>
+		/// Get text file size
+		/// </summary>
+		/// <param name="size">Numeric size</param>
+		/// <returns>Normal size</returns>
+		public static string GetFileSizeFromNumber(long size)
+		{
+			var infoAmounts = new List<string> { "Byte", "KB", "MB", "GB", "TB", "PB", "EB" };
+
+			if (size == 0)
+				return $"0{infoAmounts[0]}";
+			var bytes = Math.Abs(size);
+			var place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
+			var num = Math.Round(bytes / Math.Pow(1024, place), 1);
+			var result = $"{Math.Sign(size) * num}{infoAmounts[place]}";
+
+			return result;
 		}
 	}
 }

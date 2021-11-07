@@ -100,7 +100,7 @@
             </summary>
             <param name="id">Id of group</param>
             <param name="subjects">New subjects</param>
-            <returns>Students</returns>
+            <returns>Subjects</returns>
         </member>
         <member name="M:Kitias.API.Controllers.GroupController.CreateGroupAsync(Kitias.Providers.Models.Group.CreateGroupModel)">
             <summary>
@@ -122,14 +122,6 @@
             Delete group by id
             </summary>
             <param name="id">Existed group id</param>
-            <returns>Status message</returns>
-        </member>
-        <member name="M:Kitias.API.Controllers.GroupController.DeleteGroupStudentsAsync(System.Guid,System.Collections.Generic.IEnumerable{System.Guid})">
-            <summary>
-            Delete students from the  group by id
-            </summary>
-            <param name="id">Existed group id</param>
-            <param name="students">New students</param>
             <returns>Status message</returns>
         </member>
         <member name="M:Kitias.API.Controllers.GroupController.DeleteGroupSubjectsAsync(System.Guid,System.Collections.Generic.IEnumerable{System.Guid})">
@@ -190,12 +182,27 @@
             <param name="id">Id of subject</param>
             <returns>Subject</returns>
         </member>
+        <member name="M:Kitias.API.Controllers.SubjectController.TakeGroupSubjectsByIdAsync(System.Guid)">
+            <summary>
+            Take subject groups from db by id
+            </summary>
+            <param name="id">Id of subject</param>
+            <returns>Groups</returns>
+        </member>
         <member name="M:Kitias.API.Controllers.SubjectController.CreateSubjectAsync(Kitias.Providers.Models.Subject.CreateSubjectModel)">
             <summary>
             Create new subject
             </summary>
             <param name="model">Model to create subject</param>
             <returns>New subject</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.SubjectController.AddGroupSubjectsByIdAsync(System.Guid,System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>
+            Add subject groups to db by id
+            </summary>
+            <param name="id">Id of subject</param>
+            <param name="groups">New groups</param>
+            <returns>Groups</returns>
         </member>
         <member name="M:Kitias.API.Controllers.SubjectController.UpdateSubjectAsync(System.Guid,Kitias.Providers.Models.Subject.UpdateSubjectModel)">
             <summary>
@@ -210,6 +217,14 @@
             Delete subject by id
             </summary>
             <param name="id">Existed subject id</param>
+            <returns>Status message</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.SubjectController.DeleteGroupSubjectsAsync(System.Guid,System.Collections.Generic.IEnumerable{System.Guid})">
+            <summary>
+            Delete groups from the subject by id
+            </summary>
+            <param name="id">Existed subject id</param>
+            <param name="groups">Deleted groups</param>
             <returns>Status message</returns>
         </member>
         <member name="T:Kitias.API.Controllers.TeacherController">

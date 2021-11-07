@@ -1,4 +1,5 @@
-﻿using Kitias.Providers.Implementations;
+﻿using Kitias.API.Services;
+using Kitias.Providers.Implementations;
 using Kitias.Providers.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,6 +21,7 @@ namespace Kitias.API.Extensions
 			services.AddScoped<IStudentProvider, StudentProvider>();
 			services.AddScoped<ITeacherProvider, TeacherProvider>();
 			services.AddScoped<ISubjectProvider, SubjectProvider>();
+			services.AddTransient<FileService>();
 			return services;
 		}
 	}

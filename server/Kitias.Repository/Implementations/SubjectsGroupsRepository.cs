@@ -1,5 +1,5 @@
-﻿using Kitias.Persistence;
-using Kitias.Persistence.Entities;
+﻿using Kitias.Persistence.Contexts;
+using Kitias.Persistence.Entities.Scheduler;
 using Kitias.Repository.Implementations.Base;
 using Kitias.Repository.Interfaces;
 

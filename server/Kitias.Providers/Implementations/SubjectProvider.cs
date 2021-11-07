@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Kitias.Persistence.DTOs;
-using Kitias.Persistence.Entities;
+using Kitias.Persistence.Entities.Scheduler;
 using Kitias.Persistence.Enums;
 using Kitias.Providers.Interfaces;
 using Kitias.Providers.Models;
@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Kitias.Providers.Implementations
@@ -50,6 +51,31 @@ namespace Kitias.Providers.Implementations
 			return ResultHandler.OnSuccess(result);
 		}
 
+		public async Task<Result<IEnumerable<GroupDto>>> TakeSubjectGroupsAsync(Guid id)
+		{
+			var groupSubjects = await _unitOfWork.SubjectGroup
+				.FindBy(g => g.SubjectId == id)
+				.ToListAsync();
+
+			if (groupSubjects == null)
+				return ReturnFailureResult<IEnumerable<GroupDto>>($"GroupSubject with id ${id} doesn't existed", "Couldn't find groups for this subject");
+			var result = new List<GroupDto>();
+
+			foreach (var groupSubject in groupSubjects)
+			{
+				var group = await _unitOfWork.Group
+					.FindBy(s => s.Id == groupSubject.GroupId)
+					.SingleOrDefaultAsync();
+
+				if (group == null)
+					return ReturnFailureResult<IEnumerable<GroupDto>>($"Couldn't find group with id ${groupSubject.GroupId} doesn't existed", "Couldn't find group");
+				result.Add(_mapper.Map<GroupDto>(group));
+				_logger.LogInformation($"Add group {groupSubject.GroupId} to subject {id}");
+			}
+			_logger.LogInformation($"Get groups for subject {id}");
+			return ResultHandler.OnSuccess(result as IEnumerable<GroupDto>);
+		}
+
 		public async Task<Result<SubjectDto>> CreateSubjectAsync(CreateSubjectModel subject)
 		{
 			if (await _unitOfWork.Subject
@@ -59,23 +85,6 @@ namespace Kitias.Providers.Implementations
 			{
 				var subjectEntity = _mapper.Map<Subject>(subject);
 				var newSubject = _unitOfWork.Subject.Create(subjectEntity);
-
-				if (subject.GroupIds != null)
-				{
-					foreach (var groupId in subject.GroupIds)
-					{
-						if (!await _unitOfWork.Group.AnyAsync(g => g.Id == groupId))
-							return ReturnFailureResult<SubjectDto>($"Couldn't find group {groupId}", "Couldn't find group");
-						else if (await _unitOfWork.SubjectGroup.AnyAsync(gs => gs.SubjectId == newSubject.Id && gs.GroupId == groupId))
-							return ReturnFailureResult<SubjectDto>($"Group has the same subject");
-						_unitOfWork.SubjectGroup.Create(new()
-						{
-							GroupId = groupId,
-							SubjectId = newSubject.Id
-						});
-						_logger.LogInformation($"Created group {groupId} subject {newSubject.Id}");
-					}
-				}
 				var isSave = await _unitOfWork.SaveChangesAsync();
 
 				if (isSave <= 0)
@@ -92,6 +101,57 @@ namespace Kitias.Providers.Implementations
 			catch (Exception ex)
 			{
 				return ReturnFailureResult<SubjectDto>(ex.Message, "Error subject data");
+			}
+		}
+
+		public async Task<Result<IEnumerable<GroupDto>>> CreateSubjectGroupsAsync(Guid id, IEnumerable<Guid> groups)
+		{
+			var subjectGroups = await _unitOfWork.SubjectGroup
+				.FindBy(g => g.SubjectId == id)
+				.Include(g => g.Group)
+				.ToListAsync();
+
+			if (subjectGroups == null)
+				return ReturnFailureResult<IEnumerable<GroupDto>>($"Couldn't find groups for subject {id}", "There isn't this groups for this subject");
+			try
+			{
+				foreach (var group in groups)
+				{
+					if (!subjectGroups.Any(sg => sg.GroupId == group))
+					{
+						var subjectGroup = new SubjectGroup
+						{
+							SubjectId = id,
+							GroupId = group
+						};
+						var groupEntity = await _unitOfWork.Group
+							.FindBy(g => g.Id == group)
+							.SingleOrDefaultAsync();
+
+						if (groupEntity == null)
+							return ReturnFailureResult<IEnumerable<GroupDto>>($"Couldn't find group with id ${group} doesn't existed", "Couldn't find group");
+						_unitOfWork.SubjectGroup.Create(subjectGroup);
+						subjectGroup.Group = groupEntity;
+						subjectGroups.Add(subjectGroup);
+						_logger.LogInformation($"Add group {group} ot the subject {id}");
+					}
+				}
+				var isSave = await _unitOfWork.SaveChangesAsync();
+
+				if (isSave <= 0)
+					throw new ApplicationException("Couldn't save new groups");
+				var result = _mapper.Map<IEnumerable<GroupDto>>(subjectGroups.Select(sg => sg.Group));
+
+				_logger.LogInformation($"Get all groups of the subject {id}");
+				return ResultHandler.OnSuccess(result);
+			}
+			catch (ApplicationException)
+			{
+				throw;
+			}
+			catch (Exception ex)
+			{
+				return ReturnFailureResult<IEnumerable<GroupDto>>(ex.Message, "Error subject groups data");
 			}
 		}
 
@@ -156,6 +216,42 @@ namespace Kitias.Providers.Implementations
 					throw new ApplicationException($"Couldn't delete subject with id ${id}");
 				_logger.LogInformation($"Subject with id {id} was successfully deleted");
 				return ResultHandler.OnSuccess("Subject was successfully deleted");
+			}
+			catch (ApplicationException)
+			{
+				throw;
+			}
+			catch (Exception ex)
+			{
+				return ReturnFailureResult<string>(ex.Message, "Error subject data");
+			}
+		}
+		public async Task<Result<string>> DeleteSubjectGroupsAsync(Guid id, IEnumerable<Guid> groups)
+		{
+			var findSubjectGroups = await _unitOfWork.SubjectGroup
+				.FindBy(g => g.SubjectId == id)
+				.ToListAsync();
+
+			if (findSubjectGroups == null)
+				return ReturnFailureResult<string>($"GroupSubject with subjectId ${id} doesn't existed", "Couldn't find this groups of the subject");
+			try
+			{
+				foreach (var subjectGroup in findSubjectGroups)
+				{
+					if (groups.Contains(subjectGroup.GroupId))
+					{
+						_unitOfWork.SubjectGroup.Delete(subjectGroup);
+						_logger.LogInformation($"Group {subjectGroup.GroupId} was successfully deleted from the subject {id}");
+					}
+					else
+						return ReturnFailureResult<string>($"Group {subjectGroup.GroupId} doesn't exist in subject {id}", "Couldn't find group");
+				}
+				var isSave = await _unitOfWork.SaveChangesAsync();
+
+				if (isSave <= 0)
+					throw new ApplicationException($"Couldn't delete groups from the subject${id}");
+				_logger.LogInformation($"Groups was successfully deleted from the subject {id}");
+				return ResultHandler.OnSuccess("Groups was successfully deleted from the subject");
 			}
 			catch (ApplicationException)
 			{

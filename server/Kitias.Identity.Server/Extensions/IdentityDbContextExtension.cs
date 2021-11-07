@@ -1,4 +1,4 @@
-﻿using Kitias.Persistence;
+﻿using Kitias.Persistence.Contexts;
 using Kitias.Persistence.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

@@ -6,7 +6,7 @@ namespace Kitias.Providers.Models.Subject
 	/// <summary>
 	/// Model to create subject
 	/// </summary>
-	public class CreateSubjectModel
+	public record CreateSubjectModel
 	{
 		/// <summary>
 		/// Subject name
@@ -19,7 +19,7 @@ namespace Kitias.Providers.Models.Subject
 		/// <summary>
 		/// Subject time
 		/// </summary>
-		public TimeSpan Time { get; init; }
+		public string Time { get; init; }
 		/// <summary>
 		/// Subject date
 		/// </summary>
@@ -32,9 +32,5 @@ namespace Kitias.Providers.Models.Subject
 		/// Subject day
 		/// </summary>
 		public string Day { get; init; }
-		/// <summary>
-		/// Groups which have this subject
-		/// </summary>
-		public IEnumerable<Guid> GroupIds { get; init; }
 	}
 }

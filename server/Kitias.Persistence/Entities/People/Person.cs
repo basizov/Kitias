@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Kitias.Persistence.Entities
+namespace Kitias.Persistence.Entities.People
 {
 	/// <summary>
 	/// Person entity

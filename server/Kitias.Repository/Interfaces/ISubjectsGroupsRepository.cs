@@ -1,4 +1,4 @@
-﻿using Kitias.Persistence.Entities;
+﻿using Kitias.Persistence.Entities.Scheduler;
 using Kitias.Repository.Interfaces.Base;
 
 namespace Kitias.Repository.Interfaces

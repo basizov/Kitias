@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Kitias.Persistence.DTOs;
-using Kitias.Persistence.Entities;
+using Kitias.Persistence.Entities.People;
 using Kitias.Providers.Interfaces;
 using Kitias.Providers.Models;
 using Kitias.Providers.Models.Person;

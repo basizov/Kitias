@@ -1,8 +1,9 @@
 using Kitias.Persistence.Configurations.Data;
-using Kitias.Persistence.Entities;
+using Kitias.Persistence.Entities.Scheduler;
+using Kitias.Persistence.Entities.People;
 using Microsoft.EntityFrameworkCore;
 
-namespace Kitias.Persistence
+namespace Kitias.Persistence.Contexts
 {
 	/// <summary>
 	/// Default context for simple entities

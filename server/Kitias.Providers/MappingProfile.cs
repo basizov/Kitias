@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using Kitias.Persistence.DTOs;
-using Kitias.Persistence.Entities;
+using Kitias.Persistence.Entities.Scheduler;
+using Kitias.Persistence.Entities.People;
 using Kitias.Persistence.Enums;
 using Kitias.Providers.Models.Group;
 using Kitias.Providers.Models.Person;
 using Kitias.Providers.Models.Subject;
 using System;
+using Kitias.Persistence.Entities.File;
+using System.Linq;
 
 namespace Kitias.Providers
 {
@@ -36,10 +39,20 @@ namespace Kitias.Providers
 				.ForMember(s => s.Speciality, o => o.MapFrom(s => Helpers.GetEnumMemberAttrValue(s.Group.Speciality)));
 			CreateMap<Subject, SubjectDto>()
 				.ForMember(s => s.Week, o => o.MapFrom(s => Helpers.GetEnumMemberAttrValue(s.Week)))
+				.ForMember(s => s.Time, o => o.MapFrom(s => s.Time.ToString()))
 				.ForMember(s => s.Day, o => o.MapFrom(s => Helpers.GetEnumMemberAttrValue(s.Day)));
 			CreateMap<Teacher, TeacherDto>()
 				.ForMember(s => s.Email, o => o.MapFrom(s => s.Person.Email))
 				.ForMember(s => s.FullName, o => o.MapFrom(s => s.Person.FullName));
+			CreateMap<File, FileDto>()
+				.ForMember(s => s.FullName, o => o.MapFrom(s => $"{s.Name}.{s.Extension}"))
+				.ForMember(s => s.Date, o => o.MapFrom(s => s.Date.ToString("dd.MM.yyyy")))
+				.ForMember(s => s.Size, o => o.MapFrom(s => Helpers.GetFileSizeFromNumber(s.Size)));
+			CreateMap<Post, PostDto>()
+				.ForMember(s => s.Date, o => o.MapFrom(s => s.Date.ToString("dd.MM.yyyy")))
+				.ForMember(s => s.Filter, o => o.MapFrom(s => s.Filter.Select(f => Helpers.GetEnumMemberAttrValue(f))));
+			CreateMap<Store, StoreDto>()
+				.ForMember(s => s.Size, o => o.MapFrom(s => $"{Helpers.GetFileSizeFromNumber(s.ActualSize)} / {Helpers.GetFileSizeFromNumber(s.MaxSize)}"));
 
 			#endregion
 
@@ -54,8 +67,10 @@ namespace Kitias.Providers
 			CreateMap<CreateStudentModel, Student>();
 			CreateMap<CreateTeacherModel, Person>();
 			CreateMap<CreateTeacherModel, Teacher>();
-			CreateMap<CreateSubjectModel, Subject>();
-			CreateMap<UpdateSubjectModel, Subject>();
+			CreateMap<CreateSubjectModel, Subject>()
+				.ForMember(s => s.Time, o => o.MapFrom(s => TimeSpan.Parse(s.Time)));
+			CreateMap<UpdateSubjectModel, Subject>()
+				.ForMember(s => s.Time, o => o.MapFrom(s => TimeSpan.Parse(s.Time)));
 
 			#endregion
 		}

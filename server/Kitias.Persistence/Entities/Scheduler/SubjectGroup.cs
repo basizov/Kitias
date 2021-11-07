@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Kitias.Persistence.Entities
+namespace Kitias.Persistence.Entities.Scheduler
 {
 	/// <summary>
 	/// Entity to concat to entities
@@ -18,7 +18,7 @@ namespace Kitias.Persistence.Entities
 		/// <summary>
 		/// Subject group
 		/// </summary>
-		public virtual Group Group { get; init; }
+		public virtual Group Group { get; set; }
 		/// <summary>
 		/// Group subject id
 		/// </summary>

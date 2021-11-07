@@ -1,8 +1,9 @@
-﻿using Kitias.Persistence.Enums;
+﻿using Kitias.Persistence.Entities.People;
+using Kitias.Persistence.Enums;
 using System;
 using System.Collections.Generic;
 
-namespace Kitias.Persistence.Entities
+namespace Kitias.Persistence.Entities.Scheduler
 {
 	/// <summary>
 	/// Group model
