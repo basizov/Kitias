@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Kitias.Files.Server</name>
+    </assembly>
+    <members>
+        <member name="T:Kitias.Files.Server.Extensions.OpenApiExtension">
+            <summary>
+            Extension for adding open api service
+            </summary>
+        </member>
+        <member name="M:Kitias.Files.Server.Extensions.OpenApiExtension.AddOpenAPI(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Method which add OpenApi service
+            </summary>
+            <param name="services">All services</param>
+            <returns>List config with new service</returns>
+        </member>
+        <member name="T:Kitias.Files.Server.Program">
+            <summary>
+            Start point of app
+            </summary>
+        </member>
+        <member name="M:Kitias.Files.Server.Program.Main(System.String[])">
+            <summary>
+            Startup function
+            </summary>
+            <param name="args">Neccessary args of enviroment</param>
+            <returns>Asynchronys</returns>
+        </member>
+        <member name="M:Kitias.Files.Server.Program.CreateHostBuilder(System.String[])">
+            <summary>
+            Create programm initializer
+            </summary>
+            <param name="args">Neccessary args of enviroment</param>
+            <returns>Programm initializer</returns>
+        </member>
+        <member name="T:Kitias.Files.Server.Startup">
+            <summary>
+            Startup class for run the app
+            </summary>
+        </member>
+        <member name="M:Kitias.Files.Server.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Constructor for additing neccesary fields
+            </summary>
+            <param name="config">Get the app config file</param>
+        </member>
+        <member name="M:Kitias.Files.Server.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Configure all neccessary services
+            </summary>
+            <param name="services">Initial services</param>
+        </member>
+        <member name="M:Kitias.Files.Server.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Configure all neccessary middlewares
+            </summary>
+            <param name="app">Generate app piplines</param>
+        </member>
+    </members>
+</doc>

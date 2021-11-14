@@ -46,6 +46,13 @@ namespace Kitias.Repository.Interfaces.Base
 		/// <returns>Entities</returns>
 		IQueryable<T> FindBy(Expression<Func<T, bool>> expression);
 		/// <summary>
+		/// Find by condition with include
+		/// </summary>
+		/// <param name="expression">Expression function</param>
+		/// <param name="includeProperties">Include params</param>
+		/// <returns>Entities</returns>
+		IQueryable<T> FindByAndInclude(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includeProperties);
+		/// <summary>
 		/// Check entities by condition for existing
 		/// </summary>
 		/// <param name="expression">Expression function</param>

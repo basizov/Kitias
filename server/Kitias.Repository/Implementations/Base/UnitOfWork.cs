@@ -17,6 +17,9 @@ namespace Kitias.Repository.Implementations.Base
 		private IGroupRepository _group;
 		private ISubjectRepository _subject;
 		private ISubjectsGroupsRepository _subjectGroup;
+		private IAttendanceRepository _attendace;
+		private IShedulerAttendaceRepostiory _shedulerAttendance;
+		private IStudentAttendaceRepository _studentAttendance;
 
 		/// <summary>
 		/// Consturctor to get neccesary services
@@ -45,9 +48,21 @@ namespace Kitias.Repository.Implementations.Base
 		/// </summary>
 		public ISubjectRepository Subject => _subject ??= new SubjectRepository(_context);
 		/// <summary>
+		/// Repostiry to wotk with Attendance
+		/// </summary>
+		public IAttendanceRepository Attendance => _attendace??= new AttendanceRepository(_context);
+		/// <summary>
+		/// Repostiry to wotk with ShedulerAttendace
+		/// </summary>
+		public IShedulerAttendaceRepostiory ShedulerAttendace => _shedulerAttendance ??= new ShedulerAttendaceRepository(_context);
+		/// <summary>
 		/// Repostiry to wotk with SubjectGroup
 		/// </summary>
 		public ISubjectsGroupsRepository SubjectGroup => _subjectGroup ??= new SubjectsGroupsRepository(_context);
+		/// <summary>
+		/// Repostiry to wotk with StudentAttendace
+		/// </summary>
+		public IStudentAttendaceRepository StudentAttendace => _studentAttendance ??= new StudentAttendanceRepository(_context);
 
 		public async Task<int> SaveChangesAsync() => await _context.SaveChangesAsync();
 	}

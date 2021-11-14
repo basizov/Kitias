@@ -14,9 +14,10 @@ import {ColorEnums, defaultActions} from "../store/defaultStore";
 import {Brightness4, Brightness7} from "@mui/icons-material";
 import {PrivateRoute} from "./PrivateRoute";
 import {HomePage} from "../pages/HomePage";
-import {Routes} from "react-router-dom";
+import {Routes, Route} from "react-router-dom";
 import {AuthPage} from "../pages/AuthPage";
 import {PublicRoute} from "./PublicRoute";
+import {AttendancesPage} from "../pages/AttendancesPage";
 
 const RootPaper = styled(Paper)({
   position: 'absolute',
@@ -24,14 +25,14 @@ const RootPaper = styled(Paper)({
   left: 0,
   width: '100%',
   minHeight: '100vh',
-  borderRadius: 0,
-  transition: 'background-color 250ms linear'
+  borderRadius: 0
 });
 
 const StyledIconButton = styled(IconButton)({
   position: 'absolute',
-  top: "1rem",
-  right: "1rem"
+  bottom: ".3rem",
+  right: ".3rem",
+  zIndex: 10001
 });
 
 export const ColorModeContext = createContext({
@@ -74,8 +75,15 @@ export const App: React.FC = () => {
             <Sidebar/>
             <Box component="main" sx={{flexGrow: 1, p: 1}}>
               <Routes>
-                <PrivateRoute path='/' element={<HomePage/>}/>
-                <PublicRoute path='/login' element={<AuthPage/>}/>
+                <Route path='/' element={<PrivateRoute>
+                  <HomePage/>
+                </PrivateRoute>}/>
+                <Route path='/attendances' element={<PrivateRoute>
+                  <AttendancesPage/>
+                </PrivateRoute>}/>
+                <Route path='/login' element={<PublicRoute>
+                  <AuthPage/>
+                </PublicRoute>}/>
               </Routes>
             </Box>
             <StyledIconButton

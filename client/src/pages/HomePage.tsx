@@ -1,11 +1,17 @@
 import React from 'react';
-import {Link} from "react-router-dom";
+import {defaultActions} from "../store/defaultStore";
+import {Button} from "@mui/material";
+import {useDispatch} from "react-redux";
+
 
 export const HomePage: React.FC = () => {
+  const dispatch = useDispatch();
+
   return (
-    <div>
-      Home
-      <Link to='/login'>Go to login</Link>
-    </div>
+    <section>
+      <Button
+        onClick={() => dispatch(defaultActions.setIsAuth(false))}
+      >Go to login</Button>
+    </section>
   );
 };

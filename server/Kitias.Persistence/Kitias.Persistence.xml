@@ -79,6 +79,21 @@
             Subject groups and group subjects
             </summary>
         </member>
+        <member name="P:Kitias.Persistence.Contexts.DataContext.Attendances">
+            <summary>
+            Attendances of the subject
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Contexts.DataContext.StudentAttendances">
+            <summary>
+            Student attendences
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Contexts.DataContext.AttendanceShedulers">
+            <summary>
+            Sheduler of attendences
+            </summary>
+        </member>
         <member name="M:Kitias.Persistence.Contexts.DataContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{Kitias.Persistence.Contexts.DataContext})">
             <summary>
             Constructor to get connetion
@@ -736,6 +751,141 @@
             Teacher personality
             </summary>
         </member>
+        <member name="T:Kitias.Persistence.Entities.Scheduler.Attendence.Attendance">
+            <summary>
+            Attendance of subjects
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.Attendance.Id">
+            <summary>
+            Attendance identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.Attendance.Date">
+            <summary>
+            Date of the pair
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.Attendance.StudentId">
+            <summary>
+            Student identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.Attendance.Student">
+            <summary>
+            Student info
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.Attendance.SubjectId">
+            <summary>
+            Subject identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.Attendance.Subject">
+            <summary>
+            Subject info
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.Attendance.IsAttended">
+            <summary>
+            True if student is attended
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.Attendance.Theme">
+            <summary>
+            Subject theme
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.Attendance.Score">
+            <summary>
+            Score
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Entities.Scheduler.Attendence.AttendanceSheduler">
+            <summary>
+            Sheduler of group attendence
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.AttendanceSheduler.Id">
+            <summary>
+            AttendanceSheduler identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.AttendanceSheduler.TeacherId">
+            <summary>
+            Teacher identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.AttendanceSheduler.Teacher">
+            <summary>
+            Teacher info
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.AttendanceSheduler.GroupId">
+            <summary>
+            Group identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.AttendanceSheduler.Group">
+            <summary>
+            Group info
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.AttendanceSheduler.Students">
+            <summary>
+            Student collection
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.AttendanceSheduler.StudentAttendances">
+            <summary>
+            StudentAttendance collection
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Entities.Scheduler.Attendence.StudentAttendance">
+            <summary>
+            Shecduler of student attendence
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.StudentAttendance.Id">
+            <summary>
+            StudentAttendance identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.StudentAttendance.TeacherId">
+            <summary>
+            Teacher identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.StudentAttendance.Teacher">
+            <summary>
+            Teacher info
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.StudentAttendance.StudentId">
+            <summary>
+            Student identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.StudentAttendance.Student">
+            <summary>
+            Student info
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.StudentAttendance.Raiting">
+            <summary>
+            Student raiting
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.StudentAttendance.Grade">
+            <summary>
+            Student grade
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.StudentAttendance.Attendances">
+            <summary>
+            Attendance collection
+            </summary>
+        </member>
         <member name="T:Kitias.Persistence.Entities.Scheduler.Group">
             <summary>
             Group model
@@ -916,6 +1066,36 @@
             2 month for 6 months
             </summary>
         </member>
+        <member name="T:Kitias.Persistence.Enums.Grade">
+            <summary>
+            Grade of the subject
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.Grade.NotAdmitted">
+            <summary>
+            Too low grade
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.Grade.Retake">
+            <summary>
+            Bad exam
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.Grade.Satisfactorily">
+            <summary>
+            Grader "3"
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.Grade.Good">
+            <summary>
+            Grader "4"
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.Grade.Excellent">
+            <summary>
+            Grader "5"
+            </summary>
+        </member>
         <member name="T:Kitias.Persistence.Enums.PersonRoles">
             <summary>
             Roles of the person
@@ -1094,6 +1274,11 @@
         <member name="F:Kitias.Persistence.Enums.Week.Odd">
             <summary>
             Only odd weeks
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.Week.ByDate">
+            <summary>
+            Only by dates
             </summary>
         </member>
     </members>

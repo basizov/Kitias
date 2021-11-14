@@ -371,6 +371,25 @@
             <param name="args">Neccessary args of enviroment</param>
             <returns>Programm initializer</returns>
         </member>
+        <member name="T:Kitias.API.Services.FileService">
+            <summary>
+            Service to work with files
+            </summary>
+        </member>
+        <member name="M:Kitias.API.Services.FileService.#ctor(Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            Constructor to get services from di
+            </summary>
+            <param name="hostEnviroment">Enviroment to get assembly info</param>
+        </member>
+        <member name="M:Kitias.API.Services.FileService.SaveFilesAsync(System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Http.IFormFile},System.String)">
+            <summary>
+            Save files in project
+            </summary>
+            <param name="files">Files to save</param>
+            <param name="userEmail">Email to create user directoryinfo</param>
+            <returns>File Names</returns>
+        </member>
         <member name="T:Kitias.API.Startup">
             <summary>
             Startup class for run the app

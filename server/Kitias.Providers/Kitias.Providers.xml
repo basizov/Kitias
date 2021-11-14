@@ -403,6 +403,41 @@
             Email body message
             </summary>
         </member>
+        <member name="T:Kitias.Providers.Models.File.CreateFileModel">
+            <summary>
+            Model to create file
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.File.CreateFileModel.Name">
+            <summary>
+            File name
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.File.CreateFileModel.Extension">
+            <summary>
+            File extension
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.File.CreateFileModel.Date">
+            <summary>
+            File added date
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.File.CreateFileModel.OwnerEmail">
+            <summary>
+            Email of the sender
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.File.CreateFileModel.Path">
+            <summary>
+            Path to local file storing
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.File.CreateFileModel.Size">
+            <summary>
+            File size
+            </summary>
+        </member>
         <member name="T:Kitias.Providers.Models.Group.CreateGroupModel">
             <summary>
             Group model to create new instance

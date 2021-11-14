@@ -5,10 +5,16 @@ import {
   Drawer,
   IconButton,
   List,
-  ListItem,
+  ListItem, ListItemButton, ListItemIcon, ListItemText,
   styled, Theme
 } from "@mui/material";
-import {ChevronLeft, Menu} from "@mui/icons-material";
+import {
+  ChevronLeft,
+  Menu,
+  Home,
+  DateRange
+} from "@mui/icons-material";
+import {useNavigate} from "react-router-dom";
 
 const openMixin = (theme: Theme): CSSObject => ({
   width: 300,
@@ -39,7 +45,8 @@ const DrawerHeader = styled('div')(({theme}) => ({
 }));
 
 const StyledLeftArrow = styled(DrawerHeader)({
-  justifyContent: 'flex-end'
+  justifyContent: 'flex-end',
+  marginRight: '1rem'
 });
 
 const StyledDrawer = styled(Drawer, {
@@ -60,6 +67,7 @@ const StyledDrawer = styled(Drawer, {
 }));
 
 export const Sidebar: React.FC = () => {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
   return (
@@ -77,9 +85,22 @@ export const Sidebar: React.FC = () => {
         </StyledLeftArrow>}
       <Divider/>
       <List>
-        <ListItem>1</ListItem>
-        <ListItem>2</ListItem>
-        <ListItem>3</ListItem>
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => navigate('/')}>
+            <ListItemIcon>
+              <Home/>
+            </ListItemIcon>
+            <ListItemText primary="Главная"/>
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => navigate('/attendances')}>
+            <ListItemIcon>
+              <DateRange/>
+            </ListItemIcon>
+            <ListItemText primary="График посещений"/>
+          </ListItemButton>
+        </ListItem>
       </List>
     </StyledDrawer>
   );

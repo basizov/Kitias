@@ -44,6 +44,17 @@ namespace Kitias.Repository.Implementations.Base
 
 		public IQueryable<T> FindBy(Expression<Func<T, bool>> expression) => _dbContext.Set<T>().Where(expression).AsNoTracking();
 
+		public IQueryable<T> FindByAndInclude(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includeProperties)
+		{
+			var query = _dbContext.Set<T>().AsQueryable();
+			var includedQuery = includeProperties.Aggregate(
+				query,
+				(current, includeProperty) => current.Include(includeProperty)
+			);
+
+			return _dbContext.Set<T>().Where(expression).AsNoTracking();
+		}
+
 		public IQueryable<T> GetAllWithInclude(params Expression<Func<T, object>>[] includeProperties)
 		{
 			var query = _dbContext.Set<T>().AsQueryable();

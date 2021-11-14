@@ -21,6 +21,11 @@ namespace Kitias.Persistence.Enums
 		/// Only odd weeks
 		/// </summary>
 		[EnumMember(Value = "Нечетная неделя")]
-		Odd = 2
+		Odd = 2,
+		/// <summary>
+		/// Only by dates
+		/// </summary>
+		[EnumMember(Value = "По определенным данным")]
+		ByDate = 3
 	}
 }

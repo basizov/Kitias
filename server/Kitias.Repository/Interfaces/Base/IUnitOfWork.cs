@@ -31,6 +31,18 @@ namespace Kitias.Repository.Interfaces.Base
 		/// Subject groups and group subjects
 		/// </summary>
 		ISubjectsGroupsRepository SubjectGroup { get; }
+		/// <summary>
+		/// Subject groups and group subjects
+		/// </summary>
+		IAttendanceRepository Attendance { get; }
+		/// <summary>
+		/// Subject groups and group subjects
+		/// </summary>
+		IShedulerAttendaceRepostiory ShedulerAttendace{ get; }
+		/// <summary>
+		/// Subject groups and group subjects
+		/// </summary>
+		IStudentAttendaceRepository StudentAttendace { get; }
 
 		/// <summary>
 		/// Save changes in one transaction

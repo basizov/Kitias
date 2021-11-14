@@ -2,6 +2,7 @@ using Kitias.Persistence.Configurations.Data;
 using Kitias.Persistence.Entities.Scheduler;
 using Kitias.Persistence.Entities.People;
 using Microsoft.EntityFrameworkCore;
+using Kitias.Persistence.Entities.Scheduler.Attendence;
 
 namespace Kitias.Persistence.Contexts
 {
@@ -34,6 +35,18 @@ namespace Kitias.Persistence.Contexts
 		/// Subject groups and group subjects
 		/// </summary>
 		public DbSet<SubjectGroup> SubjectsGroups { get; set; }
+		/// <summary>
+		/// Attendances of the subject
+		/// </summary>
+		public DbSet<Attendance> Attendances { get; set; }
+		/// <summary>
+		/// Student attendences
+		/// </summary>
+		public DbSet<StudentAttendance> StudentAttendances { get; set; }
+		/// <summary>
+		/// Sheduler of attendences
+		/// </summary>
+		public DbSet<AttendanceSheduler> AttendanceShedulers { get; set; }
 
 		/// <summary>
 		/// Constructor to get connetion
