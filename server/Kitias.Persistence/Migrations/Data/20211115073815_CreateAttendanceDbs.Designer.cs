@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Kitias.Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20211111091421_CreateAttendanceDbs")]
+    [Migration("20211115073815_CreateAttendanceDbs")]
     partial class CreateAttendanceDbs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,9 +71,6 @@ namespace Kitias.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("AttendanceShedulerId")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid>("GroupId")
                         .HasColumnType("uuid");
 
@@ -81,8 +78,6 @@ namespace Kitias.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AttendanceShedulerId");
 
                     b.HasIndex("GroupId");
 
@@ -113,11 +108,11 @@ namespace Kitias.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<int>("Attended")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp without time zone");
-
-                    b.Property<bool>("IsAttended")
-                        .HasColumnType("boolean");
 
                     b.Property<byte>("Score")
                         .HasColumnType("smallint");
@@ -307,10 +302,6 @@ namespace Kitias.Persistence.Migrations
 
             modelBuilder.Entity("Kitias.Persistence.Entities.People.Student", b =>
                 {
-                    b.HasOne("Kitias.Persistence.Entities.Scheduler.Attendence.AttendanceSheduler", null)
-                        .WithMany("Students")
-                        .HasForeignKey("AttendanceShedulerId");
-
                     b.HasOne("Kitias.Persistence.Entities.Scheduler.Group", "Group")
                         .WithMany("Students")
                         .HasForeignKey("GroupId")
@@ -426,8 +417,6 @@ namespace Kitias.Persistence.Migrations
             modelBuilder.Entity("Kitias.Persistence.Entities.Scheduler.Attendence.AttendanceSheduler", b =>
                 {
                     b.Navigation("StudentAttendances");
-
-                    b.Navigation("Students");
                 });
 
             modelBuilder.Entity("Kitias.Persistence.Entities.Scheduler.Attendence.StudentAttendance", b =>

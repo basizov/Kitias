@@ -1,7 +1,8 @@
 import React, {createContext, useEffect, useMemo} from 'react';
 import {Sidebar} from "../components/Sidebar";
 import {
-  Box,
+  Backdrop,
+  Box, CircularProgress,
   createTheme,
   Grid,
   IconButton, Paper, styled,
@@ -17,6 +18,8 @@ import {HomePage} from "../pages/HomePage";
 import {Routes, Route} from "react-router-dom";
 import {AuthPage} from "../pages/AuthPage";
 import {PublicRoute} from "./PublicRoute";
+import {isAuthAsync} from "../store/defaultStore/asyncActions";
+import {ShedulersPage} from "../pages/ShedulersPage";
 import {AttendancesPage} from "../pages/AttendancesPage";
 
 const RootPaper = styled(Paper)({
@@ -42,7 +45,7 @@ export const ColorModeContext = createContext({
 
 export const App: React.FC = () => {
   const dispatch = useDispatch();
-  const {colorTheme} = useTypedSelector(s => s.common);
+  const {colorTheme, loadingInitial} = useTypedSelector(s => s.common);
   const preferDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const changeColorTheme = useMemo(() => ({
     toggleColorMode: () => {
@@ -60,6 +63,9 @@ export const App: React.FC = () => {
   }), [colorTheme]);
 
   useEffect(() => {
+    dispatch(isAuthAsync());
+  }, [dispatch]);
+  useEffect(() => {
     if (preferDarkMode) {
       dispatch(defaultActions.setDarkTheme());
     } else {
@@ -71,28 +77,35 @@ export const App: React.FC = () => {
     <ColorModeContext.Provider value={changeColorTheme}>
       <ThemeProvider theme={theme}>
         <RootPaper>
-          <Grid container>
-            <Sidebar/>
-            <Box component="main" sx={{flexGrow: 1, p: 1}}>
-              <Routes>
-                <Route path='/' element={<PrivateRoute>
-                  <HomePage/>
-                </PrivateRoute>}/>
-                <Route path='/attendances' element={<PrivateRoute>
-                  <AttendancesPage/>
-                </PrivateRoute>}/>
-                <Route path='/login' element={<PublicRoute>
-                  <AuthPage/>
-                </PublicRoute>}/>
-              </Routes>
-            </Box>
-            <StyledIconButton
-              color="inherit"
-              onClick={changeColorTheme.toggleColorMode}
-            >{theme.palette.mode === ColorEnums.LIGHT_COLOR ?
-              <Brightness7/> :
-              <Brightness4/>}</StyledIconButton>
-          </Grid>
+          <Backdrop
+            sx={{color: '#fff'}}
+            open={loadingInitial}
+          ><CircularProgress color="inherit"/></Backdrop>
+          {!loadingInitial && <Grid container>
+              <Sidebar/>
+              <Box component="main" sx={{flexGrow: 1, p: 1}}>
+                  <Routes>
+                      <Route path='/' element={<PrivateRoute>
+                        <HomePage/>
+                      </PrivateRoute>}/>
+                      <Route path='/attendances/:id' element={<PrivateRoute>
+                        <AttendancesPage/>
+                      </PrivateRoute>}/>
+                      <Route path='/attendances' element={<PrivateRoute>
+                        <ShedulersPage/>
+                      </PrivateRoute>}/>
+                      <Route path='/login' element={<PublicRoute>
+                        <AuthPage/>
+                      </PublicRoute>}/>
+                  </Routes>
+              </Box>
+              <StyledIconButton
+                  color="inherit"
+                  onClick={changeColorTheme.toggleColorMode}
+              >{theme.palette.mode === ColorEnums.LIGHT_COLOR ?
+                <Brightness7/> :
+                <Brightness4/>}</StyledIconButton>
+          </Grid>}
         </RootPaper>
       </ThemeProvider>
     </ColorModeContext.Provider>

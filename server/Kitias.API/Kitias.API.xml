@@ -4,12 +4,43 @@
         <name>Kitias.API</name>
     </assembly>
     <members>
+        <member name="T:Kitias.API.Controllers.AttendanceController">
+            <summary>
+            Controller to work with attendances
+            </summary>
+        </member>
+        <member name="M:Kitias.API.Controllers.AttendanceController.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.API.Controllers.AttendanceController},Kitias.Providers.Interfaces.IAttendanceProvider)">
+            <summary>
+            Constructor to get servies
+            </summary>
+            <param name="logger">Logging</param>
+            <param name="attendanceProvider">Provider to work with data contexta nd attendances</param>
+        </member>
+        <member name="M:Kitias.API.Controllers.AttendanceController.TakeShedulersAsync">
+            <summary>
+            Take all shedulers of the teacher
+            </summary>
+            <returns>Shedulers</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.AttendanceController.TakeShedulerByIdAsync(System.Guid)">
+            <summary>
+            Take all attendances of the sheduler
+            </summary>
+            <param name="id">Id of sheduler</param>
+            <returns>Attendances</returns>
+        </member>
         <member name="T:Kitias.API.Controllers.AuthController">
             <summary>
             Authorization endpoint
             </summary>
         </member>
         <!-- Badly formed XML comment ignored for member "M:Kitias.API.Controllers.AuthController.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.API.Controllers.AuthController},System.Net.Http.IHttpClientFactory,Microsoft.Extensions.Options.IOptions{Kitias.Persistence.Entities.Default.ISSecure},Microsoft.Extensions.Configuration.IConfiguration,Kitias.Providers.Interfaces.IStudentProvider,Kitias.Providers.Interfaces.ITeacherProvider)" -->
+        <member name="M:Kitias.API.Controllers.AuthController.IsAuth">
+            <summary>
+            Flag tha user is auth
+            </summary>
+            <returns>Status message</returns>
+        </member>
         <member name="M:Kitias.API.Controllers.AuthController.SignUpAsync(Kitias.Providers.Models.SignUpRegisterModel)">
             <summary>
             Sign up endpoint for new user

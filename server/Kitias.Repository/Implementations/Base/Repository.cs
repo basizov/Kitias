@@ -52,7 +52,7 @@ namespace Kitias.Repository.Implementations.Base
 				(current, includeProperty) => current.Include(includeProperty)
 			);
 
-			return _dbContext.Set<T>().Where(expression).AsNoTracking();
+			return includedQuery.Where(expression).AsNoTracking();
 		}
 
 		public IQueryable<T> GetAllWithInclude(params Expression<Func<T, object>>[] includeProperties)

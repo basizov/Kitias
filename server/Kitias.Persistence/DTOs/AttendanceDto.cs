@@ -16,9 +16,9 @@ namespace Kitias.Persistence.DTOs
 		/// </summary>
 		public string Date { get; init; }
 		/// <summary>
-		/// True if student is attended
+		/// Flag student is attended
 		/// </summary>
-		public bool IsAttended { get; init; }
+		public string Attended { get; init; }
 		/// <summary>
 		/// Subject theme
 		/// </summary>
@@ -31,5 +31,9 @@ namespace Kitias.Persistence.DTOs
 		/// Subject type
 		/// </summary>
 		public string Type { get; set; }
+		/// <summary>
+		/// Student Fullname
+		/// </summary>
+		public string FullName { get; set; }
 	}
 }

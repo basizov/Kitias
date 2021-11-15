@@ -111,6 +111,46 @@
             </summary>
             <param name="options">Optios to get connection info</param>
         </member>
+        <member name="T:Kitias.Persistence.DTOs.AttendanceDto">
+            <summary>
+            Data transfer object for attendance
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.AttendanceDto.Id">
+            <summary>
+            Attendance identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.AttendanceDto.Date">
+            <summary>
+            Date of the pair
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.AttendanceDto.Attended">
+            <summary>
+            Flag student is attended
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.AttendanceDto.Theme">
+            <summary>
+            Subject theme
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.AttendanceDto.Score">
+            <summary>
+            Score
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.AttendanceDto.Type">
+            <summary>
+            Subject type
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.AttendanceDto.FullName">
+            <summary>
+            Student Fullname
+            </summary>
+        </member>
         <member name="T:Kitias.Persistence.DTOs.FileDto">
             <summary>
             File data transfer object
@@ -786,9 +826,9 @@
             Subject info
             </summary>
         </member>
-        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.Attendance.IsAttended">
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.Attendance.Attended">
             <summary>
-            True if student is attended
+            Flag student is attended
             </summary>
         </member>
         <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.Attendance.Theme">
@@ -829,11 +869,6 @@
         <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.AttendanceSheduler.Group">
             <summary>
             Group info
-            </summary>
-        </member>
-        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.AttendanceSheduler.Students">
-            <summary>
-            Student collection
             </summary>
         </member>
         <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.AttendanceSheduler.StudentAttendances">
@@ -1009,6 +1044,31 @@
         <member name="P:Kitias.Persistence.Entities.Scheduler.SubjectGroup.Subject">
             <summary>
             Group subject
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Enums.AttendaceVariants">
+            <summary>
+            Variants of attendance
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.AttendaceVariants.WasNot">
+            <summary>
+            Student wasn't in the pair (Не было)
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.AttendaceVariants.WasIll">
+            <summary>
+            Student wasn't in the pair, because he was ill (Болел)
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.AttendaceVariants.WasNotByReason">
+            <summary>
+            Student wasn't in the pair by serious reason (Отсутствовал по уважительной причине)
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.AttendaceVariants.Was">
+            <summary>
+            Student was in the pair (Присутствовал)
             </summary>
         </member>
         <member name="T:Kitias.Persistence.Enums.DayWeek">
@@ -1279,6 +1339,11 @@
         <member name="F:Kitias.Persistence.Enums.Week.ByDate">
             <summary>
             Only by dates
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Seed.SeedDataContext">
+            <summary>
+            Seed postgres context
             </summary>
         </member>
     </members>

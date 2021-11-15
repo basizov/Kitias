@@ -9,6 +9,8 @@ using Kitias.Providers.Models.Subject;
 using System;
 using Kitias.Persistence.Entities.File;
 using System.Linq;
+using Kitias.Persistence.Entities.Scheduler.Attendence;
+using Kitias.Providers.Models.Attendances;
 
 namespace Kitias.Providers
 {
@@ -53,6 +55,12 @@ namespace Kitias.Providers
 				.ForMember(s => s.Filter, o => o.MapFrom(s => s.Filter.Select(f => Helpers.GetEnumMemberAttrValue(f))));
 			CreateMap<Store, StoreDto>()
 				.ForMember(s => s.Size, o => o.MapFrom(s => $"{Helpers.GetFileSizeFromNumber(s.ActualSize)} / {Helpers.GetFileSizeFromNumber(s.MaxSize)}"));
+			CreateMap<Attendance, AttendanceDto>()
+				.ForMember(s => s.Date, o => o.MapFrom(s => s.Date.ToString("dd.MM.yyyy")))
+				.ForMember(s => s.Score, o => o.MapFrom(s => s.Score.ToString()))
+				.ForMember(s => s.FullName, o => o.MapFrom(s => s.Student.Person.FullName))
+				.ForMember(s => s.Type, o => o.MapFrom(s => Helpers.GetEnumMemberAttrValue(s.Subject.Type)))
+				.ForMember(s => s.Attended, o => o.MapFrom(s => Helpers.GetEnumMemberAttrValue(s.Attended)));
 
 			#endregion
 
@@ -71,6 +79,13 @@ namespace Kitias.Providers
 				.ForMember(s => s.Time, o => o.MapFrom(s => TimeSpan.Parse(s.Time)));
 			CreateMap<UpdateSubjectModel, Subject>()
 				.ForMember(s => s.Time, o => o.MapFrom(s => TimeSpan.Parse(s.Time)));
+
+			#endregion
+
+			#region ToModels
+
+			CreateMap<AttendanceSheduler, ShedulersListResult>()
+				.ForMember(s => s.GroupNumber, o => o.MapFrom(s => s.Group.Number));
 
 			#endregion
 		}

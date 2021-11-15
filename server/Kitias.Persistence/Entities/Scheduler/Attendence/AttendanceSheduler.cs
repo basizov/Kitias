@@ -20,7 +20,7 @@ namespace Kitias.Persistence.Entities.Scheduler.Attendence
 		/// <summary>
 		/// Teacher info
 		/// </summary>
-		public Teacher Teacher { get; init; }
+		public virtual Teacher Teacher { get; init; }
 		/// <summary>
 		/// Group identifier
 		/// </summary>
@@ -28,10 +28,10 @@ namespace Kitias.Persistence.Entities.Scheduler.Attendence
 		/// <summary>
 		/// Group info
 		/// </summary>
-		public Group Group { get; init; }
+		public virtual Group Group { get; init; }
 		/// <summary>
 		/// StudentAttendance collection
 		/// </summary>
-		public ICollection<StudentAttendance> StudentAttendances { get; init; }
+		public virtual ICollection<StudentAttendance> StudentAttendances { get; init; }
 	}
 }

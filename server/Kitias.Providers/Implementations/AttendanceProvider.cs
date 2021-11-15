@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Kitias.Persistence.DTOs;
+using Kitias.Persistence.Entities.Scheduler.Attendence;
 using Kitias.Providers.Interfaces;
 using Kitias.Providers.Models;
+using Kitias.Providers.Models.Attendances;
 using Kitias.Repository.Interfaces.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -26,32 +28,50 @@ namespace Kitias.Providers.Implementations
 		public AttendanceProvider(IMapper mapper, ILogger<Provider> logger, IUnitOfWork unitOfWork) : base(mapper, logger, unitOfWork)
 		{ }
 
-		public async Task<Result<IEnumerable<Guid>>> TakeTeacherShedulersAsync(string email)
+		public async Task<Result<IEnumerable<ShedulersListResult>>> TakeTeacherShedulersAsync(string email)
 		{
 			var teacher = await _unitOfWork.Teacher
 				.FindByAndInclude(t => t.Person.Email == email, p => p.Person)
 				.SingleOrDefaultAsync();
 
 			if (teacher == null)
-				return ReturnFailureResult<IEnumerable<Guid>>($"Couldn't find teacher with email {email}", "Couldn't find teacher");
+				return ReturnFailureResult<IEnumerable<ShedulersListResult>>($"Couldn't find teacher with email {email}", "Couldn't find teacher");
 			var shedulers = _unitOfWork.ShedulerAttendace
-				.FindBy(s => s.TeacherId == teacher.Id)
-				.Select(s => s.Id)
-				.AsEnumerable();
+				.FindByAndInclude(s => s.TeacherId == teacher.Id, s => s.Group)
+				.ToList();
+			var result = _mapper.Map<IEnumerable<ShedulersListResult>>(shedulers);
 
-			return ResultHandler.OnSuccess(shedulers);
+			_logger.LogInformation($"Take all shedulers of the teacher {email}");
+			return ResultHandler.OnSuccess(result);
 		}
 
 		public async Task<Result<IEnumerable<AttendanceDto>>> TakeShedulerAttendancesAsync(Guid id)
 		{
 			var sheduler = await _unitOfWork.ShedulerAttendace
-				.FindByAndInclude(
-					s => s.Id == id,
-					s => s.StudentAttendances, s => s.Students
-				).SingleOrDefaultAsync();
+				.FindBy(s => s.Id == id)
+				.Include(s => s.StudentAttendances)
+				.ThenInclude(s => s.Attendances)
+				.ThenInclude(s => s.Subject)
+				.Include(s => s.StudentAttendances)
+				.ThenInclude(s => s.Attendances)
+				.ThenInclude(s => s.Student)
+				.ThenInclude(s => s.Person)
+				.SingleOrDefaultAsync();
 
 			if (sheduler == null)
 				return ReturnFailureResult<IEnumerable<AttendanceDto>>($"Couldn't find sheduler with id {id}", "Couldn't find sheduler");
+			var attendancesEntities = new List<Attendance>();
+			var result = new List<AttendanceDto>();
+
+			foreach (var studentAttendance in sheduler.StudentAttendances)
+			{
+				var attendances = studentAttendance.Attendances;
+
+				attendancesEntities.AddRange(attendances);
+			}
+			result.AddRange(_mapper.Map<IEnumerable<AttendanceDto>>(attendancesEntities.OrderBy(r => r.Date)));
+			_logger.LogInformation($"Take all attendances of the sheduer {id}");
+			return ResultHandler.OnSuccess(result as IEnumerable<AttendanceDto>);
 		}
 
 		private Result<T> ReturnFailureResult<T>(string loggerMessage, string errorMessage = null)

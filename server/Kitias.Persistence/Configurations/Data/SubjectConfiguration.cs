@@ -30,12 +30,12 @@ namespace Kitias.Persistence.Configurations.Data
 				.IsRequired()
 				.HasConversion<string>()
 				.HasMaxLength(20);
-			builder.HasAlternateKey(g => g.Name);
-			builder.HasIndex(g => g.Name)
-				.IsUnique()
-				.IsUnique()
-				.HasFilter(@"""Name"" IS NOT NULL")
-				.HasDatabaseName("SubjectName");
+			//builder.HasAlternateKey(g => g.Name);
+			//builder.HasIndex(g => g.Name)
+			//	.IsUnique()
+			//	.IsUnique()
+			//	.HasFilter(@"""Name"" IS NOT NULL")
+			//	.HasDatabaseName("SubjectName");
 		}
 	}
 }

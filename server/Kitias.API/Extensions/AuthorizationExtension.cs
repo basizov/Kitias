@@ -23,10 +23,10 @@ namespace Kitias.API.Extensions
 			var bearer = IdentityServerAuthenticationDefaults.AuthenticationScheme;
 
 			services.AddAuthentication(bearer)
-				.AddIdentityServerAuthentication(bearer, options =>
+				.AddJwtBearer(bearer, o =>
 				{
-					options.ApiName = apiName.Value;
-					options.Authority = authority.Value;
+					o.Authority = authority.Value;
+					o.Audience = apiName.Value;
 				});
 			return services;
 		}

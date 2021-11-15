@@ -21,7 +21,7 @@ namespace Kitias.Persistence.Entities.Scheduler.Attendence
 		/// <summary>
 		/// Teacher info
 		/// </summary>
-		public Teacher Teacher{ get; init; }
+		public virtual Teacher Teacher{ get; init; }
 		/// <summary>
 		/// Student identifier
 		/// </summary>
@@ -29,7 +29,7 @@ namespace Kitias.Persistence.Entities.Scheduler.Attendence
 		/// <summary>
 		/// Student info
 		/// </summary>
-		public Student Student { get; init; }
+		public virtual Student Student { get; init; }
 		/// <summary>
 		/// Student raiting
 		/// </summary>
@@ -41,6 +41,6 @@ namespace Kitias.Persistence.Entities.Scheduler.Attendence
 		/// <summary>
 		/// Attendance collection
 		/// </summary>
-		public ICollection<Attendance> Attendances { get; init; }
+		public virtual ICollection<Attendance> Attendances { get; init; }
 	}
 }

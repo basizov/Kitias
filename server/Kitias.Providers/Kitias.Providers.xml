@@ -52,6 +52,19 @@
             <param name="size">Numeric size</param>
             <returns>Normal size</returns>
         </member>
+        <member name="T:Kitias.Providers.Implementations.AttendanceProvider">
+            <summary>
+            Provider to work with attendances
+            </summary>
+        </member>
+        <member name="M:Kitias.Providers.Implementations.AttendanceProvider.#ctor(AutoMapper.IMapper,Microsoft.Extensions.Logging.ILogger{Kitias.Providers.Provider},Kitias.Repository.Interfaces.Base.IUnitOfWork)">
+            <summary>
+            Constructor to get services
+            </summary>
+            <param name="mapper">Mapping</param>
+            <param name="logger">Logging</param>
+            <param name="unitOfWork">Class to work with different dbs</param>
+        </member>
         <member name="T:Kitias.Providers.Implementations.AuthProvider">
             <summary>
             Main authorization provider
@@ -119,6 +132,25 @@
             <param name="mapper">Mapping</param>
             <param name="logger">Logging</param>
             <param name="unitOfWork">Pattern to get work with different dbs</param>
+        </member>
+        <member name="T:Kitias.Providers.Interfaces.IAttendanceProvider">
+            <summary>
+            Interfsce to work with attendances
+            </summary>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IAttendanceProvider.TakeTeacherShedulersAsync(System.String)">
+            <summary>
+            Take shedulers of the teacher
+            </summary>
+            <param name="email">Teacher email</param>
+            <returns>List shedulers info</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IAttendanceProvider.TakeShedulerAttendancesAsync(System.Guid)">
+            <summary>
+            Take attendances of the sheduler
+            </summary>
+            <param name="id">Identifier of sheduler</param>
+            <returns>List attandances</returns>
         </member>
         <member name="T:Kitias.Providers.Interfaces.IAuthProvider">
             <summary>
@@ -381,6 +413,21 @@
         <member name="M:Kitias.Providers.MappingProfile.#ctor">
             <summary>
             Configure all entites
+            </summary>
+        </member>
+        <member name="T:Kitias.Providers.Models.Attendances.ShedulersListResult">
+            <summary>
+            All shedulers of the teacher
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Attendances.ShedulersListResult.Id">
+            <summary>
+            Sheduler Identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Attendances.ShedulersListResult.GroupNumber">
+            <summary>
+            Number of the group
             </summary>
         </member>
         <member name="T:Kitias.Providers.Models.EmailRequestModel">

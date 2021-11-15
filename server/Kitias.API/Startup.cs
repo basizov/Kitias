@@ -28,10 +28,15 @@ namespace Kitias.API
 		/// <param name="services">Initial services</param>
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddCors();
+			services.AddControllers();
+			services.AddCors(o => o.AddPolicy("CorsPolicy", policy => policy
+				.WithOrigins("http://localhost:3000")
+				.AllowAnyHeader()
+				.AllowAnyMethod()
+				.AllowCredentials()
+			));
 			services.AddHttpClient();
 			services.AddOwnAuthorization(_config);
-			services.AddControllers();
 			services.AddMappingProfile();
 			services.AddDbConnection(_config);
 			services.AddProviders();
@@ -54,6 +59,7 @@ namespace Kitias.API
 			app.UseMiddleware<AuthenticationMiddleware>();
 			app.UseMiddleware<ErrorHandlerMiddleware>();
 			app.UseRouting();
+			app.UseCors("CorsPolicy");
 			app.UseAuthentication();
 			app.UseAuthorization();
 			app.UseCookiePolicy(new CookiePolicyOptions
@@ -62,11 +68,6 @@ namespace Kitias.API
 				HttpOnly = HttpOnlyPolicy.Always,
 				Secure = CookieSecurePolicy.Always
 			});
-			app.UseCors(x => x.WithOrigins("https://localhost:3000")
-				.AllowCredentials()
-				.AllowAnyMethod()
-				.AllowAnyHeader()
-			);
 			app.UseEndpoints(endpoints => endpoints.MapControllers());
 		}
 	}

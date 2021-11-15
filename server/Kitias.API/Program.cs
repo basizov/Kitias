@@ -1,8 +1,11 @@
 using Kitias.Persistence.Contexts;
+using Kitias.Persistence.Seed;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
 namespace Kitias.API
@@ -22,9 +25,19 @@ namespace Kitias.API
 			var host = CreateHostBuilder(args).Build();
 			using var scope = host.Services.CreateScope();
 			var services = scope.ServiceProvider;
-			var dbContext = services.GetRequiredService<DataContext>();
+			try
+			{
+				var dbContext = services.GetRequiredService<DataContext>();
 
-			await dbContext.Database.MigrateAsync();
+				await dbContext.Database.MigrateAsync();
+				await SeedDataContext.SeedAttendances(dbContext);
+			}
+			catch (Exception ex)
+			{
+				var logger = services.GetRequiredService<ILogger<Program>>();
+
+				logger.LogError(ex, ex.Message);
+			}
 			await host.RunAsync();
 		}
 

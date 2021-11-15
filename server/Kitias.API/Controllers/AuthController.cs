@@ -44,6 +44,24 @@ namespace Kitias.API.Controllers
 		/// <param name="teacherProvider">Provider to work with teacher dbparam>
 		public AuthController(ILogger<AuthController> logger, IHttpClientFactory clientFactory, IOptions<ISSecure> secureOptions, IConfiguration config, IStudentProvider studentProvider, ITeacherProvider teacherProvider) : base(logger) => (_clientFactory, _secureOptions, _config, _studentProvider, _teacherProvider) = (clientFactory, secureOptions, config, studentProvider, teacherProvider);
 
+
+		/// <summary>
+		/// Flag tha user is auth
+		/// </summary>
+		/// <returns>Status message</returns>
+		[HttpGet]
+		[AllowAnonymous]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+		public ActionResult<string> IsAuth()
+		{
+			var token = Request.Cookies[".AspNetCore.Application.Guid"];
+
+			if (token == null)
+				return Unauthorized();
+			return Ok("User is auth");
+		}
+
 		/// <summary>
 		/// Sign up endpoint for new user
 		/// </summary>
@@ -168,9 +186,8 @@ namespace Kitias.API.Controllers
 				new()
 				{
 					HttpOnly = true,
-					Path = "/api",
 					Expires = DateTime.UtcNow.AddHours(1),
-					MaxAge = TimeSpan.FromHours(1)
+					SameSite = SameSiteMode.None
 				}
 			);
 			return Ok("User was successfully logged in");

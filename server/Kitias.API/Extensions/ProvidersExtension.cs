@@ -21,6 +21,7 @@ namespace Kitias.API.Extensions
 			services.AddScoped<IStudentProvider, StudentProvider>();
 			services.AddScoped<ITeacherProvider, TeacherProvider>();
 			services.AddScoped<ISubjectProvider, SubjectProvider>();
+			services.AddScoped<IAttendanceProvider, AttendanceProvider>();
 			services.AddTransient<FileService>();
 			return services;
 		}

@@ -7,7 +7,10 @@ export enum ColorEnums {
 
 const initialState = {
   colorTheme: ColorEnums.DARK_COLOR,
-  isAuth: false
+  isAuth: false,
+  error: '',
+  loadingInitial: true,
+  loading: false
 };
 
 export const defaultReducer = (state = initialState, action: DefaultActionType) => {
@@ -18,6 +21,12 @@ export const defaultReducer = (state = initialState, action: DefaultActionType) 
       return {...state, colorTheme: action.payload};
     case 'SET_IS_AUTH':
       return {...state, isAuth: action.payload};
+    case 'SET_AUTH_LOADING':
+      return {...state, loading: action.payload};
+    case 'SET_AUTH_LOADING_INITIAL':
+      return {...state, loadingInitial: action.payload};
+    case 'SET_AUTH_ERROR':
+      return {...state, error: action.payload};
     default:
       return {...state};
   }
@@ -29,10 +38,19 @@ export const defaultActions = {
   setLightTheme: () => ({
     type: 'SET_LIGHT_THEME',
     payload: ColorEnums.LIGHT_COLOR
-  }),
+  } as const),
   setDarkTheme: () => ({
     type: 'SET_DARK_THEME',
     payload: ColorEnums.DARK_COLOR
-  }),
-  setIsAuth: (payload: boolean) => ({type: 'SET_IS_AUTH', payload})
+  } as const),
+  setIsAuth: (payload: boolean) => ({type: 'SET_IS_AUTH', payload} as const),
+  setLoading: (payload: boolean) => ({
+    type: 'SET_AUTH_LOADING',
+    payload
+  } as const),
+  setLoadingInitial: (payload: boolean) => ({
+    type: 'SET_AUTH_LOADING_INITIAL',
+    payload
+  } as const),
+  setError: (payload: string) => ({type: 'SET_AUTH_ERROR', payload} as const)
 };

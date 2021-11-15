@@ -1,4 +1,5 @@
 ﻿using Kitias.Persistence.Entities.People;
+using Kitias.Persistence.Enums;
 using System;
 
 namespace Kitias.Persistence.Entities.Scheduler.Attendence
@@ -23,7 +24,7 @@ namespace Kitias.Persistence.Entities.Scheduler.Attendence
 		/// <summary>
 		/// Student info
 		/// </summary>
-		public Student Student { get; init; }
+		public virtual Student Student { get; init; }
 		/// <summary>
 		/// Subject identifier
 		/// </summary>
@@ -31,11 +32,11 @@ namespace Kitias.Persistence.Entities.Scheduler.Attendence
 		/// <summary>
 		/// Subject info
 		/// </summary>
-		public Subject Subject { get; init; }
+		public virtual Subject Subject { get; init; }
 		/// <summary>
-		/// True if student is attended
+		/// Flag student is attended
 		/// </summary>
-		public bool IsAttended { get; init; }
+		public AttendaceVariants Attended { get; init; }
 		/// <summary>
 		/// Subject theme
 		/// </summary>

@@ -7,12 +7,6 @@ namespace Kitias.Persistence.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<Guid>(
-                name: "AttendanceShedulerId",
-                table: "Students",
-                type: "uuid",
-                nullable: true);
-
             migrationBuilder.CreateTable(
                 name: "AttendanceShedulers",
                 columns: table => new
@@ -80,7 +74,7 @@ namespace Kitias.Persistence.Migrations
                     Date = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     StudentId = table.Column<Guid>(type: "uuid", nullable: false),
                     SubjectId = table.Column<Guid>(type: "uuid", nullable: false),
-                    IsAttended = table.Column<bool>(type: "boolean", nullable: false),
+                    Attended = table.Column<int>(type: "integer", nullable: false),
                     Theme = table.Column<string>(type: "text", nullable: true),
                     Score = table.Column<byte>(type: "smallint", nullable: false),
                     StudentAttendanceId = table.Column<Guid>(type: "uuid", nullable: true)
@@ -107,11 +101,6 @@ namespace Kitias.Persistence.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Students_AttendanceShedulerId",
-                table: "Students",
-                column: "AttendanceShedulerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Attendances_StudentAttendanceId",
@@ -152,22 +141,10 @@ namespace Kitias.Persistence.Migrations
                 name: "IX_StudentAttendances_TeacherId",
                 table: "StudentAttendances",
                 column: "TeacherId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Students_AttendanceShedulers_AttendanceShedulerId",
-                table: "Students",
-                column: "AttendanceShedulerId",
-                principalTable: "AttendanceShedulers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Students_AttendanceShedulers_AttendanceShedulerId",
-                table: "Students");
-
             migrationBuilder.DropTable(
                 name: "Attendances");
 
@@ -176,14 +153,6 @@ namespace Kitias.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "AttendanceShedulers");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Students_AttendanceShedulerId",
-                table: "Students");
-
-            migrationBuilder.DropColumn(
-                name: "AttendanceShedulerId",
-                table: "Students");
         }
     }
 }
