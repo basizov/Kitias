@@ -951,6 +951,16 @@
             StudentAttendance identifier
             </summary>
         </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.StudentAttendance.ShedulerId">
+            <summary>
+            Sheduler identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.StudentAttendance.Sheduler">
+            <summary>
+            Sheduler info
+            </summary>
+        </member>
         <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.StudentAttendance.StudentId">
             <summary>
             Student identifier

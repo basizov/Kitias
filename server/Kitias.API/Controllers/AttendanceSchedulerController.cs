@@ -137,5 +137,61 @@ namespace Kitias.API.Controllers
 				return BadRequest(result.Error);
 			return Ok(result.Value);
 		}
+
+		/// <summary>
+		/// Create student attendances of the sheduler
+		/// </summary>
+		/// <param name="id">Id of sheduler</param>
+		/// <param name="model">Model to craete student attendace</param>
+		/// <returns>Student attendances</returns>
+		[HttpPost("{id}/studentAttendances")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<IEnumerable<StudentAttendanceDto>>> CreateStudentAttendancesAsync(Guid id, IEnumerable<StudentAttendanceRequestModel> models)
+		{
+			var result = await _attendanceProvider.CreateStudentAttendanceAsync(id, models);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Update student attendance
+		/// </summary>
+		/// <param name="id">Id of student attendace</param>
+		/// <param name="model">Model to updart student attendace</param>
+		/// <returns>Update student attendance</returns>
+		[HttpPut("{id}/studentAttendances")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<IEnumerable<StudentAttendanceDto>>> CreateStudentAttendancesAsync(Guid id, UpdateStudentAttendanceModel model)
+		{
+			var result = await _attendanceProvider.UpdateStudentAttendanceAsync(id, model);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Delete student attendance
+		/// </summary>
+		/// <param name="id">Id of student attendace</param>
+		/// <returns>Status message</returns>
+		[HttpDelete("{id}/studentAttendances")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<IEnumerable<StudentAttendanceDto>>> CreateStudentAttendancesAsync(Guid id)
+		{
+			var result = await _attendanceProvider.DeleteStudentAttendanceAsync(id);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
 	}
 }

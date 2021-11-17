@@ -4,46 +4,32 @@
         <name>Kitias.API</name>
     </assembly>
     <members>
-        <member name="T:Kitias.API.Controllers.AttendanceController">
+        <member name="T:Kitias.API.Controllers.AttendanceSchedulerController">
             <summary>
             Controller to work with attendances
             </summary>
         </member>
-        <member name="M:Kitias.API.Controllers.AttendanceController.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.API.Controllers.AttendanceController},Kitias.Providers.Interfaces.IAttendanceProvider)">
+        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.API.Controllers.AttendanceSchedulerController},Kitias.Providers.Interfaces.IAttendanceProvider)">
             <summary>
             Constructor to get servies
             </summary>
             <param name="logger">Logging</param>
             <param name="attendanceProvider">Provider to work with data contexta nd attendances</param>
         </member>
-        <member name="M:Kitias.API.Controllers.AttendanceController.TakeShedulersAsync">
+        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.TakeShedulersAsync">
             <summary>
             Take all shedulers of the teacher
             </summary>
             <returns>Shedulers</returns>
         </member>
-        <member name="M:Kitias.API.Controllers.AttendanceController.CreateShedulerAsync(Kitias.Providers.Models.Attendances.ShedulerRequestModel)">
+        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.CreateShedulerAsync(Kitias.Providers.Models.Attendances.ShedulerRequestModel)">
             <summary>
             Create sheduler for the teacher
             </summary>
             <param name="model">Model to create new sheduler</param>
             <returns>New sheduler</returns>
         </member>
-        <member name="M:Kitias.API.Controllers.AttendanceController.TakeShedulerAttendancesByIdAsync(System.Guid)">
-            <summary>
-            Take all attendances of the sheduler
-            </summary>
-            <param name="id">Id of sheduler</param>
-            <returns>Attendances</returns>
-        </member>
-        <member name="M:Kitias.API.Controllers.AttendanceController.TakeShedulerByIdAsync(System.Guid)">
-            <summary>
-            Take all student attendances of the sheduler
-            </summary>
-            <param name="id">Id of sheduler</param>
-            <returns>Student attendances</returns>
-        </member>
-        <member name="M:Kitias.API.Controllers.AttendanceController.UpdateShedulerAsync(System.Guid,Kitias.Providers.Models.Attendances.ShedulerRequestModel)">
+        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.UpdateShedulerAsync(System.Guid,Kitias.Providers.Models.Attendances.ShedulerRequestModel)">
             <summary>
             Update sheduler by id
             </summary>
@@ -51,11 +37,48 @@
             <param name="model">Model to update sheduler</param>
             <returns>Updated sheduler</returns>
         </member>
-        <member name="M:Kitias.API.Controllers.AttendanceController.DeleteShedulerAsync(System.Guid)">
+        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.DeleteShedulerAsync(System.Guid)">
             <summary>
             Delete sheduler by id
             </summary>
             <param name="id">Id of sheduler</param>
+            <returns>Status message</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.TakeShedulerAttendancesByIdAsync(System.Guid)">
+            <summary>
+            Take all attendances of the sheduler
+            </summary>
+            <param name="id">Id of sheduler</param>
+            <returns>Attendances</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.TakeShedulerByIdAsync(System.Guid)">
+            <summary>
+            Take all student attendances of the sheduler
+            </summary>
+            <param name="id">Id of sheduler</param>
+            <returns>Student attendances</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.CreateStudentAttendancesAsync(System.Guid,System.Collections.Generic.IEnumerable{Kitias.Providers.Models.Attendances.StudentAttendanceRequestModel})">
+            <summary>
+            Create student attendances of the sheduler
+            </summary>
+            <param name="id">Id of sheduler</param>
+            <param name="model">Model to craete student attendace</param>
+            <returns>Student attendances</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.CreateStudentAttendancesAsync(System.Guid,Kitias.Providers.Models.Attendances.UpdateStudentAttendanceModel)">
+            <summary>
+            Update student attendance
+            </summary>
+            <param name="id">Id of student attendace</param>
+            <param name="model">Model to updart student attendace</param>
+            <returns>Update student attendance</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.CreateStudentAttendancesAsync(System.Guid)">
+            <summary>
+            Delete student attendance
+            </summary>
+            <param name="id">Id of student attendace</param>
             <returns>Status message</returns>
         </member>
         <member name="T:Kitias.API.Controllers.AuthController">

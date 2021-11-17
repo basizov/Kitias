@@ -36,6 +36,6 @@ namespace Kitias.Persistence.Enums
 		/// Start of the session
 		/// </summary>
 		[EnumMember(Value = "-")]
-		None = 4
+		None = 5
 	}
 }

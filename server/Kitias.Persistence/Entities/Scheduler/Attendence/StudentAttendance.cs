@@ -15,6 +15,14 @@ namespace Kitias.Persistence.Entities.Scheduler.Attendence
 		/// </summary>
 		public Guid Id { get; init; }
 		/// <summary>
+		/// Sheduler identifier
+		/// </summary>
+		public Guid ShedulerId { get; set; }
+		/// <summary>
+		/// Sheduler info
+		/// </summary>
+		public virtual AttendanceSheduler Sheduler { get; set; }
+		/// <summary>
 		/// Student identifier
 		/// *** Null if studentName != null
 		/// </summary>
@@ -31,10 +39,10 @@ namespace Kitias.Persistence.Entities.Scheduler.Attendence
 		/// <summary>
 		/// Student raiting
 		/// </summary>
-		public byte Raiting{ get; init; }
+		public byte Raiting{ get; set; }
 		/// <summary>
 		/// Student grade
 		/// </summary>
-		public Grade Grade { get; init; }
+		public Grade Grade { get; set; }
 	}
 }

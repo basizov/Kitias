@@ -52,8 +52,22 @@ namespace Kitias.Providers.Interfaces
 		/// <summary>
 		/// Create student attendance
 		/// </summary>
+		/// <param name="id">Identifier of sheduler</param>
 		/// <param name="models">Models to create student attendances</param>
 		/// <returns>List of created student attendances</returns>
-		Task<Result<IEnumerable<StudentAttendanceDto>>> CreateStudentAttendanceAsync(IEnumerable<StudentAttendanceRequestModel> models);
+		Task<Result<IEnumerable<StudentAttendanceDto>>> CreateStudentAttendanceAsync(Guid id, IEnumerable<StudentAttendanceRequestModel> models);
+		/// <summary>
+		/// Update student attendance
+		/// </summary>
+		/// <param name="id">Identifier of student attendance</param>
+		/// <param name="model">Model to update schstudent attendanceeduler</param>
+		/// <returns>Updated student attendance</returns>
+		Task<Result<StudentAttendanceDto>> UpdateStudentAttendanceAsync(Guid id, UpdateStudentAttendanceModel model);
+		/// <summary>
+		/// Delete student attendance for teacher
+		/// </summary>
+		/// <param name="id">Identifier of student attendance</param>
+		/// <returns>Status message</returns>
+		Task<Result<string>> DeleteStudentAttendanceAsync(Guid id);
 	}
 }
