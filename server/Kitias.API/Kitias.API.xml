@@ -22,12 +22,41 @@
             </summary>
             <returns>Shedulers</returns>
         </member>
-        <member name="M:Kitias.API.Controllers.AttendanceController.TakeShedulerByIdAsync(System.Guid)">
+        <member name="M:Kitias.API.Controllers.AttendanceController.CreateShedulerAsync(Kitias.Providers.Models.Attendances.ShedulerRequestModel)">
+            <summary>
+            Create sheduler for the teacher
+            </summary>
+            <param name="model">Model to create new sheduler</param>
+            <returns>New sheduler</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.AttendanceController.TakeShedulerAttendancesByIdAsync(System.Guid)">
             <summary>
             Take all attendances of the sheduler
             </summary>
             <param name="id">Id of sheduler</param>
             <returns>Attendances</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.AttendanceController.TakeShedulerByIdAsync(System.Guid)">
+            <summary>
+            Take all student attendances of the sheduler
+            </summary>
+            <param name="id">Id of sheduler</param>
+            <returns>Student attendances</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.AttendanceController.UpdateShedulerAsync(System.Guid,Kitias.Providers.Models.Attendances.ShedulerRequestModel)">
+            <summary>
+            Update sheduler by id
+            </summary>
+            <param name="id">Id of sheduler</param>
+            <param name="model">Model to update sheduler</param>
+            <returns>Updated sheduler</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.AttendanceController.DeleteShedulerAsync(System.Guid)">
+            <summary>
+            Delete sheduler by id
+            </summary>
+            <param name="id">Id of sheduler</param>
+            <returns>Status message</returns>
         </member>
         <member name="T:Kitias.API.Controllers.AuthController">
             <summary>

@@ -12,6 +12,10 @@ namespace Kitias.Providers.Models.Attendances
 		/// </summary>
 		public Guid Id { get; init; }
 		/// <summary>
+		/// Sheduler name
+		/// </summary>
+		public string Name { get; init; }
+		/// <summary>
 		/// Number of the group
 		/// </summary>
 		public string GroupNumber { get; init; }

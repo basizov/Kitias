@@ -31,6 +31,11 @@ namespace Kitias.Persistence.Enums
 		/// Grader "5"
 		/// </summary>
 		[EnumMember(Value = "Отлично")]
-		Excellent = 4
+		Excellent = 4,
+		/// <summary>
+		/// Start of the session
+		/// </summary>
+		[EnumMember(Value = "-")]
+		None = 4
 	}
 }

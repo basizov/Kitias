@@ -3,15 +3,17 @@ using System;
 using Kitias.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Kitias.Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211116163411_UpdateTeacherDb")]
+    partial class UpdateTeacherDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -177,11 +179,8 @@ namespace Kitias.Persistence.Migrations
                     b.Property<byte>("Raiting")
                         .HasColumnType("smallint");
 
-                    b.Property<Guid?>("StudentId")
+                    b.Property<Guid>("StudentId")
                         .HasColumnType("uuid");
-
-                    b.Property<string>("StudentName")
-                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -370,7 +369,9 @@ namespace Kitias.Persistence.Migrations
 
                     b.HasOne("Kitias.Persistence.Entities.People.Student", "Student")
                         .WithMany()
-                        .HasForeignKey("StudentId");
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Student");
                 });

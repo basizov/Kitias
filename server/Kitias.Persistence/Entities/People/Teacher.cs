@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Kitias.Persistence.Entities.Scheduler.Attendence;
+using System;
+using System.Collections.Generic;
 
 namespace Kitias.Persistence.Entities.People
 {
@@ -19,5 +21,9 @@ namespace Kitias.Persistence.Entities.People
 		/// Teacher personality
 		/// </summary>
 		public virtual Person Person { get; set; }
+		/// <summary>
+		/// Teacher shedulers
+		/// </summary>
+		public virtual ICollection<AttendanceSheduler> Shedulers { get; init; }
 	}
 }

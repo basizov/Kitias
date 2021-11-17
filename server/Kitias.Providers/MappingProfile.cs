@@ -61,10 +61,24 @@ namespace Kitias.Providers
 				.ForMember(s => s.FullName, o => o.MapFrom(s => s.Student.Person.FullName))
 				.ForMember(s => s.Type, o => o.MapFrom(s => Helpers.GetEnumMemberAttrValue(s.Subject.Type)))
 				.ForMember(s => s.Attended, o => o.MapFrom(s => Helpers.GetEnumMemberAttrValue(s.Attended)));
+			CreateMap<AttendanceSheduler, AttendanceShedulerDto>()
+				.ForMember(s => s.TeacherFullName, o => o.MapFrom(s => s.Teacher.Person.FullName))
+				.ForMember(s => s.GroupNumber, o => o.MapFrom(s => s.Group.Number));
+			CreateMap<StudentAttendance, StudentAttendanceDto>()
+				.ForMember(s => s.Raiting, o => o.MapFrom(s => s.Raiting.ToString()))
+				.ForMember(s => s.Grade, o => o.MapFrom(s => Helpers.GetEnumMemberAttrValue(s.Grade)))
+				.ForMember(s => s.StudentName, o => o.MapFrom(s => s.StudentName ?? s.Student.Person.FullName));
 
 			#endregion
 
-			#region FromDTO
+			#region ToModels
+
+			CreateMap<AttendanceSheduler, ShedulersListResult>()
+				.ForMember(s => s.GroupNumber, o => o.MapFrom(s => s.Group.Number));
+
+			#endregion
+
+			#region FromModel
 
 			CreateMap<CreateGroupModel, Group>()
 				.ForMember(g => g.EducationType, o => o.MapFrom(g => Helpers.GetEnumMemberFromString<EducationType>(g.EducationType)))
@@ -79,13 +93,6 @@ namespace Kitias.Providers
 				.ForMember(s => s.Time, o => o.MapFrom(s => TimeSpan.Parse(s.Time)));
 			CreateMap<UpdateSubjectModel, Subject>()
 				.ForMember(s => s.Time, o => o.MapFrom(s => TimeSpan.Parse(s.Time)));
-
-			#endregion
-
-			#region ToModels
-
-			CreateMap<AttendanceSheduler, ShedulersListResult>()
-				.ForMember(s => s.GroupNumber, o => o.MapFrom(s => s.Group.Number));
 
 			#endregion
 		}

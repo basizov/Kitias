@@ -56,11 +56,9 @@ namespace Kitias.Persistence.Seed
 			{
 				var newStudentAttendance = new StudentAttendance()
 				{
-					Attendances = listAttendances,
 					Grade = i < 3 ? Grade.Good : Grade.Excellent,
 					Raiting = (byte)(i / 5 * 100),
-					StudentId = context.Students.First().Id,
-					TeacherId = context.Teachers.First().Id
+					StudentId = context.Students.First().Id
 				};
 
 				context.StudentAttendances.Add(newStudentAttendance);
@@ -71,7 +69,9 @@ namespace Kitias.Persistence.Seed
 			{
 				StudentAttendances = listStudentAttendances,
 				TeacherId = context.Teachers.First().Id,
-				GroupId = context.Groups.First().Id
+				GroupId = context.Groups.First().Id,
+				Attendances = listAttendances,
+				Name = "Test Sheduler"
 			};
 
 			context.AttendanceShedulers.Add(sheduler);

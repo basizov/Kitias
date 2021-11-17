@@ -151,6 +151,31 @@
             Student Fullname
             </summary>
         </member>
+        <member name="T:Kitias.Persistence.DTOs.AttendanceShedulerDto">
+            <summary>
+            Data transfer object for attendances sheduler
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.AttendanceShedulerDto.Id">
+            <summary>
+            AttendanceSheduler identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.AttendanceShedulerDto.TeacherFullName">
+            <summary>
+            Teacher full name
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.AttendanceShedulerDto.GroupNumber">
+            <summary>
+            Group number
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.AttendanceShedulerDto.Name">
+            <summary>
+            Sheduler name
+            </summary>
+        </member>
         <member name="T:Kitias.Persistence.DTOs.FileDto">
             <summary>
             File data transfer object
@@ -299,6 +324,31 @@
         <member name="P:Kitias.Persistence.DTOs.StoreDto.Size">
             <summary>
             Actual Size __ / Max Size __
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.DTOs.StudentAttendanceDto">
+            <summary>
+            Darta transfer object for student attendance
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.StudentAttendanceDto.Id">
+            <summary>
+            StudentAttendance identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.StudentAttendanceDto.StudentName">
+            <summary>
+            Student name
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.StudentAttendanceDto.Raiting">
+            <summary>
+            Student raiting
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.DTOs.StudentAttendanceDto.Grade">
+            <summary>
+            Student grade
             </summary>
         </member>
         <member name="T:Kitias.Persistence.DTOs.StudentDto">
@@ -791,6 +841,11 @@
             Teacher personality
             </summary>
         </member>
+        <member name="P:Kitias.Persistence.Entities.People.Teacher.Shedulers">
+            <summary>
+            Teacher shedulers
+            </summary>
+        </member>
         <member name="T:Kitias.Persistence.Entities.Scheduler.Attendence.Attendance">
             <summary>
             Attendance of subjects
@@ -871,6 +926,16 @@
             Group info
             </summary>
         </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.AttendanceSheduler.Name">
+            <summary>
+            Sheduler name
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.AttendanceSheduler.Attendances">
+            <summary>
+            Attendance collection
+            </summary>
+        </member>
         <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.AttendanceSheduler.StudentAttendances">
             <summary>
             StudentAttendance collection
@@ -886,19 +951,16 @@
             StudentAttendance identifier
             </summary>
         </member>
-        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.StudentAttendance.TeacherId">
-            <summary>
-            Teacher identifier
-            </summary>
-        </member>
-        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.StudentAttendance.Teacher">
-            <summary>
-            Teacher info
-            </summary>
-        </member>
         <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.StudentAttendance.StudentId">
             <summary>
             Student identifier
+            *** Null if studentName != null
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.StudentAttendance.StudentName">
+            <summary>
+            Student name
+            *** Null if studentId != null
             </summary>
         </member>
         <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.StudentAttendance.Student">
@@ -914,11 +976,6 @@
         <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.StudentAttendance.Grade">
             <summary>
             Student grade
-            </summary>
-        </member>
-        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.StudentAttendance.Attendances">
-            <summary>
-            Attendance collection
             </summary>
         </member>
         <member name="T:Kitias.Persistence.Entities.Scheduler.Group">
@@ -1154,6 +1211,11 @@
         <member name="F:Kitias.Persistence.Enums.Grade.Excellent">
             <summary>
             Grader "5"
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.Grade.None">
+            <summary>
+            Start of the session
             </summary>
         </member>
         <member name="T:Kitias.Persistence.Enums.PersonRoles">
