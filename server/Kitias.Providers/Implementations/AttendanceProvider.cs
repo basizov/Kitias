@@ -60,7 +60,7 @@ namespace Kitias.Providers.Implementations
 
 			if (sheduler == null)
 				return ReturnFailureResult<IEnumerable<AttendanceDto>>($"Couldn't find sheduler with id {id}", "Couldn't find sheduler");
-			var result = _mapper.Map<IEnumerable<AttendanceDto>>(sheduler.Attendances.OrderBy(r => r.Date));
+			var result = _mapper.Map<IEnumerable<AttendanceDto>>(sheduler.Attendances.OrderBy(r => r.Subject.Date));
 
 			_logger.LogInformation($"Take all attendances of the sheduer {id}");
 			return ResultHandler.OnSuccess(result);
@@ -93,7 +93,12 @@ namespace Kitias.Providers.Implementations
 				).SingleOrDefaultAsync();
 
 			if (teacher == null)
-				return ReturnFailureResult<AttendanceShedulerDto>($"Couldn't find teacher with email {model.TeacherEmail}", "Couldn't find teacher");
+			{
+				return ReturnFailureResult<AttendanceShedulerDto>(
+					$"Couldn't find teacher with email {model.TeacherEmail}",
+					"Couldn't find teacher"
+				);
+			}
 			_logger.LogInformation($"Found teacher with id {teacher.Id}");
 			var group = await _unitOfWork.Group
 				.FindByAndInclude(g => g.Number == model.GroupNumber)
@@ -101,14 +106,16 @@ namespace Kitias.Providers.Implementations
 
 			if (group != null)
 				_logger.LogInformation($"Found group with id {group.Id}");
-			try
+			var newAttendance = new AttendanceSheduler
 			{
-				var newSheduler = _unitOfWork.ShedulerAttendace.Create(new()
-				{
-					TeacherId = teacher.Id,
-					Name = model.Name,
-					GroupId = group?.Id ?? null
-				});
+				TeacherId = teacher.Id,
+				Name = model.Name,
+				GroupId = group?.Id ?? null
+			};
+
+			return await TryCatchExecute(newAttendance, async (parameter) =>
+			{
+				var newSheduler = _unitOfWork.ShedulerAttendace.Create(parameter);
 				var isSave = await _unitOfWork.SaveChangesAsync();
 
 				if (isSave <= 0)
@@ -119,15 +126,7 @@ namespace Kitias.Providers.Implementations
 
 				_logger.LogInformation($"Sheduler with id {newSheduler.Id} was successfully created");
 				return ResultHandler.OnSuccess(result);
-			}
-			catch (ApplicationException)
-			{
-				throw;
-			}
-			catch (Exception ex)
-			{
-				return ReturnFailureResult<AttendanceShedulerDto>(ex.Message, "Error sheduler data");
-			}
+			});
 		}
 
 		public async Task<Result<AttendanceShedulerDto>> UpdateShedulerAsync(Guid id, ShedulerRequestModel model)
@@ -140,28 +139,33 @@ namespace Kitias.Providers.Implementations
 				.SingleOrDefaultAsync();
 
 			if (sheduler == null)
-				return ReturnFailureResult<AttendanceShedulerDto>($"Couldn't find sheduler with id {id}", "Couldn't find sheduler");
-			try
 			{
-				Group group = null;
+				return ReturnFailureResult<AttendanceShedulerDto>(
+					$"Couldn't find sheduler with id {id}",
+					"Couldn't find sheduler"
+				);
+			}
+			Group group = null;
 
-				if (model.GroupNumber != null)
-				{
-					group = await _unitOfWork.Group
-						.FindByAndInclude(g => g.Number == model.GroupNumber)
-						.SingleOrDefaultAsync();
+			if (model.GroupNumber != null)
+			{
+				group = await _unitOfWork.Group
+					.FindByAndInclude(g => g.Number == model.GroupNumber)
+					.SingleOrDefaultAsync();
 
-					if (group != null)
-						_logger.LogInformation($"Found group with id {group.Id}");
-					sheduler.GroupId = group.Id;
-					sheduler.Name = null;
-				}
-				else if (model.Name != null)
-				{
-					sheduler.Name = model.Name;
-					sheduler.GroupId = null;
-				}
-				var newSheduler = _unitOfWork.ShedulerAttendace.Update(sheduler);
+				if (group != null)
+					_logger.LogInformation($"Found group with id {group.Id}");
+				sheduler.GroupId = group.Id;
+				sheduler.Name = null;
+			}
+			else if (model.Name != null)
+			{
+				sheduler.Name = model.Name;
+				sheduler.GroupId = null;
+			}
+			return await TryCatchExecute(sheduler, async (parameter) =>
+			{
+				var newSheduler = _unitOfWork.ShedulerAttendace.Update(parameter);
 				var isSave = await _unitOfWork.SaveChangesAsync();
 
 				if (isSave <= 0)
@@ -172,15 +176,7 @@ namespace Kitias.Providers.Implementations
 
 				_logger.LogInformation($"Sheduler with id {newSheduler.Id} was successfully created");
 				return ResultHandler.OnSuccess(result);
-			}
-			catch (ApplicationException)
-			{
-				throw;
-			}
-			catch (Exception ex)
-			{
-				return ReturnFailureResult<AttendanceShedulerDto>(ex.Message, "Error sheduler data");
-			}
+			});
 		}
 
 		public async Task<Result<string>> DeleteShedulerAsync(Guid id)
@@ -190,41 +186,43 @@ namespace Kitias.Providers.Implementations
 				.SingleOrDefaultAsync();
 
 			if (sheduler == null)
-				return ReturnFailureResult<string>($"Couldn't find sheduler with id {id}", "Couldn't find sheduler");
-			try
 			{
-				_unitOfWork.ShedulerAttendace.Delete(sheduler);
+				return ReturnFailureResult<string>(
+					$"Couldn't find sheduler with id {id}",
+					"Couldn't find sheduler"
+				);
+			}
+			return await TryCatchExecute(sheduler, async (parameter) =>
+			{
+				_unitOfWork.ShedulerAttendace.Delete(parameter);
 				var isSave = await _unitOfWork.SaveChangesAsync();
 
 				if (isSave <= 0)
 					throw new ApplicationException("Couldn't delete sheduler");
 				_logger.LogInformation($"Sheduler with id {id} is successfully deleted");
 				return ResultHandler.OnSuccess("Sheduler successfully deleted");
-			}
-			catch (ApplicationException)
-			{
-				throw;
-			}
-			catch (Exception ex)
-			{
-				return ReturnFailureResult<string>(ex.Message, "Error sheduler data");
-			}
+			});
 		}
 
 		public async Task<Result<IEnumerable<StudentAttendanceDto>>> CreateStudentAttendanceAsync(Guid id, IEnumerable<StudentAttendanceRequestModel> models)
 		{
 			if (!await _unitOfWork.ShedulerAttendace.AnyAsync(s => s.Id == id))
-				return ReturnFailureResult<IEnumerable<StudentAttendanceDto>>($"Couldn't find sheduler with id {id}", "Couldn't find sheduler");
-			try
 			{
-				ICollection<StudentAttendance> attendances = new List<StudentAttendance>();
+				return ReturnFailureResult<IEnumerable<StudentAttendanceDto>>(
+					$"Couldn't find sheduler with id {id}",
+					"Couldn't find sheduler"
+				);
+			}
+			return await TryCatchExecute(models, async (parameter) =>
+			{
+				var attendances = new List<StudentAttendance>();
 
-				foreach (var model in models)
+				foreach (var model in parameter)
 				{
 					var newStudentAttendance = new StudentAttendance
 					{
-						Grade = Helpers.GetEnumMemberFromString<Grade>(model.Grade),
-						Raiting = byte.Parse(model.Raiting),
+						Grade = Helpers.GetEnumMemberFromString<Grade>(model.Grade ?? "-"),
+						Raiting = byte.Parse(model.Raiting ?? "0"),
 						ShedulerId = id
 					};
 
@@ -236,7 +234,12 @@ namespace Kitias.Providers.Implementations
 							.SingleOrDefaultAsync();
 
 						if (student == null)
-							return ReturnFailureResult<IEnumerable<StudentAttendanceDto>>($"Couldn't find student with id {model.StudentId}", "Couldn't find student");
+						{
+							return ReturnFailureResult<IEnumerable<StudentAttendanceDto>>(
+								$"Couldn't find student with id {model.StudentId}",
+								"Couldn't find student"
+							);
+						}
 						newStudentAttendance.StudentId = model.StudentId;
 						_unitOfWork.StudentAttendace.Create(newStudentAttendance);
 						newStudentAttendance.Student = student;
@@ -260,15 +263,7 @@ namespace Kitias.Providers.Implementations
 
 				_logger.LogInformation("Student attendance was successfully created");
 				return ResultHandler.OnSuccess(result);
-			}
-			catch (ApplicationException)
-			{
-				throw;
-			}
-			catch (Exception ex)
-			{
-				return ReturnFailureResult<IEnumerable<StudentAttendanceDto>>(ex.Message, "Error student attendances data");
-			}
+			});
 		}
 
 		public async Task<Result<StudentAttendanceDto>> UpdateStudentAttendanceAsync(Guid id, UpdateStudentAttendanceModel model)
@@ -280,13 +275,18 @@ namespace Kitias.Providers.Implementations
 				.SingleOrDefaultAsync();
 
 			if (studentAttendance == null)
-				return ReturnFailureResult<StudentAttendanceDto>($"Couldn't find student attendance with id {id}", "Couldn't find student attendance");
-			try
 			{
-				if (model.Grade != null)
-					studentAttendance.Grade = Helpers.GetEnumMemberFromString<Grade>(model.Grade);
-				if (model.Raiting != null)
-					studentAttendance.Raiting = byte.Parse(model.Raiting);
+				return ReturnFailureResult<StudentAttendanceDto>(
+					$"Couldn't find student attendance with id {id}",
+					"Couldn't find student attendance"
+				);
+			}
+			if (model.Grade != null)
+				studentAttendance.Grade = Helpers.GetEnumMemberFromString<Grade>(model.Grade);
+			if (model.Raiting != null)
+				studentAttendance.Raiting = byte.Parse(model.Raiting);
+			return await TryCatchExecute(studentAttendance, async (parameter) =>
+			{
 				var updateStudentAttendance = _unitOfWork.StudentAttendace.Update(studentAttendance);
 				var isSave = await _unitOfWork.SaveChangesAsync();
 
@@ -296,15 +296,7 @@ namespace Kitias.Providers.Implementations
 
 				_logger.LogInformation($"Student attendance {id} was successfully updated");
 				return ResultHandler.OnSuccess(result);
-			}
-			catch (ApplicationException)
-			{
-				throw;
-			}
-			catch (Exception ex)
-			{
-				return ReturnFailureResult<StudentAttendanceDto>(ex.Message, "Error student attendance data");
-			}
+			});
 		}
 
 		public async Task<Result<string>> DeleteStudentAttendanceAsync(Guid id)
@@ -315,7 +307,7 @@ namespace Kitias.Providers.Implementations
 
 			if (studentAttendance == null)
 				return ReturnFailureResult<string>($"Couldn't find student attendance with id {id}", "Couldn't find student attendance");
-			try
+			return await TryCatchExecute(studentAttendance, async (parameter) =>
 			{
 				_unitOfWork.StudentAttendace.Delete(studentAttendance);
 				var isSave = await _unitOfWork.SaveChangesAsync();
@@ -324,22 +316,11 @@ namespace Kitias.Providers.Implementations
 					throw new ApplicationException("Couldn't delete student attendance");
 				_logger.LogInformation($"Student attendance with id {id} is successfully deleted");
 				return ResultHandler.OnSuccess("Student attendance successfully deleted");
-			}
-			catch (ApplicationException)
-			{
-				throw;
-			}
-			catch (Exception ex)
-			{
-				return ReturnFailureResult<string>(ex.Message, "Error student attendance data");
-			}
+			});
 		}
 
-		private Result<T> ReturnFailureResult<T>(string loggerMessage, string errorMessage = null)
-			where T : class
-		{
-			_logger.LogError(loggerMessage);
-			return ResultHandler.OnFailure<T>(errorMessage ?? loggerMessage);
-		}
+		public Task<Result<IEnumerable<AttendanceDto>>> CreateAttendancesAsync(Guid id, IEnumerable<AttendanceRequestModel> models) => throw new NotImplementedException();
+		public Task<Result<AttendanceDto>> UpdateAttendanceAsync(Guid id, UpdateAttendanceModel model) => throw new NotImplementedException();
+		public Task<Result<string>> DeleteAttendanceAsync(Guid id) => throw new NotImplementedException();
 	}
 }

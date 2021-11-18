@@ -856,14 +856,16 @@
             Attendance identifier
             </summary>
         </member>
-        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.Attendance.Date">
-            <summary>
-            Date of the pair
-            </summary>
-        </member>
         <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.Attendance.StudentId">
             <summary>
             Student identifier
+            *** Null if studentName != null
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.Attendance.StudentName">
+            <summary>
+            Student name
+            *** Null if studentId != null
             </summary>
         </member>
         <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.Attendance.Student">
@@ -884,11 +886,6 @@
         <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.Attendance.Attended">
             <summary>
             Flag student is attended
-            </summary>
-        </member>
-        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.Attendance.Theme">
-            <summary>
-            Subject theme
             </summary>
         </member>
         <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.Attendance.Score">
@@ -1076,6 +1073,11 @@
         <member name="P:Kitias.Persistence.Entities.Scheduler.Subject.Day">
             <summary>
             Subject day
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Subject.Theme">
+            <summary>
+            Subject theme
             </summary>
         </member>
         <member name="P:Kitias.Persistence.Entities.Scheduler.Subject.Groups">

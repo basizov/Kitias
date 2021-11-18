@@ -81,9 +81,9 @@ namespace Kitias.Providers.Implementations
 			if (await _unitOfWork.Subject
 					.AnyAsync(s => s.Name == subject.Name && s.Type == Helpers.GetEnumMemberFromString<SubjectType>(subject.Type)))
 				return ReturnFailureResult<SubjectDto>("This subject have the same subject");
-			try
+			return await TryCatchExecute(subject, async (parameter) =>
 			{
-				var subjectEntity = _mapper.Map<Subject>(subject);
+				var subjectEntity = _mapper.Map<Subject>(parameter);
 				var newSubject = _unitOfWork.Subject.Create(subjectEntity);
 				var isSave = await _unitOfWork.SaveChangesAsync();
 
@@ -93,15 +93,7 @@ namespace Kitias.Providers.Implementations
 
 				_logger.LogInformation($"Subject with id {newSubject.Id} was successfully created");
 				return ResultHandler.OnSuccess(result);
-			}
-			catch (ApplicationException)
-			{
-				throw;
-			}
-			catch (Exception ex)
-			{
-				return ReturnFailureResult<SubjectDto>(ex.Message, "Error subject data");
-			}
+			});
 		}
 
 		public async Task<Result<IEnumerable<GroupDto>>> CreateSubjectGroupsAsync(Guid id, IEnumerable<Guid> groups)
@@ -112,12 +104,17 @@ namespace Kitias.Providers.Implementations
 				.ToListAsync();
 
 			if (subjectGroups == null)
-				return ReturnFailureResult<IEnumerable<GroupDto>>($"Couldn't find groups for subject {id}", "There isn't this groups for this subject");
-			try
+			{
+				return ReturnFailureResult<IEnumerable<GroupDto>>(
+					$"Couldn't find groups for subject {id}",
+					"There isn't this groups for this subject"
+				);
+			}
+			return await TryCatchExecute(subjectGroups, async (parameter) =>
 			{
 				foreach (var group in groups)
 				{
-					if (!subjectGroups.Any(sg => sg.GroupId == group))
+					if (!parameter.Any(sg => sg.GroupId == group))
 					{
 						var subjectGroup = new SubjectGroup
 						{
@@ -129,10 +126,15 @@ namespace Kitias.Providers.Implementations
 							.SingleOrDefaultAsync();
 
 						if (groupEntity == null)
-							return ReturnFailureResult<IEnumerable<GroupDto>>($"Couldn't find group with id ${group} doesn't existed", "Couldn't find group");
+						{
+							return ReturnFailureResult<IEnumerable<GroupDto>>(
+								$"Couldn't find group with id ${group} doesn't existed",
+								"Couldn't find group"
+							);
+						}
 						_unitOfWork.SubjectGroup.Create(subjectGroup);
 						subjectGroup.Group = groupEntity;
-						subjectGroups.Add(subjectGroup);
+						parameter.Add(subjectGroup);
 						_logger.LogInformation($"Add group {group} ot the subject {id}");
 					}
 				}
@@ -140,19 +142,11 @@ namespace Kitias.Providers.Implementations
 
 				if (isSave <= 0)
 					throw new ApplicationException("Couldn't save new groups");
-				var result = _mapper.Map<IEnumerable<GroupDto>>(subjectGroups.Select(sg => sg.Group));
+				var result = _mapper.Map<IEnumerable<GroupDto>>(parameter.Select(sg => sg.Group));
 
 				_logger.LogInformation($"Get all groups of the subject {id}");
 				return ResultHandler.OnSuccess(result);
-			}
-			catch (ApplicationException)
-			{
-				throw;
-			}
-			catch (Exception ex)
-			{
-				return ReturnFailureResult<IEnumerable<GroupDto>>(ex.Message, "Error subject groups data");
-			}
+			});
 		}
 
 		public async Task<Result<SubjectDto>> UpdateSubjectAsync(Guid id, UpdateSubjectModel subject)
@@ -163,23 +157,23 @@ namespace Kitias.Providers.Implementations
 
 			if (findSubject == null)
 				return ReturnFailureResult<SubjectDto>($"Subject with id ${id} doesn't existed", "Couldn't find this subject");
-			try
+			return await TryCatchExecute(findSubject, async (parameter) =>
 			{
 				var updatedEntity = _mapper.Map<Subject>(subject);
 
 				if (subject.Name != null)
-					findSubject.Name = updatedEntity.Name;
+					parameter.Name = updatedEntity.Name;
 				if (subject.Time != null)
-					findSubject.Time = updatedEntity.Time;
+					parameter.Time = updatedEntity.Time;
 				if (subject.Type != null)
-					findSubject.Type = updatedEntity.Type;
+					parameter.Type = updatedEntity.Type;
 				if (subject.Week != null)
-					findSubject.Week = updatedEntity.Week;
+					parameter.Week = updatedEntity.Week;
 				if (subject.Date != null)
-					findSubject.Date = updatedEntity.Date;
+					parameter.Date = updatedEntity.Date;
 				if (subject.Day != null)
-					findSubject.Day = updatedEntity.Day;
-				var updateSubject = _unitOfWork.Subject.Update(findSubject);
+					parameter.Day = updatedEntity.Day;
+				var updateSubject = _unitOfWork.Subject.Update(parameter);
 				var isSave = await _unitOfWork.SaveChangesAsync();
 
 				if (isSave <= 0)
@@ -188,15 +182,7 @@ namespace Kitias.Providers.Implementations
 
 				_logger.LogInformation($"Subject with id {id} was successfully updated");
 				return ResultHandler.OnSuccess(result);
-			}
-			catch (ApplicationException)
-			{
-				throw;
-			}
-			catch (Exception ex)
-			{
-				return ReturnFailureResult<SubjectDto>(ex.Message, "Error subject data");
-			}
+			});
 		}
 
 		public async Task<Result<string>> DeleteSubjectAsync(Guid id)
@@ -206,25 +192,22 @@ namespace Kitias.Providers.Implementations
 				.SingleOrDefaultAsync();
 
 			if (findSubject == null)
-				return ReturnFailureResult<string>($"Subject with id ${id} doesn't existed", "Couldn't find this subject");
-			try
 			{
-				_unitOfWork.Subject.Delete(findSubject);
+				return ReturnFailureResult<string>(
+					$"Subject with id ${id} doesn't existed",
+					"Couldn't find this subject"
+				);
+			}
+			return await TryCatchExecute(findSubject, async (parameter) =>
+			{
+				_unitOfWork.Subject.Delete(parameter);
 				var isSave = await _unitOfWork.SaveChangesAsync();
 
 				if (isSave <= 0)
 					throw new ApplicationException($"Couldn't delete subject with id ${id}");
 				_logger.LogInformation($"Subject with id {id} was successfully deleted");
 				return ResultHandler.OnSuccess("Subject was successfully deleted");
-			}
-			catch (ApplicationException)
-			{
-				throw;
-			}
-			catch (Exception ex)
-			{
-				return ReturnFailureResult<string>(ex.Message, "Error subject data");
-			}
+			});
 		}
 		public async Task<Result<string>> DeleteSubjectGroupsAsync(Guid id, IEnumerable<Guid> groups)
 		{
@@ -234,9 +217,9 @@ namespace Kitias.Providers.Implementations
 
 			if (findSubjectGroups == null)
 				return ReturnFailureResult<string>($"GroupSubject with subjectId ${id} doesn't existed", "Couldn't find this groups of the subject");
-			try
+			return await TryCatchExecute(findSubjectGroups, async (parameter) =>
 			{
-				foreach (var subjectGroup in findSubjectGroups)
+				foreach (var subjectGroup in parameter)
 				{
 					if (groups.Contains(subjectGroup.GroupId))
 					{
@@ -252,22 +235,7 @@ namespace Kitias.Providers.Implementations
 					throw new ApplicationException($"Couldn't delete groups from the subject${id}");
 				_logger.LogInformation($"Groups was successfully deleted from the subject {id}");
 				return ResultHandler.OnSuccess("Groups was successfully deleted from the subject");
-			}
-			catch (ApplicationException)
-			{
-				throw;
-			}
-			catch (Exception ex)
-			{
-				return ReturnFailureResult<string>(ex.Message, "Error subject data");
-			}
-		}
-
-		private Result<T> ReturnFailureResult<T>(string loggerMessage, string errorMessage = null)
-			where T : class
-		{
-			_logger.LogError(loggerMessage);
-			return ResultHandler.OnFailure<T>(errorMessage ?? loggerMessage);
+			});
 		}
 	}
 }

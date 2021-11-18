@@ -14,13 +14,15 @@ namespace Kitias.Persistence.Entities.Scheduler.Attendence
 		/// </summary>
 		public Guid Id { get; init; }
 		/// <summary>
-		/// Date of the pair
-		/// </summary>
-		public DateTime Date { get; init; }
-		/// <summary>
 		/// Student identifier
+		/// *** Null if studentName != null
 		/// </summary>
-		public Guid StudentId { get; init; }
+		public Guid? StudentId { get; init; }
+		/// <summary>
+		/// Student name
+		/// *** Null if studentId != null
+		/// </summary>
+		public string StudentName { get; set; }
 		/// <summary>
 		/// Student info
 		/// </summary>
@@ -37,10 +39,6 @@ namespace Kitias.Persistence.Entities.Scheduler.Attendence
 		/// Flag student is attended
 		/// </summary>
 		public AttendaceVariants Attended { get; init; }
-		/// <summary>
-		/// Subject theme
-		/// </summary>
-		public string Theme { get; init; }
 		/// <summary>
 		/// Score
 		/// </summary>

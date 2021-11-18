@@ -60,7 +60,7 @@ namespace Kitias.Providers.Interfaces
 		/// Update student attendance
 		/// </summary>
 		/// <param name="id">Identifier of student attendance</param>
-		/// <param name="model">Model to update schstudent attendanceeduler</param>
+		/// <param name="model">Model to update student attendance</param>
 		/// <returns>Updated student attendance</returns>
 		Task<Result<StudentAttendanceDto>> UpdateStudentAttendanceAsync(Guid id, UpdateStudentAttendanceModel model);
 		/// <summary>
@@ -69,5 +69,25 @@ namespace Kitias.Providers.Interfaces
 		/// <param name="id">Identifier of student attendance</param>
 		/// <returns>Status message</returns>
 		Task<Result<string>> DeleteStudentAttendanceAsync(Guid id);
+		/// <summary>
+		/// Create attendance
+		/// </summary>
+		/// <param name="id">Identifier of sheduler</param>
+		/// <param name="models">Models to create attendances</param>
+		/// <returns>List of created attendances</returns>
+		Task<Result<IEnumerable<AttendanceDto>>> CreateAttendancesAsync(Guid id, IEnumerable<AttendanceRequestModel> models);
+		/// <summary>
+		/// Update attendance
+		/// </summary>
+		/// <param name="id">Identifier of attendance</param>
+		/// <param name="model">Model to update attendance</param>
+		/// <returns>Updated attendance</returns>
+		Task<Result<AttendanceDto>> UpdateAttendanceAsync(Guid id, UpdateAttendanceModel model);
+		/// <summary>
+		/// Delete attendance for teacher
+		/// </summary>
+		/// <param name="id">Identifier of attendance</param>
+		/// <returns>Status message</returns>
+		Task<Result<string>> DeleteAttendanceAsync(Guid id);
 	}
 }

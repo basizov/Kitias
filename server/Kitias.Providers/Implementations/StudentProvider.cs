@@ -56,20 +56,20 @@ namespace Kitias.Providers.Implementations
 		{
 			if (await _unitOfWork.Person.AnyAsync(s => s.Email == student.Email))
 				return ReturnFailureResult<StudentDto>("Student with same email is existed");
-			try
+			return await TryCatchExecute(student, async (parameter) =>
 			{
 				var group = await _unitOfWork.Group
-					.FindBy(g => g.Number == student.GroupNumber)
+					.FindBy(g => g.Number == parameter.GroupNumber)
 					.SingleOrDefaultAsync();
 
-				if (group == null && student.GroupNumber != null)
-					return ReturnFailureResult<StudentDto>($"Couldn't find group {student.GroupNumber}");
-				_logger.LogInformation($"Find group {student.GroupNumber}");
+				if (group == null && parameter.GroupNumber != null)
+					return ReturnFailureResult<StudentDto>($"Couldn't find group {parameter.GroupNumber}");
+				_logger.LogInformation($"Find group {parameter.GroupNumber}");
 				var person = _mapper.Map<Person>(student);
 				var newPerson = _unitOfWork.Person.Create(person);
 
-				_logger.LogInformation($"Create new person with email {student.Email}");
-				var studentEntity = _mapper.Map<Student>(student);
+				_logger.LogInformation($"Create new person with email {parameter.Email}");
+				var studentEntity = _mapper.Map<Student>(parameter);
 
 				studentEntity.GroupId = group.Id;
 				studentEntity.PersonId = newPerson.Id;
@@ -84,22 +84,7 @@ namespace Kitias.Providers.Implementations
 
 				_logger.LogInformation($"Student with id {newStudent.Id} was successfully created");
 				return ResultHandler.OnSuccess(result);
-			}
-			catch (ApplicationException)
-			{
-				throw;
-			}
-			catch (Exception ex)
-			{
-				return ReturnFailureResult<StudentDto>(ex.Message, "Error student data");
-			}
-		}
-
-		private Result<T> ReturnFailureResult<T>(string loggerMessage, string errorMessage = null)
-			where T : class
-		{
-			_logger.LogError(loggerMessage);
-			return ResultHandler.OnFailure<T>(errorMessage ?? loggerMessage);
+			});
 		}
 	}
 }

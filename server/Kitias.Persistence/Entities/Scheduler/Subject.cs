@@ -28,7 +28,7 @@ namespace Kitias.Persistence.Entities.Scheduler
 		/// <summary>
 		/// Subject date
 		/// </summary>
-		public DateTime? Date { get; set; }
+		public DateTime Date { get; set; }
 		/// <summary>
 		/// Subject week
 		/// </summary>
@@ -37,6 +37,10 @@ namespace Kitias.Persistence.Entities.Scheduler
 		/// Subject day
 		/// </summary>
 		public DayWeek Day { get; set; }
+		/// <summary>
+		/// Subject theme
+		/// </summary>
+		public string Theme { get; init; }
 		/// <summary>
 		/// Subject groups
 		/// </summary>

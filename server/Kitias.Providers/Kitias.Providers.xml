@@ -194,7 +194,7 @@
             Update student attendance
             </summary>
             <param name="id">Identifier of student attendance</param>
-            <param name="model">Model to update schstudent attendanceeduler</param>
+            <param name="model">Model to update student attendance</param>
             <returns>Updated student attendance</returns>
         </member>
         <member name="M:Kitias.Providers.Interfaces.IAttendanceProvider.DeleteStudentAttendanceAsync(System.Guid)">
@@ -202,6 +202,29 @@
             Delete student attendance for teacher
             </summary>
             <param name="id">Identifier of student attendance</param>
+            <returns>Status message</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IAttendanceProvider.CreateAttendancesAsync(System.Guid,System.Collections.Generic.IEnumerable{Kitias.Providers.Models.Attendances.AttendanceRequestModel})">
+            <summary>
+            Create attendance
+            </summary>
+            <param name="id">Identifier of sheduler</param>
+            <param name="models">Models to create attendances</param>
+            <returns>List of created attendances</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IAttendanceProvider.UpdateAttendanceAsync(System.Guid,Kitias.Providers.Models.Attendances.UpdateAttendanceModel)">
+            <summary>
+            Update attendance
+            </summary>
+            <param name="id">Identifier of attendance</param>
+            <param name="model">Model to update attendance</param>
+            <returns>Updated attendance</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IAttendanceProvider.DeleteAttendanceAsync(System.Guid)">
+            <summary>
+            Delete attendance for teacher
+            </summary>
+            <param name="id">Identifier of attendance</param>
             <returns>Status message</returns>
         </member>
         <member name="T:Kitias.Providers.Interfaces.IAuthProvider">
@@ -467,6 +490,26 @@
             Configure all entites
             </summary>
         </member>
+        <member name="T:Kitias.Providers.Models.Attendances.AttendanceRequestModel">
+            <summary>
+            Model to create attendance
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Attendances.AttendanceRequestModel.Id">
+            <summary>
+            Attendance identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Attendances.AttendanceRequestModel.Attended">
+            <summary>
+            Flag student is attended
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Attendances.AttendanceRequestModel.Score">
+            <summary>
+            Score
+            </summary>
+        </member>
         <member name="T:Kitias.Providers.Models.Attendances.ShedulerRequestModel">
             <summary>
             Nodel to create sheduler
@@ -545,6 +588,21 @@
         <member name="P:Kitias.Providers.Models.Attendances.StudentAttendanceRequestModel.StudentName">
             <summary>
             Students name
+            </summary>
+        </member>
+        <member name="T:Kitias.Providers.Models.Attendances.UpdateAttendanceModel">
+            <summary>
+            Model to update student attendance
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Attendances.UpdateAttendanceModel.Attended">
+            <summary>
+            Flag student is attended
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Attendances.UpdateAttendanceModel.Score">
+            <summary>
+            Score
             </summary>
         </member>
         <member name="T:Kitias.Providers.Models.Attendances.UpdateStudentAttendanceModel">
@@ -981,6 +1039,15 @@
             <param name="mapper">Mapper service</param>
             <param name="logger">Logging</param>
             <param name="unitOfWork">Take info about entities</param>
+        </member>
+        <member name="M:Kitias.Providers.Provider.ReturnFailureResult``1(System.String,System.String)">
+            <summary>
+            Return failure resul with logging
+            </summary>
+            <typeparam name="T">Type of return value</typeparam>
+            <param name="loggerMessage">Message for logging</param>
+            <param name="errorMessage">Message for client</param>
+            <returns>Failure result</returns>
         </member>
         <member name="T:Kitias.Providers.Services.EmailSender">
             <summary>

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Kitias.Persistence.DTOs;
-using Kitias.Persistence.Entities.Scheduler;
 using Kitias.Persistence.Entities.People;
+using Kitias.Persistence.Entities.Scheduler;
 using Kitias.Providers.Interfaces;
 using Kitias.Providers.Models;
 using Kitias.Providers.Models.Group;
@@ -98,9 +98,9 @@ namespace Kitias.Providers.Implementations
 		{
 			if (await _unitOfWork.Group.AnyAsync(g => g.Number == group.Number))
 				return ReturnFailureResult<GroupDto>("Group with same number is existed");
-			try
+			return await TryCatchExecute(group, async (parameter) =>
 			{
-				var groupEntity = _mapper.Map<Group>(group);
+				var groupEntity = _mapper.Map<Group>(parameter);
 				var newGroup = _unitOfWork.Group.Create(groupEntity);
 				var isSave = await _unitOfWork.SaveChangesAsync();
 
@@ -110,28 +110,25 @@ namespace Kitias.Providers.Implementations
 
 				_logger.LogInformation($"Group with id {newGroup.Id} was successfully created");
 				return ResultHandler.OnSuccess(result);
-			}
-			catch (ApplicationException)
-			{
-				throw;
-			}
-			catch (Exception ex)
-			{
-				return ReturnFailureResult<GroupDto>(ex.Message, "Error group data");
-			}
+			});
 		}
 
 		public async Task<Result<IEnumerable<StudentDto>>> CreateGroupStudentsAsync(Guid id, IEnumerable<Guid> students)
 		{
-			var group = await _unitOfWork.Group
-				.FindBy(g => g.Id == id)
-				.Include(g => g.Students)
-				.SingleOrDefaultAsync();
-
-			if (group == null)
-				return ReturnFailureResult<IEnumerable<StudentDto>>($"Group with id ${id} doesn't existed", "Couldn't find this group");
-			try
+			return await TryCatchExecute(students, async (parameter) =>
 			{
+				var group = await _unitOfWork.Group
+					.FindBy(g => g.Id == id)
+					.Include(g => g.Students)
+					.SingleOrDefaultAsync();
+
+				if (group == null)
+				{
+					return ReturnFailureResult<IEnumerable<StudentDto>>(
+						$"Group with id ${id} doesn't existed",
+						"Couldn't find this group"
+					);
+				}
 				if (group.Students == null)
 					group.Students = new List<Student>();
 				foreach (var student in group.Students)
@@ -141,10 +138,15 @@ namespace Kitias.Providers.Implementations
 						.SingleOrDefaultAsync();
 
 					if (person == null)
-						return ReturnFailureResult<IEnumerable<StudentDto>>($"Person with id ${student.PersonId} doesn't existed", "Couldn't find student");
+					{
+						return ReturnFailureResult<IEnumerable<StudentDto>>(
+							$"Person with id ${student.PersonId} doesn't existed",
+							"Couldn't find student"
+						);
+					}
 					student.Person = person;
 				}
-				foreach (var studentId in students)
+				foreach (var studentId in parameter)
 				{
 					var findStudent = await _unitOfWork.Student
 						.FindBy(s => s.Id == studentId)
@@ -152,7 +154,12 @@ namespace Kitias.Providers.Implementations
 						.SingleOrDefaultAsync();
 
 					if (findStudent == null)
-						return ReturnFailureResult<IEnumerable<StudentDto>>($"Student with id ${studentId} doesn't existed", "Couldn't find student");
+					{
+						return ReturnFailureResult<IEnumerable<StudentDto>>(
+							$"Student with id ${studentId} doesn't existed",
+							"Couldn't find student"
+						);
+					}
 					if (findStudent.GroupId != group.Id)
 					{
 						findStudent.Group = group;
@@ -170,15 +177,7 @@ namespace Kitias.Providers.Implementations
 
 				_logger.LogInformation($"Get all students of the group {id}");
 				return ResultHandler.OnSuccess(result);
-			}
-			catch (ApplicationException)
-			{
-				throw;
-			}
-			catch (Exception ex)
-			{
-				return ReturnFailureResult<IEnumerable<StudentDto>>(ex.Message, "Error group students data");
-			}
+			});
 		}
 
 		public async Task<Result<IEnumerable<SubjectDto>>> CreateGroupSubjectsAsync(Guid id, IEnumerable<Guid> subjects)
@@ -189,8 +188,13 @@ namespace Kitias.Providers.Implementations
 				.ToListAsync();
 
 			if (subjectGroups == null)
-				return ReturnFailureResult<IEnumerable<SubjectDto>>($"Couldn;t find subject for group {id}", "There isn't this subjects for this group");
-			try
+			{
+				return ReturnFailureResult<IEnumerable<SubjectDto>>(
+					$"Couldn;t find subject for group {id}",
+					"There isn't this subjects for this group"
+				);
+			}
+			return await TryCatchExecute(subjectGroups, async (parameter) =>
 			{
 				foreach (var subject in subjects)
 				{
@@ -221,15 +225,7 @@ namespace Kitias.Providers.Implementations
 
 				_logger.LogInformation($"Get all subjects of the group {id}");
 				return ResultHandler.OnSuccess(result);
-			}
-			catch (ApplicationException)
-			{
-				throw;
-			}
-			catch (Exception ex)
-			{
-				return ReturnFailureResult<IEnumerable<SubjectDto>>(ex.Message, "Error group subjects data");
-			}
+			});
 		}
 
 		public async Task<Result<GroupDto>> UpdateGroupAsync(Guid id, UpdateGroupModel group)
@@ -241,12 +237,17 @@ namespace Kitias.Providers.Implementations
 				.SingleOrDefaultAsync();
 
 			if (findGroup == null)
-				return ReturnFailureResult<GroupDto>($"Group with id ${id} doesn't existed", "Couldn't find this group");
-			try
 			{
-				findGroup.Course = group.Course ?? findGroup.Course;
-				findGroup.Number = group.Number ?? findGroup.Number;
-				var updateGroup = _unitOfWork.Group.Update(findGroup);
+				return ReturnFailureResult<GroupDto>(
+					$"Group with id ${id} doesn't existed",
+					"Couldn't find this group"
+				);
+			}
+			findGroup.Course = group.Course ?? findGroup.Course;
+			findGroup.Number = group.Number ?? findGroup.Number;
+			return await TryCatchExecute(findGroup, async (parameter) =>
+			{
+				var updateGroup = _unitOfWork.Group.Update(parameter);
 				var isSave = await _unitOfWork.SaveChangesAsync();
 
 				if (isSave <= 0)
@@ -255,15 +256,7 @@ namespace Kitias.Providers.Implementations
 
 				_logger.LogInformation($"Group with id {id} was successfully updated");
 				return ResultHandler.OnSuccess(result);
-			}
-			catch (ApplicationException)
-			{
-				throw;
-			}
-			catch (Exception ex)
-			{
-				return ReturnFailureResult<GroupDto>(ex.Message, "Error group data");
-			}
+			});
 		}
 
 		public async Task<Result<string>> DeleteGroupAsync(Guid id)
@@ -274,24 +267,16 @@ namespace Kitias.Providers.Implementations
 
 			if (findGroup == null)
 				return ReturnFailureResult<string>($"Group with id ${id} doesn't existed", "Couldn't find this group");
-			try
+			return await TryCatchExecute(findGroup, async (parameter) =>
 			{
-				_unitOfWork.Group.Delete(findGroup);
+				_unitOfWork.Group.Delete(parameter);
 				var isSave = await _unitOfWork.SaveChangesAsync();
 
 				if (isSave <= 0)
 					throw new ApplicationException($"Couldn't delete group with id ${id}");
 				_logger.LogInformation($"Group with id {id} was successfully deleted");
 				return ResultHandler.OnSuccess("Group was successfully deleted");
-			}
-			catch (ApplicationException)
-			{
-				throw;
-			}
-			catch (Exception ex)
-			{
-				return ReturnFailureResult<string>(ex.Message, "Error group data");
-			}
+			});
 		}
 
 		public async Task<Result<string>> DeleteGroupSubjectsAsync(Guid id, IEnumerable<Guid> subjects)
@@ -302,9 +287,9 @@ namespace Kitias.Providers.Implementations
 
 			if (findGroupSubjects == null)
 				return ReturnFailureResult<string>($"GroupSubject with groupId ${id} doesn't existed", "Couldn't find this subjects of the group");
-			try
+			return await TryCatchExecute(findGroupSubjects, async (parameter) =>
 			{
-				foreach (var groupSubject in findGroupSubjects)
+				foreach (var groupSubject in parameter)
 				{
 					if (subjects.Contains(groupSubject.SubjectId))
 					{
@@ -320,22 +305,7 @@ namespace Kitias.Providers.Implementations
 					throw new ApplicationException($"Couldn't delete subjects from the group ${id}");
 				_logger.LogInformation($"Subjects was successfully deleted from the group {id}");
 				return ResultHandler.OnSuccess("Subjects was successfully deleted from the group");
-			}
-			catch (ApplicationException)
-			{
-				throw;
-			}
-			catch (Exception ex)
-			{
-				return ReturnFailureResult<string>(ex.Message, "Error group data");
-			}
-		}
-
-		private Result<T> ReturnFailureResult<T>(string loggerMessage, string errorMessage = null)
-			where T : class
-		{
-			_logger.LogError(loggerMessage);
-			return ResultHandler.OnFailure<T>(errorMessage ?? loggerMessage);
+			});
 		}
 	}
 }

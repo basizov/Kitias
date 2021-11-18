@@ -55,13 +55,13 @@ namespace Kitias.Providers.Implementations
 		{
 			if (await _unitOfWork.Person.AnyAsync(s => s.Email == teacher.Email))
 				return ReturnFailureResult<TeacherDto>("Teacher with same email is existed");
-			try
+			return await TryCatchExecute(teacher, async (parameter) =>
 			{
-				var person = _mapper.Map<Person>(teacher);
+				var person = _mapper.Map<Person>(parameter);
 				var newPerson = _unitOfWork.Person.Create(person);
 
 				_logger.LogInformation($"Create new person with email {teacher.Email}");
-				var teacherEntity = _mapper.Map<Teacher>(teacher);
+				var teacherEntity = _mapper.Map<Teacher>(parameter);
 
 				teacherEntity.PersonId = newPerson.Id;
 				var newStudent = _unitOfWork.Teacher.Create(teacherEntity);
@@ -74,22 +74,7 @@ namespace Kitias.Providers.Implementations
 
 				_logger.LogInformation($"Teacher with id {newStudent.Id} was successfully created");
 				return ResultHandler.OnSuccess(result);
-			}
-			catch (ApplicationException)
-			{
-				throw;
-			}
-			catch (Exception ex)
-			{
-				return ReturnFailureResult<TeacherDto>(ex.Message, "Error teacher data");
-			}
-		}
-
-		private Result<T> ReturnFailureResult<T>(string loggerMessage, string errorMessage = null)
-			where T : class
-		{
-			_logger.LogError(loggerMessage);
-			return ResultHandler.OnFailure<T>(errorMessage ?? loggerMessage);
+			});
 		}
 	}
 }
