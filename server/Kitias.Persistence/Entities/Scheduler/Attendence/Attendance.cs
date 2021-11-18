@@ -14,10 +14,18 @@ namespace Kitias.Persistence.Entities.Scheduler.Attendence
 		/// </summary>
 		public Guid Id { get; init; }
 		/// <summary>
+		/// Sheduler identifier
+		/// </summary>
+		public Guid ShedulerId { get; init; }
+		/// <summary>
+		/// Sheduler info
+		/// </summary>
+		public AttendanceSheduler Sheduler { get; init; }
+		/// <summary>
 		/// Student identifier
 		/// *** Null if studentName != null
 		/// </summary>
-		public Guid? StudentId { get; init; }
+		public Guid? StudentId { get; set; }
 		/// <summary>
 		/// Student name
 		/// *** Null if studentId != null
@@ -26,22 +34,22 @@ namespace Kitias.Persistence.Entities.Scheduler.Attendence
 		/// <summary>
 		/// Student info
 		/// </summary>
-		public virtual Student Student { get; init; }
+		public virtual Student Student { get; set; }
 		/// <summary>
 		/// Subject identifier
 		/// </summary>
-		public Guid SubjectId { get; init; }
+		public Guid SubjectId { get; set; }
 		/// <summary>
 		/// Subject info
 		/// </summary>
-		public virtual Subject Subject { get; init; }
+		public virtual Subject Subject { get; set; }
 		/// <summary>
 		/// Flag student is attended
 		/// </summary>
-		public AttendaceVariants Attended { get; init; }
+		public AttendaceVariants Attended { get; set; }
 		/// <summary>
 		/// Score
 		/// </summary>
-		public byte Score { get; init; }
+		public byte Score { get; set; }
 	}
 }

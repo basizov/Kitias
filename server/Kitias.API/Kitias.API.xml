@@ -63,10 +63,10 @@
             Create student attendances of the sheduler
             </summary>
             <param name="id">Id of sheduler</param>
-            <param name="model">Model to craete student attendace</param>
+            <param name="models">Model to craete student attendace</param>
             <returns>Student attendances</returns>
         </member>
-        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.CreateStudentAttendancesAsync(System.Guid,Kitias.Providers.Models.Attendances.UpdateStudentAttendanceModel)">
+        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.UpdateStudentAttendanceAsync(System.Guid,Kitias.Providers.Models.Attendances.UpdateStudentAttendanceModel)">
             <summary>
             Update student attendance
             </summary>
@@ -74,11 +74,34 @@
             <param name="model">Model to updart student attendace</param>
             <returns>Update student attendance</returns>
         </member>
-        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.CreateStudentAttendancesAsync(System.Guid)">
+        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.DeleteStudentAttendanceAsync(System.Guid)">
             <summary>
             Delete student attendance
             </summary>
             <param name="id">Id of student attendace</param>
+            <returns>Status message</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.CreateAttendancesAsync(System.Guid,System.Collections.Generic.IEnumerable{Kitias.Providers.Models.Attendances.AttendanceRequestModel})">
+            <summary>
+            Create attendances of the sheduler
+            </summary>
+            <param name="id">Id of sheduler</param>
+            <param name="models">Model to craete attendace</param>
+            <returns>Attendances</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.UpdateAttendanceAsync(System.Guid,Kitias.Providers.Models.Attendances.UpdateAttendanceModel)">
+            <summary>
+            Update attendance
+            </summary>
+            <param name="id">Id of attendace</param>
+            <param name="model">Model to update attendace</param>
+            <returns>Update attendance</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.DeleteAttendanceAsync(System.Guid)">
+            <summary>
+            Delete attendance
+            </summary>
+            <param name="id">Id of attendace</param>
             <returns>Status message</returns>
         </member>
         <member name="T:Kitias.API.Controllers.AuthController">

@@ -31,5 +31,9 @@ namespace Kitias.Providers.Models.Subject
 		/// Subject day
 		/// </summary>
 		public string Day { get; init; }
+		/// <summary>
+		/// Subject theme
+		/// </summary>
+		public string Theme { get; init; }
 	}
 }

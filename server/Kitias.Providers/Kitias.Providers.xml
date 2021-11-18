@@ -495,11 +495,6 @@
             Model to create attendance
             </summary>
         </member>
-        <member name="P:Kitias.Providers.Models.Attendances.AttendanceRequestModel.Id">
-            <summary>
-            Attendance identifier
-            </summary>
-        </member>
         <member name="P:Kitias.Providers.Models.Attendances.AttendanceRequestModel.Attended">
             <summary>
             Flag student is attended
@@ -508,6 +503,21 @@
         <member name="P:Kitias.Providers.Models.Attendances.AttendanceRequestModel.Score">
             <summary>
             Score
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Attendances.AttendanceRequestModel.StudentId">
+            <summary>
+            Student came from db
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Attendances.AttendanceRequestModel.StudentName">
+            <summary>
+            Students name
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Attendances.AttendanceRequestModel.SubjectId">
+            <summary>
+            Subject identifier
             </summary>
         </member>
         <member name="T:Kitias.Providers.Models.Attendances.ShedulerRequestModel">
@@ -942,6 +952,11 @@
             Subject day
             </summary>
         </member>
+        <member name="P:Kitias.Providers.Models.Subject.CreateSubjectModel.Theme">
+            <summary>
+            Subject theme
+            </summary>
+        </member>
         <member name="T:Kitias.Providers.Models.Subject.UpdateSubjectModel">
             <summary>
             Model to update subject
@@ -975,6 +990,11 @@
         <member name="P:Kitias.Providers.Models.Subject.UpdateSubjectModel.Day">
             <summary>
             Subject day
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Subject.UpdateSubjectModel.Theme">
+            <summary>
+            Subject theme
             </summary>
         </member>
         <member name="T:Kitias.Providers.Models.SignUpRegisterModel">

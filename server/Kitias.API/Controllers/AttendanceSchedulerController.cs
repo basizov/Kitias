@@ -142,7 +142,7 @@ namespace Kitias.API.Controllers
 		/// Create student attendances of the sheduler
 		/// </summary>
 		/// <param name="id">Id of sheduler</param>
-		/// <param name="model">Model to craete student attendace</param>
+		/// <param name="models">Model to craete student attendace</param>
 		/// <returns>Student attendances</returns>
 		[HttpPost("{id}/studentAttendances")]
 		[Produces("application/json")]
@@ -167,7 +167,7 @@ namespace Kitias.API.Controllers
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-		public async Task<ActionResult<IEnumerable<StudentAttendanceDto>>> CreateStudentAttendancesAsync(Guid id, UpdateStudentAttendanceModel model)
+		public async Task<ActionResult<IEnumerable<StudentAttendanceDto>>> UpdateStudentAttendanceAsync(Guid id, UpdateStudentAttendanceModel model)
 		{
 			var result = await _attendanceProvider.UpdateStudentAttendanceAsync(id, model);
 
@@ -185,9 +185,65 @@ namespace Kitias.API.Controllers
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-		public async Task<ActionResult<IEnumerable<StudentAttendanceDto>>> CreateStudentAttendancesAsync(Guid id)
+		public async Task<ActionResult<string>> DeleteStudentAttendanceAsync(Guid id)
 		{
 			var result = await _attendanceProvider.DeleteStudentAttendanceAsync(id);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Create attendances of the sheduler
+		/// </summary>
+		/// <param name="id">Id of sheduler</param>
+		/// <param name="models">Model to craete attendace</param>
+		/// <returns>Attendances</returns>
+		[HttpPost("{id}/attendances")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<IEnumerable<AttendanceDto>>> CreateAttendancesAsync(Guid id, IEnumerable<AttendanceRequestModel> models)
+		{
+			var result = await _attendanceProvider.CreateAttendancesAsync(id, models);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Update attendance
+		/// </summary>
+		/// <param name="id">Id of attendace</param>
+		/// <param name="model">Model to update attendace</param>
+		/// <returns>Update attendance</returns>
+		[HttpPut("{id}/attendances")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<IEnumerable<AttendanceDto>>> UpdateAttendanceAsync(Guid id, UpdateAttendanceModel model)
+		{
+			var result = await _attendanceProvider.UpdateAttendanceAsync(id, model);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Delete attendance
+		/// </summary>
+		/// <param name="id">Id of attendace</param>
+		/// <returns>Status message</returns>
+		[HttpDelete("{id}/attendances")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<string>> DeleteAttendanceAsync(Guid id)
+		{
+			var result = await _attendanceProvider.DeleteAttendanceAsync(id);
 
 			if (!result.IsSuccess)
 				return BadRequest(result.Error);

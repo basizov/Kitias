@@ -59,7 +59,7 @@ namespace Kitias.Providers
 				.ForMember(s => s.Date, o => o.MapFrom(s => s.Subject.Date.ToString("dd.MM.yyyy")))
 				.ForMember(s => s.Theme, o => o.MapFrom(s => s.Subject.Theme))
 				.ForMember(s => s.Score, o => o.MapFrom(s => s.Score.ToString()))
-				.ForMember(s => s.FullName, o => o.MapFrom(s => s.Student.Person.FullName))
+				.ForMember(s => s.FullName, o => o.MapFrom(s => s.StudentName ?? s.Student.Person.FullName))
 				.ForMember(s => s.Type, o => o.MapFrom(s => Helpers.GetEnumMemberAttrValue(s.Subject.Type)))
 				.ForMember(s => s.Attended, o => o.MapFrom(s => Helpers.GetEnumMemberAttrValue(s.Attended)));
 			CreateMap<AttendanceSheduler, AttendanceShedulerDto>()

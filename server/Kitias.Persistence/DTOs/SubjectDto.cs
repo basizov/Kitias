@@ -32,6 +32,10 @@ namespace Kitias.Persistence.DTOs
 		/// </summary>
 		public string Week { get; init; }
 		/// <summary>
+		/// Subject theme
+		/// </summary>
+		public string Theme { get; init; }
+		/// <summary>
 		/// Subject day
 		/// </summary>
 		public string Day { get; init; }

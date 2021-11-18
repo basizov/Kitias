@@ -173,6 +173,8 @@ namespace Kitias.Providers.Implementations
 					parameter.Date = updatedEntity.Date;
 				if (subject.Day != null)
 					parameter.Day = updatedEntity.Day;
+				if (subject.Theme != null)
+					parameter.Theme = updatedEntity.Theme;
 				var updateSubject = _unitOfWork.Subject.Update(parameter);
 				var isSave = await _unitOfWork.SaveChangesAsync();
 

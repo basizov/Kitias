@@ -40,7 +40,7 @@ namespace Kitias.Persistence.Entities.Scheduler
 		/// <summary>
 		/// Subject theme
 		/// </summary>
-		public string Theme { get; init; }
+		public string Theme { get; set; }
 		/// <summary>
 		/// Subject groups
 		/// </summary>

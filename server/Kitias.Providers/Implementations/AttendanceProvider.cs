@@ -287,11 +287,11 @@ namespace Kitias.Providers.Implementations
 				studentAttendance.Raiting = byte.Parse(model.Raiting);
 			return await TryCatchExecute(studentAttendance, async (parameter) =>
 			{
-				var updateStudentAttendance = _unitOfWork.StudentAttendace.Update(studentAttendance);
+				var updateStudentAttendance = _unitOfWork.StudentAttendace.Update(parameter);
 				var isSave = await _unitOfWork.SaveChangesAsync();
 
 				if (isSave <= 0)
-					throw new ApplicationException("Couldn't delete student attendance");
+					throw new ApplicationException("Couldn't update student attendance");
 				var result = _mapper.Map<StudentAttendanceDto>(updateStudentAttendance);
 
 				_logger.LogInformation($"Student attendance {id} was successfully updated");
@@ -306,10 +306,15 @@ namespace Kitias.Providers.Implementations
 				.SingleOrDefaultAsync();
 
 			if (studentAttendance == null)
-				return ReturnFailureResult<string>($"Couldn't find student attendance with id {id}", "Couldn't find student attendance");
+			{
+				return ReturnFailureResult<string>(
+					$"Couldn't find student attendance with id {id}",
+					"Couldn't find student attendance"
+				);
+			}
 			return await TryCatchExecute(studentAttendance, async (parameter) =>
 			{
-				_unitOfWork.StudentAttendace.Delete(studentAttendance);
+				_unitOfWork.StudentAttendace.Delete(parameter);
 				var isSave = await _unitOfWork.SaveChangesAsync();
 
 				if (isSave <= 0)
@@ -319,8 +324,139 @@ namespace Kitias.Providers.Implementations
 			});
 		}
 
-		public Task<Result<IEnumerable<AttendanceDto>>> CreateAttendancesAsync(Guid id, IEnumerable<AttendanceRequestModel> models) => throw new NotImplementedException();
-		public Task<Result<AttendanceDto>> UpdateAttendanceAsync(Guid id, UpdateAttendanceModel model) => throw new NotImplementedException();
-		public Task<Result<string>> DeleteAttendanceAsync(Guid id) => throw new NotImplementedException();
+		public async Task<Result<IEnumerable<AttendanceDto>>> CreateAttendancesAsync(Guid id, IEnumerable<AttendanceRequestModel> models)
+		{
+			if (!await _unitOfWork.ShedulerAttendace.AnyAsync(s => s.Id == id))
+			{
+				return ReturnFailureResult<IEnumerable<AttendanceDto>>(
+					$"Couldn't find sheduler with id {id}",
+					"Couldn't find sheduler"
+				);
+			}
+			return await TryCatchExecute(models, async (parameter) =>
+			{
+				var attendances = new List<Attendance>();
+
+				foreach (var model in parameter)
+				{
+					var subject = await _unitOfWork.Subject
+						.FindBy(s => s.Id == model.SubjectId)
+						.SingleOrDefaultAsync();
+
+					if (subject == null)
+					{
+						return ReturnFailureResult<IEnumerable<AttendanceDto>>(
+							$"Couldn't find subject with id {model.SubjectId}",
+							"Couldn't find subject"
+						);
+					}
+					var newAttendance = new Attendance
+					{
+						ShedulerId = id,
+						Score = byte.Parse(model.Score ?? "0"),
+						Attended = Helpers.GetEnumMemberFromString<AttendaceVariants>(model.Attended ?? "Н"),
+						SubjectId = model.SubjectId
+					};
+
+					if (model.StudentId != null)
+					{
+						var student = await _unitOfWork.Student
+							.FindBy(s => s.Id == model.StudentId)
+							.Include(s => s.Person)
+							.SingleOrDefaultAsync();
+
+						if (student == null)
+						{
+							return ReturnFailureResult<IEnumerable<AttendanceDto>>(
+								$"Couldn't find student with id {model.StudentId}",
+								"Couldn't find student"
+							);
+						}
+						newAttendance.StudentId = model.StudentId;
+						_unitOfWork.Attendance.Create(newAttendance);
+						newAttendance.Student = student;
+						newAttendance.Subject = subject;
+						attendances.Add(newAttendance);
+					}
+					else if (model.StudentName != null)
+					{
+						newAttendance.StudentName = model.StudentName;
+						_unitOfWork.Attendance.Create(newAttendance);
+						newAttendance.Subject = subject;
+						attendances.Add(newAttendance);
+					}
+					else
+						return ReturnFailureResult<IEnumerable<AttendanceDto>>("Enter students");
+					_logger.LogInformation($"Created new attendance with id {newAttendance.Id}");
+				}
+				var isSave = await _unitOfWork.SaveChangesAsync();
+
+				if (isSave <= 0)
+					throw new ApplicationException("Couldn't save new attendances");
+				var result = _mapper.Map<IEnumerable<AttendanceDto>>(attendances);
+
+				_logger.LogInformation("Attendance was successfully created");
+				return ResultHandler.OnSuccess(result);
+			});
+		}
+
+		public async Task<Result<AttendanceDto>> UpdateAttendanceAsync(Guid id, UpdateAttendanceModel model)
+		{
+			var attendance = await _unitOfWork.Attendance
+				.FindBy(a => a.Id == id)
+				.Include(a => a.Student)
+				.ThenInclude(a => a.Person)
+				.Include(a => a.Subject)
+				.SingleOrDefaultAsync();
+
+			if (attendance == null)
+			{
+				return ReturnFailureResult<AttendanceDto>(
+					$"Couldn't find attendance with id {id}",
+					"Couldn't find attendance"
+				);
+			}
+			if (model.Attended != null)
+				attendance.Attended = Helpers.GetEnumMemberFromString<AttendaceVariants>(model.Attended);
+			if (model.Score != null)
+				attendance.Score = byte.Parse(model.Score);
+			return await TryCatchExecute(attendance, async (parameter) =>
+			{
+				var updateAttendance = _unitOfWork.Attendance.Update(parameter);
+				var isSave = await _unitOfWork.SaveChangesAsync();
+
+				if (isSave <= 0)
+					throw new ApplicationException("Couldn't update attendance");
+				var result = _mapper.Map<AttendanceDto>(updateAttendance);
+
+				_logger.LogInformation($"Attendance {id} was successfully updated");
+				return ResultHandler.OnSuccess(result);
+			});
+		}
+
+		public async Task<Result<string>> DeleteAttendanceAsync(Guid id)
+		{
+			var attendance = await _unitOfWork.Attendance
+				.FindBy(a => a.Id == id)
+				.SingleOrDefaultAsync();
+
+			if (attendance == null)
+			{
+				return ReturnFailureResult<string>(
+					$"Couldn't find attendance with id {id}",
+					"Couldn't find attendance"
+				);
+			}
+			return await TryCatchExecute(attendance, async (parameter) =>
+			{
+				_unitOfWork.Attendance.Delete(parameter);
+				var isSave = await _unitOfWork.SaveChangesAsync();
+
+				if (isSave <= 0)
+					throw new ApplicationException("Couldn't delete attendance");
+				_logger.LogInformation($"Attendance with id {id} is successfully deleted");
+				return ResultHandler.OnSuccess("Attendance successfully deleted");
+			});
+		}
 	}
 }
