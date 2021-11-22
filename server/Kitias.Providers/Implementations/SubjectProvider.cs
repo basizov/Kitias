@@ -76,14 +76,22 @@ namespace Kitias.Providers.Implementations
 			return ResultHandler.OnSuccess(result as IEnumerable<GroupDto>);
 		}
 
-		public async Task<Result<SubjectDto>> CreateSubjectAsync(CreateSubjectModel subject)
+		public async Task<Result<SubjectDto>> CreateSubjectAsync(CreateSubjectModel subject, string email)
 		{
-			if (await _unitOfWork.Subject
-					.AnyAsync(s => s.Name == subject.Name && s.Type == Helpers.GetEnumMemberFromString<SubjectType>(subject.Type)))
-				return ReturnFailureResult<SubjectDto>("This subject have the same subject");
+			var teacher = await _unitOfWork.Teacher
+				.FindByAndInclude(t => t.Person.Email == email, p => p.Person)
+				.SingleOrDefaultAsync();
+
+			if (teacher == null)
+				return ReturnFailureResult<SubjectDto>($"Couldn't find teacher with email {email}", "Couldn't find teacher");
+			//if (await _unitOfWork.Subject
+			//		.AnyAsync(s => s.Name == subject.Name && s.Type == Helpers.GetEnumMemberFromString<SubjectType>(subject.Type)))
+			//	return ReturnFailureResult<SubjectDto>("This subject have the same subject");
 			return await TryCatchExecute(subject, async (parameter) =>
 			{
 				var subjectEntity = _mapper.Map<Subject>(parameter);
+
+				subjectEntity.TeacherId = teacher.Id;
 				var newSubject = _unitOfWork.Subject.Create(subjectEntity);
 				var isSave = await _unitOfWork.SaveChangesAsync();
 

@@ -13,6 +13,9 @@ namespace Kitias.API.Controllers
 	[Authorize(AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme)]
 	public class BaseController : ControllerBase
 	{
+		/// <summary>
+		/// Logging
+		/// </summary>
 		protected readonly ILogger _logger;
 
 		/// <summary>

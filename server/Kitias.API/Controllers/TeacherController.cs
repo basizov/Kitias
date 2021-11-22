@@ -1,10 +1,13 @@
 ﻿using Kitias.Persistence.DTOs;
 using Kitias.Providers.Interfaces;
+using Kitias.Providers.Models.Subject;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Kitias.API.Controllers
@@ -52,6 +55,58 @@ namespace Kitias.API.Controllers
 		public async Task<ActionResult<TeacherDto>> TakeStudentByIdAsync(Guid id)
 		{
 			var result = await _teacherProvider.TakeTeacherByIdAsync(id);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Take subjects of the teacher
+		/// </summary>
+		/// <returns>Subjects</returns>
+		[HttpGet("subjects")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<IEnumerable<SubjectDto>>> TakeTeacherSubjectsAsync()
+		{
+			var result = await _teacherProvider.TakeTeacherSubjectsAsync(User.FindFirst(ClaimTypes.Email)?.Value ?? "");
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Take subject of the teacher
+		/// </summary>
+		/// <param name="name">subject name</param>
+		/// <returns>Subjects</returns>
+		[HttpGet("subjects/{name}")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<IEnumerable<SubjectDto>>> TakeTeacherSubjectAsync(string name)
+		{
+			var result = await _teacherProvider.TakeTeacherSubjectAsync(User.FindFirst(ClaimTypes.Email)?.Value ?? "", name);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Take subjects infos of the teacher
+		/// </summary>
+		/// <returns>Subjects infos</returns>
+		[HttpGet("subjectsInfos")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<Dictionary<string, Dictionary<string, IGrouping<string, string>>>>> TakeTeacherSubjectsInfosAsync()
+		{
+			var result = await _teacherProvider.TakeTeacherSubjectsInfosAsync(User.FindFirst(ClaimTypes.Email)?.Value ?? "");
 
 			if (!result.IsSuccess)
 				return BadRequest(result.Error);

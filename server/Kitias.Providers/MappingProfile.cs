@@ -42,6 +42,7 @@ namespace Kitias.Providers
 			CreateMap<Subject, SubjectDto>()
 				.ForMember(s => s.Week, o => o.MapFrom(s => Helpers.GetEnumMemberAttrValue(s.Week)))
 				.ForMember(s => s.Time, o => o.MapFrom(s => s.Time.ToString()))
+				.ForMember(s => s.Date, o => o.MapFrom(s => s.Date.ToString("dd.MM.yyyy")))
 				.ForMember(s => s.Day, o => o.MapFrom(s => Helpers.GetEnumMemberAttrValue(s.Day)));
 			CreateMap<Teacher, TeacherDto>()
 				.ForMember(s => s.Email, o => o.MapFrom(s => s.Person.Email))

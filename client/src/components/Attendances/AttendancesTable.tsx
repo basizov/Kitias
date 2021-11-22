@@ -39,13 +39,13 @@ type PropsType = {
 export const AttendancesTable: React.FC<PropsType> = ({
                                                         subjectType
                                                       }) => {
-  const [anchorEl, setAnchorEl] = React.useState<HTMLTableCellElement | null>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLTableCellElement | null>(null);
   const open = Boolean(anchorEl);
   const pageSize = useMemo(() => 8, []);
   const [page, setPage] = useState(0);
   const {attendances} = useTypedSelector(s => s.attendance);
   const specAttendance = useMemo(() => attendances
-    .filter(a => a.type === subjectType), [attendances]);
+    .filter(a => a.type === subjectType), [attendances, subjectType]);
   const studentAttendances = useMemo(() => {
     const result = specAttendance.reduce((fst, sec) => {
       fst[sec.fullName] = fst[sec.fullName] || [];

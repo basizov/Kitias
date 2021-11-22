@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   CSSObject,
   Divider,
@@ -12,7 +12,7 @@ import {
   ChevronLeft,
   Menu,
   Home,
-  DateRange
+  DateRange, FeaturedPlayList
 } from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 
@@ -52,7 +52,7 @@ const StyledLeftArrow = styled(DrawerHeader)({
 const StyledDrawer = styled(Drawer, {
   shouldForwardProp: (prop) => prop !== 'open'
 })(({theme, open}) => ({
-  width: 200,
+  width: 300,
   flexShrink: 0,
   whiteSpace: 'nowrap',
   boxSizing: 'border-box',
@@ -63,12 +63,19 @@ const StyledDrawer = styled(Drawer, {
   ...(!open && {
     ...closeMixin(theme),
     '& .MuiDrawer-paper': closeMixin(theme)
-  }),
+  })
 }));
 
-export const Sidebar: React.FC = () => {
+type PropsType = {
+  open: boolean;
+  setOpen: (payload: boolean) => void;
+};
+
+export const Sidebar: React.FC<PropsType> = ({
+                                               open,
+                                               setOpen
+                                             }) => {
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
 
   return (
     <StyledDrawer variant="permanent" open={open}>
@@ -91,6 +98,14 @@ export const Sidebar: React.FC = () => {
               <Home/>
             </ListItemIcon>
             <ListItemText primary="Главная"/>
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => navigate('/subjects')}>
+            <ListItemIcon>
+              <FeaturedPlayList/>
+            </ListItemIcon>
+            <ListItemText primary="Предметы"/>
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>

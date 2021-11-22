@@ -1,4 +1,5 @@
-﻿using Kitias.Persistence.Entities.Scheduler.Attendence;
+﻿using Kitias.Persistence.Entities.Scheduler;
+using Kitias.Persistence.Entities.Scheduler.Attendence;
 using System;
 using System.Collections.Generic;
 
@@ -25,5 +26,9 @@ namespace Kitias.Persistence.Entities.People
 		/// Teacher shedulers
 		/// </summary>
 		public virtual ICollection<AttendanceSheduler> Shedulers { get; init; }
+		/// <summary>
+		/// Subjects
+		/// </summary>
+		public virtual ICollection<Subject> Subjects { get; init; }
 	}
 }

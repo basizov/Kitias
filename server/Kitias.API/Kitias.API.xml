@@ -110,7 +110,7 @@
             </summary>
         </member>
         <!-- Badly formed XML comment ignored for member "M:Kitias.API.Controllers.AuthController.#ctor(Microsoft.Extensions.Logging.ILogger{Kitias.API.Controllers.AuthController},System.Net.Http.IHttpClientFactory,Microsoft.Extensions.Options.IOptions{Kitias.Persistence.Entities.Default.ISSecure},Microsoft.Extensions.Configuration.IConfiguration,Kitias.Providers.Interfaces.IStudentProvider,Kitias.Providers.Interfaces.ITeacherProvider)" -->
-        <member name="M:Kitias.API.Controllers.AuthController.IsAuth">
+        <member name="M:Kitias.API.Controllers.AuthController.IsAuthAsync">
             <summary>
             Flag tha user is auth
             </summary>
@@ -145,6 +145,11 @@
         <member name="T:Kitias.API.Controllers.BaseController">
             <summary>
             Base controller
+            </summary>
+        </member>
+        <member name="F:Kitias.API.Controllers.BaseController._logger">
+            <summary>
+            Logging
             </summary>
         </member>
         <member name="M:Kitias.API.Controllers.BaseController.#ctor(Microsoft.Extensions.Logging.ILogger)">
@@ -357,6 +362,25 @@
             </summary>
             <param name="id">Id of teacher</param>
             <returns>Teacher</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.TeacherController.TakeTeacherSubjectsAsync">
+            <summary>
+            Take subjects of the teacher
+            </summary>
+            <returns>Subjects</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.TeacherController.TakeTeacherSubjectAsync(System.String)">
+            <summary>
+            Take subject of the teacher
+            </summary>
+            <param name="name">subject name</param>
+            <returns>Subjects</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.TeacherController.TakeTeacherSubjectsInfosAsync">
+            <summary>
+            Take subjects infos of the teacher
+            </summary>
+            <returns>Subjects infos</returns>
         </member>
         <member name="T:Kitias.API.Extensions.AuthorizationExtension">
             <summary>

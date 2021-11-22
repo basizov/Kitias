@@ -851,6 +851,11 @@
             Teacher shedulers
             </summary>
         </member>
+        <member name="P:Kitias.Persistence.Entities.People.Teacher.Subjects">
+            <summary>
+            Subjects
+            </summary>
+        </member>
         <member name="T:Kitias.Persistence.Entities.Scheduler.Attendence.Attendance">
             <summary>
             Attendance of subjects
@@ -1093,6 +1098,16 @@
         <member name="P:Kitias.Persistence.Entities.Scheduler.Subject.Theme">
             <summary>
             Subject theme
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Subject.TeacherId">
+            <summary>
+            Teacher identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Subject.Teacher">
+            <summary>
+            Teacher info
             </summary>
         </member>
         <member name="P:Kitias.Persistence.Entities.Scheduler.Subject.Groups">

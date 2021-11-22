@@ -4,11 +4,13 @@ using Kitias.Persistence.Entities.People;
 using Kitias.Providers.Interfaces;
 using Kitias.Providers.Models;
 using Kitias.Providers.Models.Person;
+using Kitias.Providers.Models.Subject;
 using Kitias.Repository.Interfaces.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Kitias.Providers.Implementations
@@ -75,6 +77,80 @@ namespace Kitias.Providers.Implementations
 				_logger.LogInformation($"Teacher with id {newStudent.Id} was successfully created");
 				return ResultHandler.OnSuccess(result);
 			});
+		}
+
+		public async Task<Result<IEnumerable<SubjectDto>>> TakeTeacherSubjectsAsync(string email)
+		{
+			var teacher = await _unitOfWork.Teacher
+				.FindByAndInclude(
+					s => s.Person.Email == email,
+					s => s.Person, s => s.Subjects
+				)
+				.SingleOrDefaultAsync();
+
+			if (teacher == null)
+				return ReturnFailureResult<IEnumerable<SubjectDto>>($"Teacher with email ${email} doesn't existed", "Couldn't find this teacher");
+			var result = _mapper.Map<IEnumerable<SubjectDto>>(teacher.Subjects);
+
+			_logger.LogInformation($"Take all subjects of teacher {email}");
+			return ResultHandler.OnSuccess(result);
+		}
+
+		public async Task<Result<IEnumerable<SubjectDto>>> TakeTeacherSubjectAsync(string email, string name)
+		{
+			var teacher = await _unitOfWork.Teacher
+				.FindByAndInclude(
+					s => s.Person.Email == email,
+					s => s.Person, s => s.Subjects
+				)
+				.SingleOrDefaultAsync();
+
+			if (teacher == null)
+				return ReturnFailureResult<IEnumerable<SubjectDto>>($"Teacher with email ${email} doesn't existed", "Couldn't find this teacher");
+			var result = _mapper.Map<IEnumerable<SubjectDto>>(teacher.Subjects
+				.Where(s => s.Name == name)
+			);
+
+			_logger.LogInformation($"Take all subjects of teacher {email}");
+			return ResultHandler.OnSuccess(result);
+		}
+
+		public async Task<Result<Dictionary<string, Dictionary<string, IGrouping<string, string>>>>> TakeTeacherSubjectsInfosAsync(string email)
+		{
+			var teacher = await _unitOfWork.Teacher
+				.FindByAndInclude(
+					s => s.Person.Email == email,
+					s => s.Person, s => s.Subjects
+				)
+				.SingleOrDefaultAsync();
+
+			if (teacher == null)
+				return ReturnFailureResult<Dictionary<string, Dictionary<string, IGrouping<string, string>>>>($"Teacher with email ${email} doesn't existed", "Couldn't find this teacher");
+			var result = teacher.Subjects
+				.Select(s => new SubjectInfoModel
+				{
+					Type = Helpers.GetEnumMemberAttrValue(s.Type),
+					Name = s.Name,
+					Date = s.Date.ToString("dd.MM.yyyy"),
+					Time = s.Time.ToString().Remove(s.Time.ToString().Length - 3)
+				})
+				.OrderBy(s => s.Name)
+				.GroupBy(s => s.Name)
+				.ToDictionary(s => s.Key);
+			var r = new Dictionary<string, Dictionary<string, IGrouping<string, string>>>();
+
+			foreach (var key in result.Keys)
+			{
+				var item = result.GetValueOrDefault(key);
+				var newValue = item
+					.OrderBy(s => $"{s.Date} {s.Time}")
+					.GroupBy(s => s.Type, s => $"{s.Date} {s.Time}")
+					.ToDictionary(s => s.Key);
+
+				r.Add(key, newValue);
+			}
+			_logger.LogInformation($"Take all subjects of teacher {email}");
+			return ResultHandler.OnSuccess(r);
 		}
 	}
 }

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Kitias.API.Controllers
@@ -85,13 +86,13 @@ namespace Kitias.API.Controllers
 		/// <param name="model">Model to create subject</param>
 		/// <returns>New subject</returns>
 		[HttpPost]
-		[Authorize(Roles = RolesNames.ADMIN_ROLE)]
+		[Authorize(Roles = RolesNames.TEACHER_ROLE)]
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
 		public async Task<ActionResult<GroupDto>> CreateSubjectAsync(CreateSubjectModel model)
 		{
-			var result = await _subjectProvider.CreateSubjectAsync(model);
+			var result = await _subjectProvider.CreateSubjectAsync(model, User.FindFirst(ClaimTypes.Email)?.Value ?? "");
 
 			if (!result.IsSuccess)
 				return BadRequest(result.Error);
@@ -106,6 +107,7 @@ namespace Kitias.API.Controllers
 		/// <returns>Groups</returns>
 		[HttpPost("{id}/groups")]
 		[Produces("application/json")]
+		[Authorize(Roles = RolesNames.ADMIN_ROLE)]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
 		public async Task<ActionResult<GroupDto>> AddGroupSubjectsByIdAsync(Guid id, [FromBody] IEnumerable<Guid> groups)
@@ -124,7 +126,7 @@ namespace Kitias.API.Controllers
 		/// <param name="model">Model to create subject</param>
 		/// <returns>Updated subject</returns>
 		[HttpPut("{id}")]
-		[Authorize(Roles = RolesNames.ADMIN_ROLE)]
+		[Authorize(Roles = RolesNames.TEACHER_ROLE)]
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -143,7 +145,7 @@ namespace Kitias.API.Controllers
 		/// <param name="id">Existed subject id</param>
 		/// <returns>Status message</returns>
 		[HttpDelete("{id}")]
-		[Authorize(Roles = RolesNames.ADMIN_ROLE)]
+		[Authorize(Roles = RolesNames.TEACHER_ROLE)]
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]

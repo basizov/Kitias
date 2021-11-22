@@ -1,10 +1,9 @@
-import React, {createContext, useEffect, useMemo} from 'react';
+import React, {createContext, useEffect, useMemo, useState} from 'react';
 import {Sidebar} from "../components/Sidebar";
 import {
   Backdrop,
-  Box, CircularProgress,
+  CircularProgress,
   createTheme,
-  Grid,
   IconButton, Paper, styled,
   ThemeProvider,
   useMediaQuery
@@ -21,6 +20,7 @@ import {PublicRoute} from "./PublicRoute";
 import {isAuthAsync} from "../store/defaultStore/asyncActions";
 import {ShedulersPage} from "../pages/ShedulersPage";
 import {AttendancesPage} from "../pages/AttendancesPage";
+import {SubjectsPage} from "../pages/SubjectsPage";
 
 const RootPaper = styled(Paper)({
   position: 'absolute',
@@ -32,7 +32,7 @@ const RootPaper = styled(Paper)({
 });
 
 const StyledIconButton = styled(IconButton)({
-  position: 'absolute',
+  position: 'fixed',
   bottom: ".3rem",
   right: ".3rem",
   zIndex: 10001
@@ -42,6 +42,25 @@ export const ColorModeContext = createContext({
   toggleColorMode: () => {
   }
 });
+
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
+  open?: boolean;
+}>(({ theme, open }) => ({
+  flexGrow: 1,
+  padding: theme.spacing(1),
+  transition: theme.transitions.create('margin', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  marginLeft: theme.spacing(7),
+  ...(open && {
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginLeft: 300,
+  }),
+}));
 
 export const App: React.FC = () => {
   const dispatch = useDispatch();
@@ -61,6 +80,7 @@ export const App: React.FC = () => {
       mode: colorTheme
     }
   }), [colorTheme]);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     dispatch(isAuthAsync());
@@ -81,12 +101,15 @@ export const App: React.FC = () => {
             sx={{color: '#fff'}}
             open={loadingInitial}
           ><CircularProgress color="inherit"/></Backdrop>
-          {!loadingInitial && <Grid container>
-              <Sidebar/>
-              <Box component="main" sx={{flexGrow: 1, p: 1}}>
+          {!loadingInitial && <React.Fragment>
+              <Sidebar open={open} setOpen={setOpen}/>
+              <Main open={open}>
                   <Routes>
                       <Route path='/' element={<PrivateRoute>
                         <HomePage/>
+                      </PrivateRoute>}/>
+                      <Route path='/subjects' element={<PrivateRoute>
+                        <SubjectsPage/>
                       </PrivateRoute>}/>
                       <Route path='/attendances/:id' element={<PrivateRoute>
                         <AttendancesPage/>
@@ -98,14 +121,14 @@ export const App: React.FC = () => {
                         <AuthPage/>
                       </PublicRoute>}/>
                   </Routes>
-              </Box>
+              </Main>
               <StyledIconButton
                   color="inherit"
                   onClick={changeColorTheme.toggleColorMode}
               >{theme.palette.mode === ColorEnums.LIGHT_COLOR ?
                 <Brightness7/> :
                 <Brightness4/>}</StyledIconButton>
-          </Grid>}
+          </React.Fragment>}
         </RootPaper>
       </ThemeProvider>
     </ColorModeContext.Provider>

@@ -1,4 +1,5 @@
-﻿using Kitias.Persistence.Enums;
+﻿using Kitias.Persistence.Entities.People;
+using Kitias.Persistence.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -41,6 +42,14 @@ namespace Kitias.Persistence.Entities.Scheduler
 		/// Subject theme
 		/// </summary>
 		public string Theme { get; set; }
+		/// <summary>
+		/// Teacher identifier
+		/// </summary>
+		public Guid TeacherId { get; set; }
+		/// <summary>
+		/// Teacher info
+		/// </summary>
+		public Teacher Teacher { get; init; }
 		/// <summary>
 		/// Subject groups
 		/// </summary>

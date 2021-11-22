@@ -417,11 +417,12 @@
             <param name="id">Id of the subject to take</param>
             <returns>Groups</returns>
         </member>
-        <member name="M:Kitias.Providers.Interfaces.ISubjectProvider.CreateSubjectAsync(Kitias.Providers.Models.Subject.CreateSubjectModel)">
+        <member name="M:Kitias.Providers.Interfaces.ISubjectProvider.CreateSubjectAsync(Kitias.Providers.Models.Subject.CreateSubjectModel,System.String)">
             <summary>
             Create subject
             </summary>
             <param name="subject">Model to create a subject</param>
+            <param name="email">Teacher email</param>
             <returns>New subject</returns>
         </member>
         <member name="M:Kitias.Providers.Interfaces.ISubjectProvider.CreateSubjectGroupsAsync(System.Guid,System.Collections.Generic.IEnumerable{System.Guid})">
@@ -472,6 +473,28 @@
             </summary>
             <param name="id">Id of the teacher to take</param>
             <returns>Teacher</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.ITeacherProvider.TakeTeacherSubjectsAsync(System.String)">
+            <summary>
+            Take all subjects of the teacher
+            </summary>
+            <param name="email">Email of the teacher to take</param>
+            <returns>Subjects</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.ITeacherProvider.TakeTeacherSubjectAsync(System.String,System.String)">
+            <summary>
+            Take subject of the teacher by name
+            </summary>
+            <param name="email">Email of the teacher to take</param>
+            <param name="name">Subject name</param>
+            <returns>Subject</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.ITeacherProvider.TakeTeacherSubjectsInfosAsync(System.String)">
+            <summary>
+            Take all subjects infos of the teacher
+            </summary>
+            <param name="email">Email of the teacher to take</param>
+            <returns>Subjects</returns>
         </member>
         <member name="M:Kitias.Providers.Interfaces.ITeacherProvider.CreateTeacherAsync(Kitias.Providers.Models.Person.CreateTeacherModel)">
             <summary>
@@ -955,6 +978,31 @@
         <member name="P:Kitias.Providers.Models.Subject.CreateSubjectModel.Theme">
             <summary>
             Subject theme
+            </summary>
+        </member>
+        <member name="T:Kitias.Providers.Models.Subject.SubjectInfoModel">
+            <summary>
+            Subjects info model
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Subject.SubjectInfoModel.Name">
+            <summary>
+            Name of the subject
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Subject.SubjectInfoModel.Type">
+            <summary>
+            Type of the subject
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Subject.SubjectInfoModel.Date">
+            <summary>
+            List of dates
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Subject.SubjectInfoModel.Time">
+            <summary>
+            List of times
             </summary>
         </member>
         <member name="T:Kitias.Providers.Models.Subject.UpdateSubjectModel">

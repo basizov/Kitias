@@ -52,13 +52,36 @@ namespace Kitias.API.Controllers
 		[HttpGet]
 		[AllowAnonymous]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-		public ActionResult<string> IsAuth()
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+		public async Task<ActionResult<string>> IsAuthAsync()
 		{
 			var token = Request.Cookies[".AspNetCore.Application.Guid"];
 
 			if (token == null)
-				return Unauthorized();
+			{
+				var identityDomain = _config.GetConnectionString("IdentityServerDomain");
+				var (newRefreshResponse, refreshClient, discovery) = await GetNewTokenAsync(identityDomain);
+
+				if (newRefreshResponse.StatusCode != HttpStatusCode.OK)
+				{
+					_logger.LogError("Couln't take old refreshToken");
+					return Unauthorized("Please enter to the app");
+				}
+				var (saveRefreshResponse, tokenResponse) = await ReloadTokenAsync(
+					newRefreshResponse,
+					refreshClient,
+					discovery,
+					identityDomain
+				);
+
+				if (saveRefreshResponse.StatusCode != HttpStatusCode.OK)
+				{
+					_logger.LogError("Couln't update refresh token into identity-db");
+					return BadRequest(await saveRefreshResponse.Content.ReadAsStringAsync());
+				}
+				SaveAccessToken(tokenResponse);
+			}
 			return Ok("User is auth");
 		}
 
@@ -180,16 +203,7 @@ namespace Kitias.API.Controllers
 				_logger.LogError("Couln't save refresh token to identity-db");
 				return BadRequest(await saveRefreshResponse.Content.ReadAsStringAsync());
 			}
-			Response.Cookies.Append(
-				".AspNetCore.Application.Guid",
-				$"{tokenResponse.AccessToken}",
-				new()
-				{
-					HttpOnly = true,
-					Expires = DateTime.UtcNow.AddHours(1),
-					SameSite = SameSiteMode.None
-				}
-			);
+			SaveAccessToken(tokenResponse);
 			return Ok("User was successfully logged in");
 		}
 
@@ -206,15 +220,40 @@ namespace Kitias.API.Controllers
 		public async Task<ActionResult<string>> TakeNewTokenAsync()
 		{
 			var identityDomain = _config.GetConnectionString("IdentityServerDomain");
-			var refreshClient = _clientFactory.CreateClient();
-			var discovery = await refreshClient.GetDiscoveryDocumentAsync(_secureOptions.Value.Authority);
-			var newRefreshResponse = await refreshClient.GetAsync($"{identityDomain}/auth/token");
+			var (newRefreshResponse, refreshClient, discovery) = await GetNewTokenAsync(identityDomain);
 
 			if (newRefreshResponse.StatusCode != HttpStatusCode.OK)
 			{
 				_logger.LogError("Couln't take old refreshToken");
 				return Unauthorized("Please enter to the app");
 			}
+			var (saveRefreshResponse, tokenResponse) = await ReloadTokenAsync(
+				newRefreshResponse,
+				refreshClient,
+				discovery,
+				identityDomain
+			);
+
+			if (saveRefreshResponse.StatusCode != HttpStatusCode.OK)
+			{
+				_logger.LogError("Couln't update refresh token into identity-db");
+				return BadRequest(await saveRefreshResponse.Content.ReadAsStringAsync());
+			}
+			SaveAccessToken(tokenResponse);
+			return Ok("User was successfully reconnected");
+		}
+
+		private async Task<(HttpResponseMessage, HttpClient, DiscoveryDocumentResponse)> GetNewTokenAsync(string identityDomain)
+		{
+			var refreshClient = _clientFactory.CreateClient();
+			var discovery = await refreshClient.GetDiscoveryDocumentAsync(_secureOptions.Value.Authority);
+			var newRefreshResponse = await refreshClient.GetAsync($"{identityDomain}/auth/token");
+
+			return (newRefreshResponse, refreshClient, discovery);
+		}
+
+		private async Task<(HttpResponseMessage, TokenResponse)> ReloadTokenAsync(HttpResponseMessage newRefreshResponse, HttpClient refreshClient, DiscoveryDocumentResponse discovery, string identityDomain)
+		{
 			var oldToken = await newRefreshResponse.Content.ReadAsStringAsync();
 			var tokenResponse = await refreshClient.RequestRefreshTokenAsync(new()
 			{
@@ -240,11 +279,11 @@ namespace Kitias.API.Controllers
 				"application/json"
 			));
 
-			if (saveRefreshResponse.StatusCode != HttpStatusCode.OK)
-			{
-				_logger.LogError("Couln't update refresh token into identity-db");
-				return BadRequest(await saveRefreshResponse.Content.ReadAsStringAsync());
-			}
+			return (saveRefreshResponse, tokenResponse);
+		}
+
+		private void SaveAccessToken(TokenResponse tokenResponse)
+		{
 			Response.Cookies.Append(
 				".AspNetCore.Application.Guid",
 				$"{tokenResponse.AccessToken}",
@@ -256,7 +295,6 @@ namespace Kitias.API.Controllers
 					MaxAge = TimeSpan.FromHours(1)
 				}
 			);
-			return Ok("User was successfully reconnected");
 		}
 
 		/// <summary>

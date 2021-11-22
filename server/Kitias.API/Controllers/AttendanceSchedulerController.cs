@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -111,7 +112,7 @@ namespace Kitias.API.Controllers
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-		public async Task<ActionResult<IEnumerable<AttendanceDto>>> TakeShedulerAttendancesByIdAsync(Guid id)
+		public async Task<ActionResult<Dictionary<string, IGrouping<string, AttendanceDto>>>> TakeShedulerAttendancesByIdAsync(Guid id)
 		{
 			var result = await _attendanceProvider.TakeShedulerAttendancesAsync(id);
 

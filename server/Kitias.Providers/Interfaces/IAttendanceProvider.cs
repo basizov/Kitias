@@ -3,6 +3,7 @@ using Kitias.Providers.Models;
 using Kitias.Providers.Models.Attendances;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Kitias.Providers.Interfaces
@@ -23,7 +24,7 @@ namespace Kitias.Providers.Interfaces
 		/// </summary>
 		/// <param name="id">Identifier of sheduler</param>
 		/// <returns>List attandances</returns>
-		Task<Result<IEnumerable<AttendanceDto>>> TakeShedulerAttendancesAsync(Guid id);
+		Task<Result<Dictionary<string, IGrouping<string, AttendanceDto>>>> TakeShedulerAttendancesAsync(Guid id);
 		/// <summary>
 		/// Take student attendances of the sheduler
 		/// </summary>
