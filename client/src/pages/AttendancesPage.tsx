@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
   Grid,
   styled,
@@ -12,6 +12,7 @@ import {useDispatch} from "react-redux";
 import {useParams} from "react-router";
 import {useTypedSelector} from "../hooks/useTypedSelector";
 import {Loading} from "../layout/Loading";
+import {getSubjects} from "../store/subjectStore/asyncActions";
 
 const StyledTab = styled(Tab)({
   fontSize: '.7rem'
@@ -24,10 +25,11 @@ export const AttendancesPage: React.FC = () => {
   const {loading} = useTypedSelector(s => s.attendance);
 
   useEffect(() => {
-    if (params.id) {
+    if (params.id && params.subjectName) {
       dispatch(getAttendances(params.id));
+      dispatch(getSubjects(params.subjectName));
     }
-  }, [params.id, dispatch]);
+  }, [params.id, params.subjectName, dispatch]);
 
   if (loading) {
     return <Loading loading={loading}/>;

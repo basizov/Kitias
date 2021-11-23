@@ -171,6 +171,11 @@
             Group number
             </summary>
         </member>
+        <member name="P:Kitias.Persistence.DTOs.AttendanceShedulerDto.SubjectName">
+            <summary>
+            Subject name
+            </summary>
+        </member>
         <member name="P:Kitias.Persistence.DTOs.AttendanceShedulerDto.Name">
             <summary>
             Sheduler name
@@ -931,6 +936,11 @@
         <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.AttendanceSheduler.Teacher">
             <summary>
             Teacher info
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.AttendanceSheduler.SubjectName">
+            <summary>
+            Subject name
             </summary>
         </member>
         <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.AttendanceSheduler.GroupId">

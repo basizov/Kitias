@@ -111,7 +111,7 @@ export const App: React.FC = () => {
                       <Route path='/subjects' element={<PrivateRoute>
                         <SubjectsPage/>
                       </PrivateRoute>}/>
-                      <Route path='/attendances/:id' element={<PrivateRoute>
+                      <Route path='/attendances/:id/:subjectName' element={<PrivateRoute>
                         <AttendancesPage/>
                       </PrivateRoute>}/>
                       <Route path='/attendances' element={<PrivateRoute>

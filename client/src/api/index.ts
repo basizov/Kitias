@@ -2,7 +2,9 @@ import {instance} from "./instance";
 import {SignInType} from "../model/User/SignInModel";
 import {AxiosResponse} from "axios";
 import {ShedulerListType} from "../model/Attendance/ShedulerList";
-import {AttendenceType} from "../model/Attendance/Attendence";
+import {
+  AttendancesByStudents,
+} from "../model/Attendance/Attendence";
 import {SubjectInfoType, SubjectType} from "../model/Subject/Subject";
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
@@ -12,7 +14,7 @@ enum Paths {
   SIGN_IN_PATH = '/Auth/signIn',
   TAKE_SUBJECTS = '/Teacher/subjects',
   TAKE_SUBJECTS_INFOS = '/Teacher/subjectsInfos',
-  TAKE_SHEDULERS_PATH = '/Teacher/subjectsInfos',
+  TAKE_SHEDULERS_PATH = '/AttendanceScheduler',
   TAKE_ATTENDANCES_PATH = '/AttendanceScheduler/'
 };
 
@@ -28,7 +30,7 @@ const auth = {
 
 const attendance = {
   shedulers: () => requests.get<ShedulerListType[]>(Paths.TAKE_SHEDULERS_PATH),
-  attendances: (id: string) => requests.get<AttendenceType[]>(`${Paths.TAKE_ATTENDANCES_PATH}${id}/attendances`)
+  attendances: (id: string) => requests.get<AttendancesByStudents[]>(`${Paths.TAKE_ATTENDANCES_PATH}${id}/attendances`)
 };
 
 const subject = {

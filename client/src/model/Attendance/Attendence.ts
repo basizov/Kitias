@@ -7,3 +7,7 @@ export type AttendenceType = {
   score: string;
   fullName: string;
 };
+
+export type AttendancesByStudents = {
+  [key: string]: AttendenceType[];
+};

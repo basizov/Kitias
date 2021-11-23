@@ -44,17 +44,10 @@ export const AttendancesTable: React.FC<PropsType> = ({
   const pageSize = useMemo(() => 8, []);
   const [page, setPage] = useState(0);
   const {attendances} = useTypedSelector(s => s.attendance);
-  const specAttendance = useMemo(() => attendances
-    .filter(a => a.type === subjectType), [attendances, subjectType]);
-  const studentAttendances = useMemo(() => {
-    const result = specAttendance.reduce((fst, sec) => {
-      fst[sec.fullName] = fst[sec.fullName] || [];
-      fst[sec.fullName].push(sec);
-      return fst;
-    }, Object.create(null));
-
-    return result as SortedAttendanceType[];
-  }, [specAttendance]);
+  const {subjects} = useTypedSelector(s => s.subject);
+  const selectedSubject = useMemo(() => {
+    return subjects.filter(s => s.type === subjectType);
+  }, [subjects, subjectType])
 
   return (
     <TableContainer component={Paper}>
@@ -65,37 +58,37 @@ export const AttendancesTable: React.FC<PropsType> = ({
               align='center' rowSpan={2}
               sx={{borderRight: 1, borderRightColor: 'grey.800'}}
             >4443</StyledTableHeadCell>
-            {specAttendance.map((a, i) => (
-              <React.Fragment key={`name ${a.id}`}>
-                {a.type === subjectType &&
+            {selectedSubject.map((s, i) => (
+              <React.Fragment key={`name ${s.id}`}>
+                {s.type === subjectType &&
                 page * pageSize < i + 1 && i + 1 < (page + 1) * pageSize &&
                 <StyledTableHeadCell
                     align='center'
                     sx={{padding: 0}}
-                >{`${a.type} ${i + 1}`}</StyledTableHeadCell>}
+                >{`${s.type} ${i + 1}`}</StyledTableHeadCell>}
               </React.Fragment>))}
           </TableRow>
           <TableRow>
-            {specAttendance.map((a, i) => (
-              <React.Fragment key={`date ${a.id}`}>
-                {a.type === subjectType &&
+            {selectedSubject.map((s, i) => (
+              <React.Fragment key={`date ${s.id}`}>
+                {s.type === subjectType &&
                 page * pageSize < i + 1 && i + 1 < (page + 1) * pageSize &&
                 <StyledTableHeadCell
                     align='center'
                     sx={{padding: 0}}
-                >{a.date}</StyledTableHeadCell>}
+                >{s.date}</StyledTableHeadCell>}
               </React.Fragment>))}
           </TableRow>
         </StyledTableHead>
         <TableBody>
-          {Object.keys(studentAttendances).map((prop: any) => (
-            <StyledTableRow key={prop}>
+          {Object.entries(attendances).map(([key, value]) => (
+            <StyledTableRow key={key}>
               <TableCell
-                aria-describedby={prop}
+                aria-describedby={key}
                 onDoubleClick={(e) => setAnchorEl(e.currentTarget)}
-              >{prop}</TableCell>
+              >{key}</TableCell>
               <Popover
-                id={prop}
+                id={key}
                 open={open}
                 anchorEl={anchorEl}
                 onClose={() => setAnchorEl(null)}
@@ -104,26 +97,25 @@ export const AttendancesTable: React.FC<PropsType> = ({
                   horizontal: 'left',
                 }}
               >The content of the Popover.</Popover>
-              {// @ts-ignore
-                studentAttendances[prop].map((a: AttendenceType, i) => (
-                  <React.Fragment key={`data ${a.id}`}>
-                    {a.type === subjectType &&
-                    page * pageSize < i + 1 && i + 1 < (page + 1) * pageSize &&
-                    <React.Fragment>
-                        <TableCell
-                            aria-describedby={a.id}
-                            align='center'
-                            onDoubleClick={(e) => setAnchorEl(e.currentTarget)}
-                        >{a.attended}</TableCell>
-                    </React.Fragment>}
-                  </React.Fragment>))}
+              {[].map.call(value, (a: AttendenceType, i) => (
+                <React.Fragment key={`data ${a.id}`}>
+                  {a.type === subjectType &&
+                  page * pageSize < i + 1 && i + 1 < (page + 1) * pageSize &&
+                  <React.Fragment>
+                      <TableCell
+                          aria-describedby={a.id}
+                          align='center'
+                          onDoubleClick={(e) => setAnchorEl(e.currentTarget)}
+                      >{a.attended}</TableCell>
+                  </React.Fragment>}
+                </React.Fragment>))}
             </StyledTableRow>
           ))}
         </TableBody>
-        {attendances.length > 8 && <TableFooter>
+        {selectedSubject.length > 8 && <TableFooter>
             <TableRow>
                 <TablePagination
-                    count={specAttendance.length / Object.keys(studentAttendances).length}
+                    count={selectedSubject.length}
                     rowsPerPage={pageSize}
                     page={page}
                     rowsPerPageOptions={[]}

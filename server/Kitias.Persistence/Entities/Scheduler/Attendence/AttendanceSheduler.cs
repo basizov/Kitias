@@ -22,6 +22,10 @@ namespace Kitias.Persistence.Entities.Scheduler.Attendence
 		/// </summary>
 		public virtual Teacher Teacher { get; set; }
 		/// <summary>
+		/// Subject name
+		/// </summary>
+		public string SubjectName { get; init; }
+		/// <summary>
 		/// Group identifier
 		/// </summary>
 		public Guid? GroupId { get; set; }

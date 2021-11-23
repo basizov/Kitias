@@ -14,6 +14,7 @@ import {
 import {useTypedSelector} from "../hooks/useTypedSelector";
 import {Groups} from "@mui/icons-material";
 import {Loading} from "../layout/Loading";
+import {getSubjects} from "../store/subjectStore/asyncActions";
 
 export const ShedulersPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -46,7 +47,7 @@ export const ShedulersPage: React.FC = () => {
             <ListItem key={s.id} disablePadding>
               <ListItemButton
                 onClick={async () => {
-                  navigate(`${s.id}`);
+                  navigate(`${s.id}/${s.subjectName}`);
                 }}
               >
                 <ListItemIcon>

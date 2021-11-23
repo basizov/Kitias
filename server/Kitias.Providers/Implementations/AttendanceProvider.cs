@@ -39,7 +39,10 @@ namespace Kitias.Providers.Implementations
 			if (teacher == null)
 				return ReturnFailureResult<IEnumerable<ShedulersListResult>>($"Couldn't find teacher with email {email}", "Couldn't find teacher");
 			var shedulers = _unitOfWork.ShedulerAttendace
-				.FindByAndInclude(s => s.TeacherId == teacher.Id, s => s.Group);
+				.FindByAndInclude(
+					s => s.TeacherId == teacher.Id,
+					s => s.Group
+				);
 			var result = _mapper.Map<IEnumerable<ShedulersListResult>>(shedulers);
 
 			_logger.LogInformation($"Take all shedulers of the teacher {email}");
@@ -102,6 +105,17 @@ namespace Kitias.Providers.Implementations
 					"Couldn't find teacher"
 				);
 			}
+			var subject = await _unitOfWork.Subject
+				.FindBy(s => s.Name == model.Name)
+				.FirstOrDefaultAsync();
+
+			if (subject == null)
+			{
+				return ReturnFailureResult<AttendanceShedulerDto>(
+					$"Couldn't find subject with name {model.SubjectName}",
+					"Couldn't find subject"
+				);
+			}
 			_logger.LogInformation($"Found teacher with id {teacher.Id}");
 			var group = await _unitOfWork.Group
 				.FindByAndInclude(g => g.Number == model.GroupNumber)
@@ -113,7 +127,8 @@ namespace Kitias.Providers.Implementations
 			{
 				TeacherId = teacher.Id,
 				Name = model.Name,
-				GroupId = group?.Id ?? null
+				GroupId = group?.Id ?? null,
+				SubjectName = model.SubjectName
 			};
 
 			return await TryCatchExecute(newAttendance, async (parameter) =>

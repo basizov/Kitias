@@ -19,5 +19,9 @@ namespace Kitias.Providers.Models.Attendances
 		/// Number of the group
 		/// </summary>
 		public string GroupNumber { get; init; }
+		/// <summary>
+		/// Subject name
+		/// </summary>
+		public string SubjectName { get; init; }
 	}
 }

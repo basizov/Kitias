@@ -1,4 +1,6 @@
-﻿namespace Kitias.Providers.Models.Attendances
+﻿using System;
+
+namespace Kitias.Providers.Models.Attendances
 {
 	/// <summary>
 	/// Nodel to create sheduler
@@ -13,6 +15,10 @@
 		/// Sheduler name
 		/// </summary>
 		public string Name { get; init; }
+		/// <summary>
+		/// Subject name
+		/// </summary>
+		public string SubjectName { get; init; }
 	}
 
 	/// <summary>
@@ -32,5 +38,9 @@
 		/// Sheduler name
 		/// </summary>
 		public string Name { get; init; }
+		/// <summary>
+		/// Subject name
+		/// </summary>
+		public string SubjectName { get; init; }
 	}
 }

@@ -558,6 +558,11 @@
             Sheduler name
             </summary>
         </member>
+        <member name="P:Kitias.Providers.Models.Attendances.ShedulerRequestModel.SubjectName">
+            <summary>
+            Subject name
+            </summary>
+        </member>
         <member name="T:Kitias.Providers.Models.Attendances.ShedulerProviderRequestModel">
             <summary>
             Model to create sheduler with Email
@@ -578,6 +583,11 @@
             Sheduler name
             </summary>
         </member>
+        <member name="P:Kitias.Providers.Models.Attendances.ShedulerProviderRequestModel.SubjectName">
+            <summary>
+            Subject name
+            </summary>
+        </member>
         <member name="T:Kitias.Providers.Models.Attendances.ShedulersListResult">
             <summary>
             All shedulers of the teacher
@@ -596,6 +606,11 @@
         <member name="P:Kitias.Providers.Models.Attendances.ShedulersListResult.GroupNumber">
             <summary>
             Number of the group
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Attendances.ShedulersListResult.SubjectName">
+            <summary>
+            Subject name
             </summary>
         </member>
         <member name="T:Kitias.Providers.Models.Attendances.StudentAttendanceRequestModel">

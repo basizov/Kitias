@@ -1,10 +1,10 @@
 import {InferActionType} from "../index";
 import {ShedulerListType} from "../../model/Attendance/ShedulerList";
-import {AttendenceType} from "../../model/Attendance/Attendence";
+import {AttendancesByStudents} from "../../model/Attendance/Attendence";
 
 const initialState = {
   shedulers: [] as ShedulerListType[],
-  attendances: [] as AttendenceType[],
+  attendances: [] as AttendancesByStudents[],
   error: '',
   loading: false
 };
@@ -31,7 +31,7 @@ export const attendanceActions = {
     type: 'SET_SHEDULERS',
     payload
   } as const),
-  setAttendances: (payload: AttendenceType[]) => ({
+  setAttendances: (payload: AttendancesByStudents[]) => ({
     type: 'SET_ATTENDANCES',
     payload
   } as const),
