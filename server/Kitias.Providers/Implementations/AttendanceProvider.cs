@@ -49,6 +49,25 @@ namespace Kitias.Providers.Implementations
 			return ResultHandler.OnSuccess(result);
 		}
 
+		public async Task<Result<IEnumerable<SubjectDto>>> TakeTeacherShedulerAsync(Guid id)
+		{
+			var sheduler = await _unitOfWork.ShedulerAttendace
+				.FindBy(s => s.Id == id)
+				.SingleOrDefaultAsync();
+
+			if (sheduler == null)
+				return ReturnFailureResult<IEnumerable<SubjectDto>>($"Couldn't find sheduler with id {id}", "Couldn't find sheduler");
+			var subjects = _unitOfWork.Subject
+				.FindBy(s => s.Name == sheduler.SubjectName);
+
+			if (subjects == null)
+				return ReturnFailureResult<IEnumerable<SubjectDto>>($"Couldn't find subject of sheduler {id}", "Couldn't find subjects");
+			var result = _mapper.Map<IEnumerable<SubjectDto>>(subjects);
+
+			_logger.LogInformation($"Take sheduler {id} subjects");
+			return ResultHandler.OnSuccess(result);
+		}
+
 		public async Task<Result<Dictionary<string, IGrouping<string, AttendanceDto>>>> TakeShedulerAttendancesAsync(Guid id)
 		{
 			var sheduler = await _unitOfWork.ShedulerAttendace

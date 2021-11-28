@@ -30,12 +30,14 @@ const auth = {
 
 const attendance = {
   shedulers: () => requests.get<ShedulerListType[]>(Paths.TAKE_SHEDULERS_PATH),
-  attendances: (id: string) => requests.get<AttendancesByStudents[]>(`${Paths.TAKE_ATTENDANCES_PATH}${id}/attendances`)
+  attendances: (id: string) => requests.get<AttendancesByStudents[]>(`${Paths.TAKE_ATTENDANCES_PATH}${id}/attendances`),
+  subjects: (id: string) => requests.get<SubjectType[]>(`${Paths.TAKE_ATTENDANCES_PATH}${id}/subjects`)
 };
 
 const subject = {
   subjects: (payload: string) => requests.get<SubjectType[]>(`${Paths.TAKE_SUBJECTS}/${payload}`),
-  subjectsInfos: () => requests.get<SubjectInfoType[]>(Paths.TAKE_SUBJECTS_INFOS)
+  subjectsInfos: () => requests.get<SubjectInfoType[]>(Paths.TAKE_SUBJECTS_INFOS),
+  allSubjects: () => requests.get<SubjectType[]>(Paths.TAKE_SUBJECTS)
 };
 
 export const API = {

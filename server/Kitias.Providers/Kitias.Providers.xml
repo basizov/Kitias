@@ -145,6 +145,13 @@
             <param name="email">Teacher email</param>
             <returns>List shedulers info</returns>
         </member>
+        <member name="M:Kitias.Providers.Interfaces.IAttendanceProvider.TakeTeacherShedulerAsync(System.Guid)">
+            <summary>
+            Take sheduler of the teacher
+            </summary>
+            <param name="id">Identifier of sheduler</param>
+            <returns>List shedulers info</returns>
+        </member>
         <member name="M:Kitias.Providers.Interfaces.IAttendanceProvider.TakeShedulerAttendancesAsync(System.Guid)">
             <summary>
             Take attendances of the sheduler

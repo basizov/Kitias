@@ -29,9 +29,28 @@ export const getSubjectsInfos = () : AsyncThunkType => {
 
 export const getSubjects = (name: string) : AsyncThunkType => {
   return async dispatch => {
-    dispatch(subjectActions.setLoading(true));
+    dispatch(subjectActions.setLoadingInitial(true));
     try {
       const response = await API.subject.subjects(name);
+
+      if (response) {
+        dispatch(subjectActions.setSubjects(response));
+      }
+    } catch (e) {
+      const error = e as ServerErrorType;
+
+      console.log(error)
+    } finally {
+      dispatch(subjectActions.setLoadingInitial(false));
+    }
+  }
+};
+
+export const getAllSubjects = () : AsyncThunkType => {
+  return async dispatch => {
+    dispatch(subjectActions.setLoading(true));
+    try {
+      const response = await API.subject.allSubjects();
 
       if (response) {
         dispatch(subjectActions.setSubjects(response));

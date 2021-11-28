@@ -11,6 +11,7 @@ import {
 import {
   ChevronLeft,
   Menu,
+  EventAvailable,
   Home,
   DateRange, FeaturedPlayList
 } from "@mui/icons-material";
@@ -106,6 +107,14 @@ export const Sidebar: React.FC<PropsType> = ({
               <FeaturedPlayList/>
             </ListItemIcon>
             <ListItemText primary="Предметы"/>
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => navigate('/calendar')}>
+            <ListItemIcon>
+              <EventAvailable/>
+            </ListItemIcon>
+            <ListItemText primary="Календарь"/>
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>

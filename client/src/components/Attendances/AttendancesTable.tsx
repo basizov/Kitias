@@ -28,10 +28,6 @@ const StyledTableHead = styled(TableHead)(({theme}) => ({
   backgroundColor: theme.palette.action.selected
 }));
 
-type SortedAttendanceType = {
-  [key: string]: AttendenceType[];
-};
-
 type PropsType = {
   subjectType: 'Лекция' | 'Практика';
 };

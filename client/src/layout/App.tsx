@@ -21,13 +21,14 @@ import {isAuthAsync} from "../store/defaultStore/asyncActions";
 import {ShedulersPage} from "../pages/ShedulersPage";
 import {AttendancesPage} from "../pages/AttendancesPage";
 import {SubjectsPage} from "../pages/SubjectsPage";
+import {CalendarPage} from "../pages/CalendarPage";
 
 const RootPaper = styled(Paper)({
   position: 'absolute',
   top: 0,
   left: 0,
   width: '100%',
-  minHeight: '100vh',
+  height: '100vh',
   borderRadius: 0
 });
 
@@ -43,9 +44,9 @@ export const ColorModeContext = createContext({
   }
 });
 
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
+const Main = styled('main', {shouldForwardProp: (prop) => prop !== 'open'})<{
   open?: boolean;
-}>(({ theme, open }) => ({
+}>(({theme, open}) => ({
   flexGrow: 1,
   padding: theme.spacing(1),
   transition: theme.transitions.create('margin', {
@@ -103,7 +104,7 @@ export const App: React.FC = () => {
           ><CircularProgress color="inherit"/></Backdrop>
           {!loadingInitial && <React.Fragment>
               <Sidebar open={open} setOpen={setOpen}/>
-              <Main open={open}>
+              <Main open={open} sx={{height: 'calc(100% - 16px)'}}>
                   <Routes>
                       <Route path='/' element={<PrivateRoute>
                         <HomePage/>
@@ -111,11 +112,14 @@ export const App: React.FC = () => {
                       <Route path='/subjects' element={<PrivateRoute>
                         <SubjectsPage/>
                       </PrivateRoute>}/>
-                      <Route path='/attendances/:id/:subjectName' element={<PrivateRoute>
+                      <Route path='/attendances/:id' element={<PrivateRoute>
                         <AttendancesPage/>
                       </PrivateRoute>}/>
                       <Route path='/attendances' element={<PrivateRoute>
                         <ShedulersPage/>
+                      </PrivateRoute>}/>
+                      <Route path='/calendar' element={<PrivateRoute>
+                        <CalendarPage/>
                       </PrivateRoute>}/>
                       <Route path='/login' element={<PublicRoute>
                         <AuthPage/>

@@ -22,6 +22,13 @@
             </summary>
             <returns>Shedulers</returns>
         </member>
+        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.TakeShedulerSubjectsAsync(System.Guid)">
+            <summary>
+            Take sheduler by id
+            </summary>
+            <param name="id">Sheduler identifier</param>
+            <returns>Sheduler</returns>
+        </member>
         <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.CreateShedulerAsync(Kitias.Providers.Models.Attendances.ShedulerRequestModel)">
             <summary>
             Create sheduler for the teacher

@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Grid,
   styled,
@@ -7,12 +7,14 @@ import {
 } from "@mui/material";
 import {AttendanceTable} from "../components/Attendances/AttendanceTable";
 import {AttendancesTable} from "../components/Attendances/AttendancesTable";
-import {getAttendances} from "../store/attendanceStore/asyncActions";
+import {
+  getAttendances,
+  getAttendanceSubjects
+} from "../store/attendanceStore/asyncActions";
 import {useDispatch} from "react-redux";
 import {useParams} from "react-router";
 import {useTypedSelector} from "../hooks/useTypedSelector";
 import {Loading} from "../layout/Loading";
-import {getSubjects} from "../store/subjectStore/asyncActions";
 
 const StyledTab = styled(Tab)({
   fontSize: '.7rem'
@@ -25,9 +27,9 @@ export const AttendancesPage: React.FC = () => {
   const {loading} = useTypedSelector(s => s.attendance);
 
   useEffect(() => {
-    if (params.id && params.subjectName) {
+    if (params.id) {
       dispatch(getAttendances(params.id));
-      dispatch(getSubjects(params.subjectName));
+      dispatch(getAttendanceSubjects(params.id));
     }
   }, [params.id, params.subjectName, dispatch]);
 
