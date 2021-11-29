@@ -6,6 +6,7 @@ const initialState = {
   shedulers: [] as ShedulerListType[],
   attendances: [] as AttendancesByStudents[],
   error: '',
+  loadingInitial: false,
   loading: false
 };
 
@@ -17,6 +18,8 @@ export const attendanceReducer = (state = initialState, action: AttendanceAction
       return {...state, attendances: action.payload};
     case 'SET_SHEDULER_LOADING':
       return {...state, loading: action.payload};
+    case 'SET_SHEDULER_LOADING_INITIAL':
+      return {...state, loadingInitial: action.payload};
     case 'SET_ATTENDANCE_ERROR':
       return {...state, error: action.payload};
     default:
@@ -41,6 +44,10 @@ export const attendanceActions = {
   } as const),
   setLoading: (payload: boolean) => ({
     type: 'SET_SHEDULER_LOADING',
+    payload
+  } as const),
+  setLoadingInitial: (payload: boolean) => ({
+    type: 'SET_SHEDULER_LOADING_INITIAL',
     payload
   } as const)
 };

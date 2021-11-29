@@ -1,7 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import {
-  Paper, Popover,
-  styled,
+  Paper, styled,
   Table, TableBody,
   TableCell,
   TableContainer, TableFooter,
@@ -10,6 +9,7 @@ import {
 } from "@mui/material";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {AttendenceType} from "../../model/Attendance/Attendence";
+import {AttendanceCell} from "./AttendanceCell";
 
 const StyledTableRow = styled(TableRow)(({theme}) => ({
   '&:nth-of-type(odd)': {
@@ -35,8 +35,6 @@ type PropsType = {
 export const AttendancesTable: React.FC<PropsType> = ({
                                                         subjectType
                                                       }) => {
-  const [anchorEl, setAnchorEl] = useState<HTMLTableCellElement | null>(null);
-  const open = Boolean(anchorEl);
   const pageSize = useMemo(() => 8, []);
   const [page, setPage] = useState(0);
   const {attendances} = useTypedSelector(s => s.attendance);
@@ -80,29 +78,18 @@ export const AttendancesTable: React.FC<PropsType> = ({
           {Object.entries(attendances).map(([key, value]) => (
             <StyledTableRow key={key}>
               <TableCell
+                sx={{width: '15rem', height: '2.35rem'}}
                 aria-describedby={key}
-                onDoubleClick={(e) => setAnchorEl(e.currentTarget)}
               >{key}</TableCell>
-              <Popover
-                id={key}
-                open={open}
-                anchorEl={anchorEl}
-                onClose={() => setAnchorEl(null)}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left',
-                }}
-              >The content of the Popover.</Popover>
               {[].map.call(value, (a: AttendenceType, i) => (
                 <React.Fragment key={`data ${a.id}`}>
                   {a.type === subjectType &&
                   page * pageSize < i + 1 && i + 1 < (page + 1) * pageSize &&
                   <React.Fragment>
-                      <TableCell
-                          aria-describedby={a.id}
-                          align='center'
-                          onDoubleClick={(e) => setAnchorEl(e.currentTarget)}
-                      >{a.attended}</TableCell>
+                      <AttendanceCell
+                        identifier={a.id}
+                        title={a.attended}
+                      />
                   </React.Fragment>}
                 </React.Fragment>))}
             </StyledTableRow>

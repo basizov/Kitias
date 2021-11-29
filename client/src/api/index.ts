@@ -3,9 +3,10 @@ import {SignInType} from "../model/User/SignInModel";
 import {AxiosResponse} from "axios";
 import {ShedulerListType} from "../model/Attendance/ShedulerList";
 import {
-  AttendancesByStudents,
+  AttendancesByStudents, AttendenceType,
 } from "../model/Attendance/Attendence";
 import {SubjectInfoType, SubjectType} from "../model/Subject/Subject";
+import {UpdateAttendaceType} from "../model/Attendance/UpdateAttendace";
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
@@ -20,7 +21,8 @@ enum Paths {
 
 const requests = {
   get: <T>(url: string) => instance.get<T>(url).then(responseBody),
-  post: <T>(url: string, body: {}) => instance.post<T>(url, body).then(responseBody)
+  post: <T>(url: string, body: {}) => instance.post<T>(url, body).then(responseBody),
+  put: <T>(url: string, body: {}) => instance.put<T>(url, body).then(responseBody)
 };
 
 const auth = {
@@ -31,6 +33,7 @@ const auth = {
 const attendance = {
   shedulers: () => requests.get<ShedulerListType[]>(Paths.TAKE_SHEDULERS_PATH),
   attendances: (id: string) => requests.get<AttendancesByStudents[]>(`${Paths.TAKE_ATTENDANCES_PATH}${id}/attendances`),
+  update: (id: string, payload: UpdateAttendaceType) => requests.put<AttendenceType>(`${Paths.TAKE_ATTENDANCES_PATH}${id}/attendances`, payload),
   subjects: (id: string) => requests.get<SubjectType[]>(`${Paths.TAKE_ATTENDANCES_PATH}${id}/subjects`)
 };
 

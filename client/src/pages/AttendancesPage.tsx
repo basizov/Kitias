@@ -24,7 +24,7 @@ export const AttendancesPage: React.FC = () => {
   const dispatch = useDispatch();
   const params = useParams();
   const [tab, setTab] = useState(0);
-  const {loading} = useTypedSelector(s => s.attendance);
+  const {loadingInitial} = useTypedSelector(s => s.attendance);
 
   useEffect(() => {
     if (params.id) {
@@ -33,8 +33,8 @@ export const AttendancesPage: React.FC = () => {
     }
   }, [params.id, params.subjectName, dispatch]);
 
-  if (loading) {
-    return <Loading loading={loading}/>;
+  if (loadingInitial) {
+    return <Loading loading={loadingInitial}/>;
   }
   return (
     <Grid
