@@ -90,9 +90,9 @@ namespace Kitias.API.Controllers
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-		public async Task<ActionResult<GroupDto>> CreateSubjectAsync(CreateSubjectModel model)
+		public async Task<ActionResult<IEnumerable<SubjectDto>>> CreateSubjectAsync(IEnumerable<CreateSubjectModel> models)
 		{
-			var result = await _subjectProvider.CreateSubjectAsync(model, User.FindFirst(ClaimTypes.Email)?.Value ?? "");
+			var result = await _subjectProvider.CreateSubjectAsync(models, User.FindFirst(ClaimTypes.Email)?.Value ?? "");
 
 			if (!result.IsSuccess)
 				return BadRequest(result.Error);

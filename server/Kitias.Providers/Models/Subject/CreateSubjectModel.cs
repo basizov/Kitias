@@ -22,7 +22,7 @@ namespace Kitias.Providers.Models.Subject
 		/// <summary>
 		/// Subject date
 		/// </summary>
-		public DateTime? Date { get; init; }
+		public string Date { get; init; }
 		/// <summary>
 		/// Subject week
 		/// </summary>

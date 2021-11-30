@@ -42,13 +42,18 @@ export const AttendancesPage: React.FC = () => {
       direction='column'
       spacing={1}
     >
-      <Tabs value={tab} onChange={(_, selectedTab) => setTab(selectedTab)}>
+      <Tabs
+        value={tab}
+        onChange={(_, selectedTab) => setTab(selectedTab)}
+        variant='scrollable'
+        scrollButtons='auto'
+      >
         <StyledTab label='Посещений лекций'/>
         <StyledTab label='Посещение практик'/>
         <StyledTab label='Посещение лаб'/>
-        <StyledTab label='Выполнение работ по лекциям'/>
-        <StyledTab label='Выполнение работ по практикам'/>
-        <StyledTab label='Выполнение работ по лабам'/>
+        <StyledTab label='Работы по лекциям'/>
+        <StyledTab label='Работы по практикам'/>
+        <StyledTab label='Работы по лабам'/>
         <StyledTab label='Итог'/>
       </Tabs>
       <Grid item>

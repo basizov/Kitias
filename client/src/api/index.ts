@@ -7,6 +7,7 @@ import {
 } from "../model/Attendance/Attendence";
 import {SubjectInfoType, SubjectType} from "../model/Subject/Subject";
 import {UpdateAttendaceType} from "../model/Attendance/UpdateAttendace";
+import {CreateSubjectType} from "../model/Subject/CreateSubjectModel";
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
@@ -16,13 +17,15 @@ enum Paths {
   TAKE_SUBJECTS = '/Teacher/subjects',
   TAKE_SUBJECTS_INFOS = '/Teacher/subjectsInfos',
   TAKE_SHEDULERS_PATH = '/AttendanceScheduler',
-  TAKE_ATTENDANCES_PATH = '/AttendanceScheduler/'
+  TAKE_ATTENDANCES_PATH = '/AttendanceScheduler/',
+  TAKE_SUBJECT = '/Subject'
 };
 
 const requests = {
   get: <T>(url: string) => instance.get<T>(url).then(responseBody),
   post: <T>(url: string, body: {}) => instance.post<T>(url, body).then(responseBody),
-  put: <T>(url: string, body: {}) => instance.put<T>(url, body).then(responseBody)
+  put: <T>(url: string, body: {}) => instance.put<T>(url, body).then(responseBody),
+  delete: (url: string) => instance.delete(url).then(responseBody)
 };
 
 const auth = {
@@ -40,7 +43,12 @@ const attendance = {
 const subject = {
   subjects: (payload: string) => requests.get<SubjectType[]>(`${Paths.TAKE_SUBJECTS}/${payload}`),
   subjectsInfos: () => requests.get<SubjectInfoType[]>(Paths.TAKE_SUBJECTS_INFOS),
-  allSubjects: () => requests.get<SubjectType[]>(Paths.TAKE_SUBJECTS)
+  allSubjects: () => requests.get<SubjectType[]>(Paths.TAKE_SUBJECTS),
+  create: (payload: CreateSubjectType[]) => requests.post<SubjectType[]>(Paths.TAKE_SUBJECT, payload),
+  update: (id: string, payload: CreateSubjectType) => requests.put<SubjectType>(
+    `${Paths.TAKE_SUBJECT}/${id}`, payload
+  ),
+  delete: (id: string) => requests.delete(`${Paths.TAKE_SUBJECT}/${id}`)
 };
 
 export const API = {

@@ -11,6 +11,7 @@ using Kitias.Persistence.Entities.File;
 using System.Linq;
 using Kitias.Persistence.Entities.Scheduler.Attendence;
 using Kitias.Providers.Models.Attendances;
+using System.Globalization;
 
 namespace Kitias.Providers
 {
@@ -92,9 +93,11 @@ namespace Kitias.Providers
 			CreateMap<CreateTeacherModel, Person>();
 			CreateMap<CreateTeacherModel, Teacher>();
 			CreateMap<CreateSubjectModel, Subject>()
-				.ForMember(s => s.Time, o => o.MapFrom(s => TimeSpan.Parse(s.Time)));
+				.ForMember(s => s.Time, o => o.MapFrom(s => TimeSpan.Parse(s.Time)))
+				.ForMember(s => s.Date, o => o.MapFrom(s => DateTime.ParseExact(s.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture)));
 			CreateMap<UpdateSubjectModel, Subject>()
-				.ForMember(s => s.Time, o => o.MapFrom(s => TimeSpan.Parse(s.Time)));
+				.ForMember(s => s.Time, o => o.MapFrom(s => TimeSpan.Parse(s.Time)))
+				.ForMember(s => s.Date, o => o.MapFrom(s => DateTime.ParseExact(s.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture)));
 
 			#endregion
 		}

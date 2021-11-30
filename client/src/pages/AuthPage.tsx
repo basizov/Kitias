@@ -103,7 +103,7 @@ export const AuthPage: React.FC = () => {
                   <Typography
                     variant="caption"
                     component="div"
-                    color='secondary'
+                    color='error'
                     sx={{paddingLeft: '.5rem'}}
                   >{error || ''}</Typography>
                 </Grid>

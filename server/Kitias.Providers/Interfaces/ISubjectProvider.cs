@@ -35,7 +35,7 @@ namespace Kitias.Providers.Interfaces
 		/// <param name="subject">Model to create a subject</param>
 		/// <param name="email">Teacher email</param>
 		/// <returns>New subject</returns>
-		Task<Result<SubjectDto>> CreateSubjectAsync(CreateSubjectModel subject, string email);
+		Task<Result<IEnumerable<SubjectDto>>> CreateSubjectAsync(IEnumerable<CreateSubjectModel> subjects, string email);
 		/// <summary>
 		/// Create subject groups
 		/// </summary>

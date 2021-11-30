@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {
+  Button,
   Card,
   CardContent,
-  CardHeader, CircularProgress, Divider,
-  Grid, IconButton, List, ListItem, ListItemText, Modal, Paper, styled,
-  Typography
+  CardHeader, Divider,
+  Grid, IconButton, Typography
 } from "@mui/material";
 import {useTypedSelector} from "../hooks/useTypedSelector";
 import {
@@ -14,18 +14,14 @@ import {
 import {useDispatch} from "react-redux";
 import {Loading} from "../layout/Loading";
 import {MoreHoriz} from "@mui/icons-material";
-
-const StyledPaper = styled(Paper)({
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  padding: '1rem'
-});
+import {SubjectsInfos} from "../components/Subject/SubjectsInfos";
+import {ModalHoc} from "../components/HOC/ModalHoc";
+import {CreateSubject} from "../components/Subject/CreateSubject";
 
 export const SubjectsPage: React.FC = () => {
   const dispatch = useDispatch();
-  const [open, setOpen] = useState(false);
+  const [openInfo, setOpenInfo] = useState(false);
+  const [openCreate, setOpenCreate] = useState(false);
   const {
     subjectsInfos,
     loading,
@@ -42,12 +38,18 @@ export const SubjectsPage: React.FC = () => {
   }
   return (
     <Grid container direction='column'>
-      <Grid item>
-        <Typography
-          variant="h5"
-          component="div"
-          sx={{marginLeft: '.7rem'}}
-        >Ваши предметы</Typography>
+      <Grid container>
+        <Grid item xs={6}>
+          <Typography
+            variant="h5"
+            component="div"
+            sx={{marginLeft: '.7rem'}}
+          >Ваши предметы</Typography>
+        </Grid>
+        <Button
+          sx={{marginLeft: 'auto'}}
+          onClick={() => setOpenCreate(true)}
+        >Добавить новый предмет</Button>
       </Grid>
       <Grid
         container
@@ -61,7 +63,7 @@ export const SubjectsPage: React.FC = () => {
                 title={key}
                 action={<IconButton onClick={async (e) => {
                   e.preventDefault();
-                  setOpen(true);
+                  setOpenInfo(true);
                   await dispatch(getSubjects(key));
                 }}><MoreHoriz/></IconButton>}
               />
@@ -91,21 +93,14 @@ export const SubjectsPage: React.FC = () => {
           </Grid>
         ))}
       </Grid>
-      <Modal
-        open={open}
-        onClose={() => setOpen(false)}
-      >
-        <StyledPaper>
-          {loading ? <CircularProgress color="inherit"/> :
-            <List>
-              {subjects.map(subject => (
-                <ListItem disablePadding key={subject.id}>
-                  <ListItemText primary={subject.name}/>
-                </ListItem>
-              ))}
-            </List>}
-        </StyledPaper>
-      </Modal>
+      <ModalHoc
+        open={openInfo}
+        onClose={() => setOpenInfo(false)}
+      ><SubjectsInfos loading={loading} subjects={subjects}/></ModalHoc>
+      <ModalHoc
+        open={openCreate}
+        onClose={() => setOpenCreate(false)}
+      ><CreateSubject/></ModalHoc>
     </Grid>
   );
 };

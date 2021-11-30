@@ -424,7 +424,7 @@
             <param name="id">Id of the subject to take</param>
             <returns>Groups</returns>
         </member>
-        <member name="M:Kitias.Providers.Interfaces.ISubjectProvider.CreateSubjectAsync(Kitias.Providers.Models.Subject.CreateSubjectModel,System.String)">
+        <member name="M:Kitias.Providers.Interfaces.ISubjectProvider.CreateSubjectAsync(System.Collections.Generic.IEnumerable{Kitias.Providers.Models.Subject.CreateSubjectModel},System.String)">
             <summary>
             Create subject
             </summary>

@@ -76,30 +76,37 @@ namespace Kitias.Providers.Implementations
 			return ResultHandler.OnSuccess(result as IEnumerable<GroupDto>);
 		}
 
-		public async Task<Result<SubjectDto>> CreateSubjectAsync(CreateSubjectModel subject, string email)
+		public async Task<Result<IEnumerable<SubjectDto>>> CreateSubjectAsync(IEnumerable<CreateSubjectModel> subjects, string email)
 		{
 			var teacher = await _unitOfWork.Teacher
 				.FindByAndInclude(t => t.Person.Email == email, p => p.Person)
 				.SingleOrDefaultAsync();
 
 			if (teacher == null)
-				return ReturnFailureResult<SubjectDto>($"Couldn't find teacher with email {email}", "Couldn't find teacher");
+				return ReturnFailureResult<IEnumerable<SubjectDto>>($"Couldn't find teacher with email {email}", "Couldn't find teacher");
 			//if (await _unitOfWork.Subject
 			//		.AnyAsync(s => s.Name == subject.Name && s.Type == Helpers.GetEnumMemberFromString<SubjectType>(subject.Type)))
 			//	return ReturnFailureResult<SubjectDto>("This subject have the same subject");
-			return await TryCatchExecute(subject, async (parameter) =>
+			return await TryCatchExecute(subjects, async (parameter) =>
 			{
-				var subjectEntity = _mapper.Map<Subject>(parameter);
+				var subjectsEntities = new List<Subject>();
 
-				subjectEntity.TeacherId = teacher.Id;
-				var newSubject = _unitOfWork.Subject.Create(subjectEntity);
+				foreach (var subject in parameter)
+				{
+					var subjectEntity = _mapper.Map<Subject>(parameter);
+
+					subjectEntity.TeacherId = teacher.Id;
+					var newSubject = _unitOfWork.Subject.Create(subjectEntity);
+
+					subjectsEntities.Add(newSubject);
+				}
 				var isSave = await _unitOfWork.SaveChangesAsync();
 
 				if (isSave <= 0)
-					throw new ApplicationException("Couldn't save new subject");
-				var result = _mapper.Map<SubjectDto>(newSubject);
+					throw new ApplicationException("Couldn't save new subjects");
+				var result = _mapper.Map<IEnumerable<SubjectDto>>(subjectsEntities);
 
-				_logger.LogInformation($"Subject with id {newSubject.Id} was successfully created");
+				_logger.LogInformation($"Subjects  was successfully created");
 				return ResultHandler.OnSuccess(result);
 			});
 		}

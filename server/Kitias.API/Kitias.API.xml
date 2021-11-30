@@ -307,7 +307,7 @@
             <param name="id">Id of subject</param>
             <returns>Groups</returns>
         </member>
-        <member name="M:Kitias.API.Controllers.SubjectController.CreateSubjectAsync(Kitias.Providers.Models.Subject.CreateSubjectModel)">
+        <member name="M:Kitias.API.Controllers.SubjectController.CreateSubjectAsync(System.Collections.Generic.IEnumerable{Kitias.Providers.Models.Subject.CreateSubjectModel})">
             <summary>
             Create new subject
             </summary>
