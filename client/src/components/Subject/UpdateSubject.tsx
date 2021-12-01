@@ -18,10 +18,12 @@ import {format, parse} from "date-fns";
 
 type PropsType = {
   subject: SubjectType;
+  close: () => void;
 };
 
 export const UpdateSubject: React.FC<PropsType> = ({
-                                                     subject
+                                                     subject,
+                                                     close
                                                    }) => {
   const dispatch = useDispatch();
 
@@ -29,7 +31,7 @@ export const UpdateSubject: React.FC<PropsType> = ({
     <Formik
       initialValues={{
         ...subject,
-        time: parse(subject.time, 'hh:mm:ss', new Date()),
+        time: parse(subject.time, 'H:mm:ss', new Date()),
         date: parse(subject.date, 'dd.MM.yyyy', new Date())
       }}
       onSubmit={async (values) => {
@@ -37,21 +39,22 @@ export const UpdateSubject: React.FC<PropsType> = ({
           subject.id,
           {
             ...values,
-            time: format(values.time, 'hh:mm:ss'),
+            time: format(values.time, 'H:mm:ss'),
             date: format(values.date, 'dd.MM.yyyy')
           }
         ));
+        close();
       }}
     >
       {({
           values,
-          submitForm,
+          handleSubmit,
           errors,
           setFieldValue,
           handleBlur,
           handleChange
         }) => (
-        <Form onSubmit={submitForm}>
+        <Form onSubmit={handleSubmit}>
           <Grid
             container
             sx={{minWidth: '35rem'}}
@@ -77,7 +80,7 @@ export const UpdateSubject: React.FC<PropsType> = ({
             </Grid>
             <Grid item xs={4}>
               <TextField
-                id="updateSubjectTheme"
+                id="theme"
                 type="text"
                 variant="outlined"
                 fullWidth
@@ -89,7 +92,7 @@ export const UpdateSubject: React.FC<PropsType> = ({
                 label="Тема"
               />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={6} sm={4}>
               <LocalizationProvider
                 dateAdapter={AdapterDateFns}
                 locale={ru}
@@ -110,36 +113,14 @@ export const UpdateSubject: React.FC<PropsType> = ({
             </Grid>
             <Grid item xs={6}>
               <FormControl fullWidth>
-                <InputLabel id="updateSubjectDay-label">День</InputLabel>
-                <Select
-                  id="updateSubjectDay"
-                  labelId="updateSubjectDay-label"
-                  value={values.day}
-                  label="День"
-                  error={!!errors.day}
-                  onChange={(e) => setFieldValue('day', e.target.value)}
-                  onBlur={handleBlur}
-                >
-                  <MenuItem value={'Понедельник'}>Понедельник</MenuItem>
-                  <MenuItem value={'Вторник'}>Вторник</MenuItem>
-                  <MenuItem value={'Среда'}>Среда</MenuItem>
-                  <MenuItem value={'Четверг'}>Четверг</MenuItem>
-                  <MenuItem value={'Пятница'}>Пятница</MenuItem>
-                  <MenuItem value={'Суббота'}>Суббота</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={6}>
-              <FormControl fullWidth>
                 <InputLabel id="updateSubjectType-label">Тип</InputLabel>
                 <Select
-                  id="updateSubjectType"
+                  id="type"
                   labelId="updateSubjectType-label"
                   value={values.type}
                   label="Тип"
                   error={!!errors.type}
                   onChange={(e) => setFieldValue('type', e.target.value)}
-                  onBlur={handleBlur}
                 >
                   <MenuItem value={'Лекция'}>Лекция</MenuItem>
                   <MenuItem value={'Практика'}>Практика</MenuItem>

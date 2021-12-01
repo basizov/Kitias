@@ -8,6 +8,10 @@ import {
 import {SubjectInfoType, SubjectType} from "../model/Subject/Subject";
 import {UpdateAttendaceType} from "../model/Attendance/UpdateAttendace";
 import {CreateSubjectType} from "../model/Subject/CreateSubjectModel";
+import {
+  DeleteSubjectType,
+  UpdateSubjectType
+} from "../model/Subject/UpdateSubjectModel";
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
@@ -25,7 +29,7 @@ const requests = {
   get: <T>(url: string) => instance.get<T>(url).then(responseBody),
   post: <T>(url: string, body: {}) => instance.post<T>(url, body).then(responseBody),
   put: <T>(url: string, body: {}) => instance.put<T>(url, body).then(responseBody),
-  delete: (url: string) => instance.delete(url).then(responseBody)
+  delete: (url: string, body?: {}) => instance.delete(url, body).then(responseBody)
 };
 
 const auth = {
@@ -48,7 +52,11 @@ const subject = {
   update: (id: string, payload: CreateSubjectType) => requests.put<SubjectType>(
     `${Paths.TAKE_SUBJECT}/${id}`, payload
   ),
-  delete: (id: string) => requests.delete(`${Paths.TAKE_SUBJECT}/${id}`)
+  delete: (id: string) => requests.delete(`${Paths.TAKE_SUBJECT}/${id}`),
+  updateName: (payload: UpdateSubjectType) =>
+    requests.put<SubjectType[]>(Paths.TAKE_SUBJECT, payload),
+  deleteName: (payload: DeleteSubjectType) =>
+    requests.delete(`${Paths.TAKE_SUBJECT}/name/${payload.name}`)
 };
 
 export const API = {

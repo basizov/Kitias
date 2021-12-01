@@ -330,6 +330,20 @@
             <param name="model">Model to create subject</param>
             <returns>Updated subject</returns>
         </member>
+        <member name="M:Kitias.API.Controllers.SubjectController.UpdateSubjectsByName(Kitias.Providers.Models.Subject.UpdateSubjectByName)">
+            <summary>
+            Update subjects by name
+            </summary>
+            <param name="model">Model with names for subjects</param>
+            <returns>Groups</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.SubjectController.DeleteSubjectsByName(System.String)">
+            <summary>
+            Update subjects by name
+            </summary>
+            <param name="name">Name for subjects</param>
+            <returns>STatus message</returns>
+        </member>
         <member name="M:Kitias.API.Controllers.SubjectController.DeleteDeleteAsync(System.Guid)">
             <summary>
             Delete subject by id

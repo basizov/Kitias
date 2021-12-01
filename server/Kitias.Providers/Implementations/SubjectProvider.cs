@@ -93,7 +93,7 @@ namespace Kitias.Providers.Implementations
 
 				foreach (var subject in parameter)
 				{
-					var subjectEntity = _mapper.Map<Subject>(parameter);
+					var subjectEntity = _mapper.Map<Subject>(subject);
 
 					subjectEntity.TeacherId = teacher.Id;
 					var newSubject = _unitOfWork.Subject.Create(subjectEntity);
@@ -108,6 +108,59 @@ namespace Kitias.Providers.Implementations
 
 				_logger.LogInformation($"Subjects  was successfully created");
 				return ResultHandler.OnSuccess(result);
+			});
+		}
+
+
+		public async Task<Result<IEnumerable<SubjectDto>>> UpdateSubjectsByNameAsync(string name, string newName)
+		{
+			var subjects = _unitOfWork.Subject.FindBy(s => s.Name == name);
+
+			if (subjects == null)
+				return ReturnFailureResult<IEnumerable<SubjectDto>>($"Couldn't find subjects with name {name}", "Couldn't find subjects");
+			return await TryCatchExecute(subjects, async (parameter) =>
+			{
+				var subjectsEntities = new List<Subject>();
+
+				foreach (var subject in parameter)
+				{
+					var subjectEntity = _mapper.Map<Subject>(subject);
+
+					subjectEntity.Name = newName;
+					var newSubject = _unitOfWork.Subject.Update(subjectEntity);
+
+					subjectsEntities.Add(newSubject);
+				}
+				var isSave = await _unitOfWork.SaveChangesAsync();
+
+				if (isSave <= 0)
+					throw new ApplicationException("Couldn't save subjects");
+				var result = _mapper.Map<IEnumerable<SubjectDto>>(subjectsEntities);
+
+				_logger.LogInformation($"Subjects  was successfully update");
+				return ResultHandler.OnSuccess(result);
+			});
+		}
+
+		public async Task<Result<string>> DeleteSubjectsByNameAsync(string name)
+		{
+			var subjects = _unitOfWork.Subject.FindBy(s => s.Name == name);
+
+			if (subjects == null)
+				return ReturnFailureResult<string>($"Couldn't find subjects with name {name}", "Couldn't find subjects");
+			return await TryCatchExecute(subjects, async (parameter) =>
+			{
+				foreach (var subject in parameter)
+				{
+					var subjectEntity = _mapper.Map<Subject>(subject);
+					_unitOfWork.Subject.Delete(subjectEntity);
+				}
+				var isSave = await _unitOfWork.SaveChangesAsync();
+
+				if (isSave <= 0)
+					throw new ApplicationException("Couldn't delete subjects");
+				_logger.LogInformation($"Subjects  was successfully deleted");
+				return ResultHandler.OnSuccess("Subjects were successfully deleted");
 			});
 		}
 

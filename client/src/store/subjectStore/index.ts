@@ -1,7 +1,7 @@
 import {InferActionType} from "../index";
 import {SubjectInfoType, SubjectType} from "../../model/Subject/Subject";
 
-const initialState = {
+export const initialState = {
   subjects: [] as SubjectType[],
   subjectsInfos: [] as SubjectInfoType[],
   error: '',

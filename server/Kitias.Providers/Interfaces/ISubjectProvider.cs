@@ -51,6 +51,19 @@ namespace Kitias.Providers.Interfaces
 		/// <returns>Subject</returns>
 		Task<Result<SubjectDto>> UpdateSubjectAsync(Guid id, UpdateSubjectModel Subject);
 		/// <summary>
+		/// Update subjects by name
+		/// </summary>
+		/// <param name="name">Name of the subjects</param>
+		/// <param name="newName">New name for the subjects</param>
+		/// <returns>Subjects</returns>
+		Task<Result<IEnumerable<SubjectDto>>> UpdateSubjectsByNameAsync(string name, string newName);
+		/// <summary>
+		/// Delete subjects by name
+		/// </summary>
+		/// <param name="name">Name of the subjects</param>
+		/// <returns>Status message</returns>
+		Task<Result<string>> DeleteSubjectsByNameAsync(string name);
+		/// <summary>
 		/// Delete subject from db
 		/// </summary>
 		/// <param name="id">Id of the subject</param>

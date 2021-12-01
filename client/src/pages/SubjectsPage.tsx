@@ -21,6 +21,7 @@ import {CreateSubject} from "../components/Subject/CreateSubject";
 export const SubjectsPage: React.FC = () => {
   const dispatch = useDispatch();
   const [openInfo, setOpenInfo] = useState(false);
+  const [name, setName] = useState('');
   const [openCreate, setOpenCreate] = useState(false);
   const {
     subjectsInfos,
@@ -32,6 +33,16 @@ export const SubjectsPage: React.FC = () => {
   useEffect(() => {
     dispatch(getSubjectsInfos());
   }, [dispatch]);
+
+  const closeCreateModel = async () => {
+    await dispatch(getSubjectsInfos());
+    setOpenCreate(false);
+  };
+
+  const closeInfoModel = async () => {
+    await dispatch(getSubjectsInfos());
+    setOpenInfo(false);
+  };
 
   if (loadingInitial) {
     return <Loading loading={loadingInitial}/>;
@@ -64,6 +75,7 @@ export const SubjectsPage: React.FC = () => {
                 action={<IconButton onClick={async (e) => {
                   e.preventDefault();
                   setOpenInfo(true);
+                  setName(key);
                   await dispatch(getSubjects(key));
                 }}><MoreHoriz/></IconButton>}
               />
@@ -95,12 +107,18 @@ export const SubjectsPage: React.FC = () => {
       </Grid>
       <ModalHoc
         open={openInfo}
-        onClose={() => setOpenInfo(false)}
-      ><SubjectsInfos loading={loading} subjects={subjects}/></ModalHoc>
+        onClose={closeInfoModel}
+      ><SubjectsInfos
+        name={name}
+        setName={setName}
+        loading={loading}
+        subjects={subjects}
+        close={closeInfoModel}
+      /></ModalHoc>
       <ModalHoc
         open={openCreate}
-        onClose={() => setOpenCreate(false)}
-      ><CreateSubject/></ModalHoc>
+        onClose={closeCreateModel}
+      ><CreateSubject close={closeCreateModel}/></ModalHoc>
     </Grid>
   );
 };

@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -108,6 +109,7 @@ namespace Kitias.Providers.Implementations
 			if (teacher == null)
 				return ReturnFailureResult<IEnumerable<SubjectDto>>($"Teacher with email ${email} doesn't existed", "Couldn't find this teacher");
 			var result = _mapper.Map<IEnumerable<SubjectDto>>(teacher.Subjects
+				.OrderBy(s => s.Date)
 				.Where(s => s.Name == name)
 			);
 
@@ -143,7 +145,11 @@ namespace Kitias.Providers.Implementations
 			{
 				var item = result.GetValueOrDefault(key);
 				var newValue = item
-					.OrderBy(s => $"{s.Date} {s.Time}")
+					.OrderBy(s => DateTime.ParseExact(
+						$"{s.Date} {s.Time}", 
+						"dd.MM.yyyy H:mm",
+						CultureInfo.InvariantCulture
+					))
 					.GroupBy(s => s.Type, s => $"{s.Date} {s.Time}")
 					.ToDictionary(s => s.Key);
 

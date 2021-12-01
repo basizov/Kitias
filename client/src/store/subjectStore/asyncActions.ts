@@ -3,9 +3,10 @@ import {API} from "../../api";
 import {ServerErrorType} from "../../model/ServerError";
 import {subjectActions, SubjectActionType} from "./index";
 import {CreateSubjectType} from "../../model/Subject/CreateSubjectModel";
+import {RootState} from "../index";
 
 type AsyncThunkType = ThunkAction<Promise<void>,
-  null,
+  RootState,
   unknown,
   SubjectActionType>;
 
@@ -54,7 +55,29 @@ export const createSubjects = (subjects: CreateSubjectType[]): AsyncThunkType =>
       const response = await API.subject.create(subjects);
 
       if (response) {
-        await dispatch(getSubjectsInfos());
+        dispatch(subjectActions.setError(''));
+      }
+    } catch (e) {
+      const error = e as ServerErrorType;
+
+      dispatch(subjectActions.setError(error.message));
+    } finally {
+      dispatch(subjectActions.setLoading(false));
+    }
+  }
+};
+
+export const updateSubjectsNames = (oldName: string, newName: string): AsyncThunkType => {
+  return async dispatch => {
+    dispatch(subjectActions.setLoading(true));
+    try {
+      const response = await API.subject.updateName({
+        name: oldName,
+        newName: newName
+      });
+
+      if (response) {
+        dispatch(subjectActions.setSubjects(response));
       }
     } catch (e) {
       const error = e as ServerErrorType;
@@ -70,13 +93,21 @@ export const updateSubject = (
   id: string,
   subject: CreateSubjectType
 ): AsyncThunkType => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     dispatch(subjectActions.setLoading(true));
     try {
       const response = await API.subject.update(id, subject);
 
       if (response) {
-        await dispatch(getSubjectsInfos());
+        const state = getState().subject;
+        const subjectIndex = state.subjects.indexOf(
+          state.subjects.find(s => s.id === id)!
+        );
+
+
+        dispatch(subjectActions.setSubjects([
+          ...state.subjects.map((s, i) => i === subjectIndex ? response : s)
+        ]));
       }
     } catch (e) {
       const error = e as ServerErrorType;
@@ -91,13 +122,40 @@ export const updateSubject = (
 export const deleteSubject = (
   id: string
 ): AsyncThunkType => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     dispatch(subjectActions.setLoading(true));
     try {
       const response = await API.subject.delete(id);
 
       if (response) {
-        await dispatch(getSubjectsInfos());
+        const state = getState().subject;
+
+        dispatch(subjectActions.setSubjects([
+          ...state.subjects.filter(s => s.id !== id)
+        ]));
+      }
+    } catch (e) {
+      const error = e as ServerErrorType;
+
+      dispatch(subjectActions.setError(error.message));
+    } finally {
+      dispatch(subjectActions.setLoading(false));
+    }
+  }
+};
+
+export const deleteSubjectByName = (
+  name: string
+): AsyncThunkType => {
+  return async (dispatch, getState) => {
+    dispatch(subjectActions.setLoading(true));
+    try {
+      const response = await API.subject.deleteName({
+        name: name
+      });
+
+      if (response) {
+        dispatch(subjectActions.setError(''));
       }
     } catch (e) {
       const error = e as ServerErrorType;

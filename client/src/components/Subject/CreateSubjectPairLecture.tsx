@@ -7,19 +7,18 @@ import {
   MenuItem,
   Select, TextField
 } from "@mui/material";
-import {LocalizationProvider, TimePicker} from "@mui/lab";
+import {DatePicker, LocalizationProvider, TimePicker} from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import {ru} from "date-fns/locale";
 import {FormikProps} from "formik";
 import {initialSubjectTypeState} from "./CreateSubject";
 
 export const CreateSubjectPairLecture: React.FC<FormikProps<typeof initialSubjectTypeState>> = ({
-                                                                                           values,
-                                                                                           handleChange,
-                                                                                           handleBlur,
-                                                                                           errors,
-                                                                                           setFieldValue
-                                                                                         }) => {
+                                                                                                  values,
+                                                                                                  handleChange,
+                                                                                                  errors,
+                                                                                                  setFieldValue
+                                                                                                }) => {
   return (
     <Grid container direction='column' spacing={2}>
       <Grid item>
@@ -32,7 +31,6 @@ export const CreateSubjectPairLecture: React.FC<FormikProps<typeof initialSubjec
             type='number'
             value={values.lectureCount}
             onChange={handleChange}
-            onBlur={handleBlur}
             onFocus={(e) => e.target.select()}
             error={!!errors.lectureCount}
             inputProps={{min: 0}}
@@ -49,38 +47,15 @@ export const CreateSubjectPairLecture: React.FC<FormikProps<typeof initialSubjec
             label="Неделя"
             error={!!errors.lectureWeek}
             onChange={(e) => setFieldValue('lectureWeek', e.target.value)}
-            onBlur={handleBlur}
           >
-            <MenuItem value={'10'}>Четная</MenuItem>
-            <MenuItem value={'20'}>Нечетная</MenuItem>
-            <MenuItem value={'30'}>Еженедельно</MenuItem>
-            <MenuItem value={'40'}>По датам</MenuItem>
+            <MenuItem value={'Четная неделя'}>Четная</MenuItem>
+            <MenuItem value={'Нечетная неделя'}>Нечетная</MenuItem>
+            <MenuItem value={'Еженедельно'}>Еженедельно</MenuItem>
+            <MenuItem value={'По определенным данным'}>По датам</MenuItem>
           </Select>
         </FormControl>
       </Grid>
-      {values.lectureWeek !== '' && values.lectureWeek !== '40' &&
-      <Grid item>
-          <FormControl fullWidth>
-              <InputLabel id="lectureDay-label">День</InputLabel>
-              <Select
-                  id="lectureDay"
-                  labelId="lectureDay-label"
-                  value={values.lectureDay}
-                  label="День"
-                  error={!!errors.lectureDay}
-                  onChange={(e) => setFieldValue('lectureDay', e.target.value)}
-                  onBlur={handleBlur}
-              >
-                  <MenuItem value={'10'}>Понедельник</MenuItem>
-                  <MenuItem value={'20'}>Вторник</MenuItem>
-                  <MenuItem value={'30'}>Среда</MenuItem>
-                  <MenuItem value={'40'}>Четверг</MenuItem>
-                  <MenuItem value={'50'}>Пятница</MenuItem>
-                  <MenuItem value={'60'}>Суббота</MenuItem>
-              </Select>
-          </FormControl>
-      </Grid>}
-      {values.lectureWeek !== '' && values.lectureWeek !== '40' &&
+      {values.lectureWeek !== '' && values.lectureWeek !== 'По определенным данным' &&
       <Grid item>
           <LocalizationProvider
               dateAdapter={AdapterDateFns}
@@ -99,7 +74,27 @@ export const CreateSubjectPairLecture: React.FC<FormikProps<typeof initialSubjec
               />
           </LocalizationProvider>
       </Grid>}
-      {values.lectureWeek === '40' &&
+      {values.lectureWeek !== '' && values.lectureWeek !== 'По определенным данным' &&
+      <Grid item>
+          <LocalizationProvider
+              dateAdapter={AdapterDateFns}
+              locale={ru}
+          >
+              <DatePicker
+                  mask='__.__.____'
+                  label='Дата первого занятия'
+                  value={values.lectureFirstDate}
+                  onChange={(newValue) => setFieldValue('lectureFirstDate', newValue)}
+                  renderInput={(params) =>
+                    <TextField
+                      id='lectureFirstDate'
+                      error={!!errors.lectureFirstDate}
+                      {...params}
+                    />}
+              />
+          </LocalizationProvider>
+      </Grid>}
+      {values.lectureWeek === 'По определенным данным' &&
       <Grid item>
         {/*<DatePicker*/}
         {/*    id='lectureDates'*/}

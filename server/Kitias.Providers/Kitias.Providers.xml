@@ -448,6 +448,21 @@
             <param name="Subject">Subject update model</param>
             <returns>Subject</returns>
         </member>
+        <member name="M:Kitias.Providers.Interfaces.ISubjectProvider.UpdateSubjectsByNameAsync(System.String,System.String)">
+            <summary>
+            Update subjects by name
+            </summary>
+            <param name="name">Name of the subjects</param>
+            <param name="newName">New name for the subjects</param>
+            <returns>Subjects</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.ISubjectProvider.DeleteSubjectsByNameAsync(System.String)">
+            <summary>
+            Delete subjects by name
+            </summary>
+            <param name="name">Name of the subjects</param>
+            <returns>Status message</returns>
+        </member>
         <member name="M:Kitias.Providers.Interfaces.ISubjectProvider.DeleteSubjectAsync(System.Guid)">
             <summary>
             Delete subject from db
@@ -1002,6 +1017,16 @@
             Subject theme
             </summary>
         </member>
+        <member name="T:Kitias.Providers.Models.Subject.DeleteSubjectByNameModel">
+            <summary>
+            Model to delete subjects by name
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Subject.DeleteSubjectByNameModel.Name">
+            <summary>
+            Names of subjects
+            </summary>
+        </member>
         <member name="T:Kitias.Providers.Models.Subject.SubjectInfoModel">
             <summary>
             Subjects info model
@@ -1025,6 +1050,21 @@
         <member name="P:Kitias.Providers.Models.Subject.SubjectInfoModel.Time">
             <summary>
             List of times
+            </summary>
+        </member>
+        <member name="T:Kitias.Providers.Models.Subject.UpdateSubjectByName">
+            <summary>
+            Update subjects with name
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Subject.UpdateSubjectByName.Name">
+            <summary>
+            Name for subjects
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Subject.UpdateSubjectByName.NewName">
+            <summary>
+            New name for subjects
             </summary>
         </member>
         <member name="T:Kitias.Providers.Models.Subject.UpdateSubjectModel">

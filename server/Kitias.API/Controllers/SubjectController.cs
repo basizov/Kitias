@@ -140,6 +140,44 @@ namespace Kitias.API.Controllers
 		}
 
 		/// <summary>
+		/// Update subjects by name
+		/// </summary>
+		/// <param name="model">Model with names for subjects</param>
+		/// <returns>Groups</returns>
+		[HttpPut]
+		[Authorize(Roles = RolesNames.TEACHER_ROLE)]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<IEnumerable<SubjectDto>>> UpdateSubjectsByName(UpdateSubjectByName model)
+		{
+			var result = await _subjectProvider.UpdateSubjectsByNameAsync(model.Name, model.NewName);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Update subjects by name
+		/// </summary>
+		/// <param name="name">Name for subjects</param>
+		/// <returns>STatus message</returns>
+		[HttpDelete("name/{name}")]
+		[Authorize(Roles = RolesNames.TEACHER_ROLE)]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<string>> DeleteSubjectsByName(string name)
+		{
+			var result = await _subjectProvider.DeleteSubjectsByNameAsync(name);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
 		/// Delete subject by id
 		/// </summary>
 		/// <param name="id">Existed subject id</param>

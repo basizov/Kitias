@@ -9,14 +9,13 @@ import {
   MenuItem,
   Select, TextField
 } from "@mui/material";
-import {LocalizationProvider, TimePicker} from "@mui/lab";
+import {DatePicker, LocalizationProvider, TimePicker} from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import {ru} from "date-fns/locale";
 
 export const CreateSubjectPairPractise: React.FC<FormikProps<typeof initialSubjectTypeState>> = ({
                                                                                                    values,
                                                                                                    handleChange,
-                                                                                                   handleBlur,
                                                                                                    errors,
                                                                                                    setFieldValue
                                                                                                  }) => {
@@ -32,7 +31,6 @@ export const CreateSubjectPairPractise: React.FC<FormikProps<typeof initialSubje
             type='number'
             value={values.practiseCount}
             onChange={handleChange}
-            onBlur={handleBlur}
             onFocus={(e) => e.target.select()}
             error={!!errors.practiseCount}
             inputProps={{min: 0}}
@@ -49,38 +47,15 @@ export const CreateSubjectPairPractise: React.FC<FormikProps<typeof initialSubje
             label="Неделя"
             error={!!errors.practiseWeek}
             onChange={(e) => setFieldValue('practiseWeek', e.target.value)}
-            onBlur={handleBlur}
           >
-            <MenuItem value={'10'}>Четная</MenuItem>
-            <MenuItem value={'20'}>Нечетная</MenuItem>
-            <MenuItem value={'30'}>Еженедельно</MenuItem>
-            <MenuItem value={'40'}>По датам</MenuItem>
+            <MenuItem value={'Четная неделя'}>Четная</MenuItem>
+            <MenuItem value={'Нечетная неделя'}>Нечетная</MenuItem>
+            <MenuItem value={'Еженедельно'}>Еженедельно</MenuItem>
+            <MenuItem value={'По определенным данным'}>По датам</MenuItem>
           </Select>
         </FormControl>
       </Grid>
-      {values.practiseWeek !== '' && values.practiseWeek !== '40' &&
-      <Grid item>
-          <FormControl fullWidth>
-              <InputLabel id="practiseDay-label">День</InputLabel>
-              <Select
-                  id="practiseDay"
-                  labelId="practiseDay-label"
-                  value={values.practiseDay}
-                  label="День"
-                  error={!!errors.practiseDay}
-                  onChange={(e) => setFieldValue('practiseDay', e.target.value)}
-                  onBlur={handleBlur}
-              >
-                  <MenuItem value={'10'}>Понедельник</MenuItem>
-                  <MenuItem value={'20'}>Вторник</MenuItem>
-                  <MenuItem value={'30'}>Среда</MenuItem>
-                  <MenuItem value={'40'}>Четверг</MenuItem>
-                  <MenuItem value={'50'}>Пятница</MenuItem>
-                  <MenuItem value={'60'}>Суббота</MenuItem>
-              </Select>
-          </FormControl>
-      </Grid>}
-      {values.practiseWeek !== '' && values.practiseWeek !== '40' &&
+      {values.practiseWeek !== '' && values.practiseWeek !== 'По определенным данным' &&
       <Grid item>
           <LocalizationProvider
               dateAdapter={AdapterDateFns}
@@ -99,7 +74,27 @@ export const CreateSubjectPairPractise: React.FC<FormikProps<typeof initialSubje
               />
           </LocalizationProvider>
       </Grid>}
-      {values.practiseWeek === '40' &&
+      {values.laborotoryWeek !== '' && values.laborotoryWeek !== 'По определенным данным' &&
+      <Grid item>
+          <LocalizationProvider
+              dateAdapter={AdapterDateFns}
+              locale={ru}
+          >
+              <DatePicker
+                  mask='__.__.____'
+                  label='Дата первого занятия'
+                  value={values.laborotoryFirstDate}
+                  onChange={(newValue) => setFieldValue('laborotoryFirstDate', newValue)}
+                  renderInput={(params) =>
+                    <TextField
+                      id='lectureFirstDate'
+                      error={!!errors.laborotoryFirstDate}
+                      {...params}
+                    />}
+              />
+          </LocalizationProvider>
+      </Grid>}
+      {values.practiseWeek === 'По определенным данным' &&
       <Grid item>
         {/*<DatePicker*/}
         {/*    id='lectureDates'*/}

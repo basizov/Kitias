@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {
   Button, ButtonGroup,
   Checkbox,
@@ -12,41 +12,80 @@ import {CreateSubjectPairPractise} from "./CreateSubjectPairPractise";
 import {CreateSubjectPairLaborotory} from "./CreateSubjectPairLaborotory";
 import {CreateSubjectType} from "../../model/Subject/CreateSubjectModel";
 import {createSubjects} from "../../store/subjectStore/asyncActions";
+import {addDays, format} from "date-fns";
+import {useDispatch} from "react-redux";
 
 export const initialSubjectTypeState = {
   subjectName: '' as string,
-  themes: true,
+  themes: false,
   newTheme: '' as string,
   themesList: [] as string[],
   lectureCount: 0 as number,
   lectureWeek: '' as string,
-  lectureDay: '' as string,
+  lectureFirstDate: new Date(),
+  practiseFirstDate: new Date(),
+  laborotoryFirstDate: new Date(),
   lectureTime: new Date(),
   lectureDates: [] as Date[],
   practiseCount: 0 as number,
   practiseWeek: '' as string,
-  practiseDay: '' as string,
   practiseTime: new Date(),
   practiseDates: [] as Date[],
   laborotoryCount: 0 as number,
   laborotoryWeek: '' as string,
-  laborotoryDay: '' as string,
   laborotoryTime: new Date(),
   laborotoryDates: [] as Date[]
 } as const;
 
-export const CreateSubject: React.FC = () => {
+type PropsType = {
+  close: () => void;
+};
+
+export const CreateSubject: React.FC<PropsType> = ({close}) => {
+  const dispatch = useDispatch();
   const [newSubjects, setNewSubjects] = useState<CreateSubjectType[]>([]);
+  const Days = useMemo(() => [
+    'Понедельник',
+    'Вторник',
+    'Среда',
+    'Четверг',
+    'Пятница',
+    'Суббота',
+    'Воскресенье'
+  ], []);
 
   return (
     <Formik
       initialValues={initialSubjectTypeState}
-      onSubmit={(values) => {
-        console.log(values);
+      onSubmit={async (values) => {
+        let subjects = newSubjects;
+
+        for (let i = 0; i < values.lectureCount; ++i) {
+          subjects = [
+            ...subjects, {
+              day: Days[values.lectureFirstDate.getDay()],
+              date: format(
+                values.lectureWeek === 'Еженедельно' ?
+                  addDays(values.lectureFirstDate, 7 * i) :
+                  addDays(values.lectureFirstDate, 14 * i),
+                'dd.MM.yyy'
+              ),
+              name: values.subjectName,
+              theme: values.newTheme,
+              time: format(values.lectureTime, 'hh:mm:ss'),
+              week: values.lectureWeek,
+              type: 'Лекция'
+            }
+          ];
+        }
+        setNewSubjects(subjects);
+        await dispatch(createSubjects(subjects));
+        setNewSubjects([]);
+        close();
       }}
     >
       {(props) => (
-        <Form onSubmit={props.submitForm}>
+        <Form onSubmit={props.handleSubmit}>
           <Grid
             container
             spacing={1}
@@ -133,9 +172,7 @@ export const CreateSubject: React.FC = () => {
                     }}
                 >Добавить тему</Button>}
                 <Button
-                  onClick={async () => {
-                    await createSubjects(newSubjects);
-                  }}
+                  type='submit'
                 >Добавить предмет</Button>
               </ButtonGroup>
             </Grid>
