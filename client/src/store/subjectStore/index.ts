@@ -3,6 +3,7 @@ import {SubjectInfoType, SubjectType} from "../../model/Subject/Subject";
 
 export const initialState = {
   subjects: [] as SubjectType[],
+  subjectsNames: [] as string[],
   subjectsInfos: [] as SubjectInfoType[],
   error: '',
   loadingInitial: false,
@@ -13,6 +14,8 @@ export const subjectReducer = (state = initialState, action: SubjectActionType) 
   switch (action.type) {
     case "SET_SUBJECTS":
       return {...state, subjects: action.payload};
+    case "SET_SUBJECTS_NAMES":
+      return {...state, subjectsNames: action.payload};
     case "SET_SUBJECTS_INFOS":
       return {...state, subjectsInfos: action.payload};
     case 'SET_SUBJECT_LOADING':
@@ -31,6 +34,10 @@ export type SubjectActionType = InferActionType<typeof subjectActions>;
 export const subjectActions = {
   setSubjects: (payload: SubjectType[]) => ({
     type: 'SET_SUBJECTS',
+    payload
+  } as const),
+  setSubjectsNames: (payload: string[]) => ({
+    type: 'SET_SUBJECTS_NAMES',
     payload
   } as const),
   setSubjectsInfos: (payload: SubjectInfoType[]) => ({

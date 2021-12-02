@@ -22,12 +22,19 @@
             </summary>
             <returns>Shedulers</returns>
         </member>
-        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.TakeShedulerSubjectsAsync(System.Guid)">
+        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.TakeShedulerAsync(System.Guid)">
             <summary>
             Take sheduler by id
             </summary>
             <param name="id">Sheduler identifier</param>
             <returns>Sheduler</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.TakeShedulerSubjectsAsync(System.Guid)">
+            <summary>
+            Take shedulre subjects by id
+            </summary>
+            <param name="id">Sheduler identifier</param>
+            <returns>Sheduler subjects</returns>
         </member>
         <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.CreateShedulerAsync(Kitias.Providers.Models.Attendances.ShedulerRequestModel)">
             <summary>
@@ -183,6 +190,12 @@
             </summary>
             <returns>Groups</returns>
         </member>
+        <member name="M:Kitias.API.Controllers.GroupController.TakeGroupsNames">
+            <summary>
+            Take all groups names from db
+            </summary>
+            <returns>Groups names</returns>
+        </member>
         <member name="M:Kitias.API.Controllers.GroupController.TakeGroupByIdAsync(System.Guid)">
             <summary>
             Take group from db by id
@@ -191,6 +204,13 @@
             <returns>Group</returns>
         </member>
         <member name="M:Kitias.API.Controllers.GroupController.TakeGroupStudentsByIdAsync(System.Guid)">
+            <summary>
+            Take group students from db by id
+            </summary>
+            <param name="id">Id of group</param>
+            <returns>Students</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.GroupController.TakeGroupStudentsNamesByIdAsync(System.Guid)">
             <summary>
             Take group students from db by id
             </summary>
@@ -389,6 +409,12 @@
             Take subjects of the teacher
             </summary>
             <returns>Subjects</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.TeacherController.TakeTeacherSubjectsNamesAsync">
+            <summary>
+            Take subjects names of the teacher
+            </summary>
+            <returns>Subjects names</returns>
         </member>
         <member name="M:Kitias.API.Controllers.TeacherController.TakeTeacherSubjectAsync(System.String)">
             <summary>

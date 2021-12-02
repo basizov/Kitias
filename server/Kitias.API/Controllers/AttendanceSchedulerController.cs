@@ -48,13 +48,31 @@ namespace Kitias.API.Controllers
 		/// </summary>
 		/// <param name="id">Sheduler identifier</param>
 		/// <returns>Sheduler</returns>
+		[HttpGet("{id}")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<SubjectDto>> TakeShedulerAsync(Guid id)
+		{
+			var result = await _attendanceProvider.TakeTeacherShedulerAsync(id);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Take shedulre subjects by id
+		/// </summary>
+		/// <param name="id">Sheduler identifier</param>
+		/// <returns>Sheduler subjects</returns>
 		[HttpGet("{id}/subjects")]
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
 		public async Task<ActionResult<IEnumerable<SubjectDto>>> TakeShedulerSubjectsAsync(Guid id)
 		{
-			var result = await _attendanceProvider.TakeTeacherShedulerAsync(id);
+			var result = await _attendanceProvider.TakeTeacherShedulerSubjectsAsync(id);
 
 			if (!result.IsSuccess)
 				return BadRequest(result.Error);
@@ -76,6 +94,7 @@ namespace Kitias.API.Controllers
 			{
 				GroupNumber = model.GroupNumber,
 				Name = model.Name,
+				SubjectName = model.SubjectName,
 				TeacherEmail = User.FindFirst(ClaimTypes.Email)?.Value ?? ""
 			});
 

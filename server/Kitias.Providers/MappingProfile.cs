@@ -28,6 +28,7 @@ namespace Kitias.Providers
 			#region ToDTO
 
 			CreateMap<Person, PersonDto>();
+			CreateMap<Group, GroupNames>();
 			CreateMap<Group, GroupDto>()
 				.ForMember(g => g.EducationType, o => o.MapFrom(g => Helpers.GetEnumMemberAttrValue(g.EducationType)))
 				.ForMember(g => g.Speciality, o => o.MapFrom(g => Helpers.GetEnumMemberAttrValue(g.Speciality)))

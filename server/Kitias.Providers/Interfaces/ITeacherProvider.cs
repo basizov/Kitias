@@ -32,6 +32,12 @@ namespace Kitias.Providers.Interfaces
 		/// <returns>Subjects</returns>
 		Task<Result<IEnumerable<SubjectDto>>> TakeTeacherSubjectsAsync(string email);
 		/// <summary>
+		/// Take all subjects names of the teacher
+		/// </summary>
+		/// <param name="email">Email of the teacher to take</param>
+		/// <returns>Subjects names</returns>
+		Task<Result<IEnumerable<string>>> TakeTeacherSubjectsNamesAsync(string email);
+		/// <summary>
 		/// Take subject of the teacher by name
 		/// </summary>
 		/// <param name="email">Email of the teacher to take</param>

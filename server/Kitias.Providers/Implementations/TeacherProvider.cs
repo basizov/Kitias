@@ -97,6 +97,24 @@ namespace Kitias.Providers.Implementations
 			return ResultHandler.OnSuccess(result);
 		}
 
+		public async Task<Result<IEnumerable<string>>> TakeTeacherSubjectsNamesAsync(string email)
+		{
+			var teacher = await _unitOfWork.Teacher
+				.FindByAndInclude(
+					s => s.Person.Email == email,
+					s => s.Person, s => s.Subjects
+				)
+				.SingleOrDefaultAsync();
+
+			if (teacher == null)
+				return ReturnFailureResult<IEnumerable<string>>($"Teacher with email ${email} doesn't existed", "Couldn't find this teacher");
+
+			_logger.LogInformation($"Take all subjects names of teacher {email}");
+			return ResultHandler.OnSuccess(teacher.Subjects
+				.Select(s => s.Name).Distinct()
+			);
+		}
+
 		public async Task<Result<IEnumerable<SubjectDto>>> TakeTeacherSubjectAsync(string email, string name)
 		{
 			var teacher = await _unitOfWork.Teacher

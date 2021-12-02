@@ -79,6 +79,23 @@ namespace Kitias.API.Controllers
 		}
 
 		/// <summary>
+		/// Take subjects names of the teacher
+		/// </summary>
+		/// <returns>Subjects names</returns>
+		[HttpGet("subjects/names")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<IEnumerable<string>>> TakeTeacherSubjectsNamesAsync()
+		{
+			var result = await _teacherProvider.TakeTeacherSubjectsNamesAsync(User.FindFirst(ClaimTypes.Email)?.Value ?? "");
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
 		/// Take subject of the teacher
 		/// </summary>
 		/// <param name="name">subject name</param>

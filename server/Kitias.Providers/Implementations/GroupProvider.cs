@@ -37,6 +37,15 @@ namespace Kitias.Providers.Implementations
 			return ResultHandler.OnSuccess(result);
 		}
 
+		public Result<IEnumerable<GroupNames>> TakeGroupsNames()
+		{
+			var groups = _unitOfWork.Group.GetAll();
+			var result = _mapper.Map<IEnumerable<GroupNames>>(groups);
+
+			_logger.LogInformation("Take all groups from db");
+			return ResultHandler.OnSuccess(result);
+		}
+
 		public async Task<Result<IEnumerable<StudentDto>>> TakeGroupStudentsAsync(Guid id)
 		{
 			var group = await _unitOfWork.Group
@@ -53,6 +62,22 @@ namespace Kitias.Providers.Implementations
 
 			_logger.LogInformation($"Get students for group {id}");
 			return ResultHandler.OnSuccess(result);
+		}
+
+		public async Task<Result<IEnumerable<string>>> TakeGroupStudentsNamesAsync(Guid id)
+		{
+			var group = await _unitOfWork.Group
+				.FindBy(g => g.Id == id)
+				.Include(g => g.Students)
+				.ThenInclude(s => s.Person)
+				.SingleOrDefaultAsync();
+
+			if (group == null)
+				return ReturnFailureResult<IEnumerable<string>>($"Group with id ${id} doesn't existed", "Couldn't find this group");
+			else if (group.Students == null)
+				return ReturnFailureResult<IEnumerable<string>>($"Couldn;t find students for {id}", "Couldn't find students for this group");
+			_logger.LogInformation($"Get students for group {id}");
+			return ResultHandler.OnSuccess(group.Students.Select(s => s.Person.FullName));
 		}
 
 		public async Task<Result<IEnumerable<SubjectDto>>> TakeGroupSubjectsAsync(Guid id)

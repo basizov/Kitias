@@ -9,7 +9,7 @@ import {AttendanceTable} from "../components/Attendances/AttendanceTable";
 import {AttendancesTable} from "../components/Attendances/AttendancesTable";
 import {
   getAttendances,
-  getAttendanceSubjects
+  getAttendanceSubjects, getSheduler
 } from "../store/attendanceStore/asyncActions";
 import {useDispatch} from "react-redux";
 import {useParams} from "react-router";
@@ -29,6 +29,7 @@ export const AttendancesPage: React.FC = () => {
   useEffect(() => {
     if (params.id) {
       dispatch(getAttendances(params.id));
+      dispatch(getSheduler(params.id));
       dispatch(getAttendanceSubjects(params.id));
     }
   }, [params.id, params.subjectName, dispatch]);
@@ -59,6 +60,7 @@ export const AttendancesPage: React.FC = () => {
       <Grid item>
         {tab === 0 && <AttendancesTable subjectType='Лекция'/>}
         {tab === 1 && <AttendancesTable subjectType='Практика'/>}
+        {tab === 2 && <AttendancesTable subjectType='Лабораторная работа'/>}
         {tab === 6 && <AttendanceTable/>}
       </Grid>
     </Grid>

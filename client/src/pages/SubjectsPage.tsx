@@ -83,19 +83,22 @@ export const SubjectsPage: React.FC = () => {
               <CardContent sx={{padding: '.7rem', paddingTop: '.3rem'}}>
                 <Grid container spacing={1}>
                   {Object.entries(value).map(([vKey, vValue]) => (
-                    <Grid item xs={4} sm={6} md={4} key={vKey}>
-                      <Typography
-                        variant='subtitle1'
-                        color="text.primary"
-                        align='center'
-                      >{vKey}</Typography>
-                      {[].map.call(vValue, date => (
+                    <Grid item container key={vKey}>
+                      <Grid item xs={12}>
                         <Typography
-                          key={date}
-                          variant="body2"
-                          align='center'
-                          color="text.secondary"
-                        >{date}</Typography>
+                          variant='subtitle1'
+                          color="text.primary"
+                          sx={{marginLeft: '.3rem'}}
+                        >{vKey}</Typography>
+                      </Grid>
+                      {[].map.call(vValue, date => (
+                        <Grid item xs={4} sm={6} md={4} key={date}>
+                          <Typography
+                            variant="body2"
+                            align='center'
+                            color="text.secondary"
+                          >{date}</Typography>
+                        </Grid>
                       ))}
                     </Grid>
                   ))}

@@ -18,11 +18,22 @@ namespace Kitias.Providers.Interfaces
 		/// <returns>Groups</returns>
 		Result<IEnumerable<GroupDto>> TakeGroups();
 		/// <summary>
+		/// Take all groups names from db
+		/// </summary>
+		/// <returns>Groups names</returns>
+		Result<IEnumerable<GroupNames>> TakeGroupsNames();
+		/// <summary>
 		/// Take all students of the group from db
 		/// </summary>
 		/// <param name="id">Id of the group to take</param>
 		/// <returns>Groups</returns>
 		Task<Result<IEnumerable<StudentDto>>> TakeGroupStudentsAsync(Guid id);
+		/// <summary>
+		/// Take all students of the group from db
+		/// </summary>
+		/// <param name="id">Id of the group to take</param>
+		/// <returns>Groups</returns>
+		Task<Result<IEnumerable<string>>> TakeGroupStudentsNamesAsync(Guid id);
 		/// <summary>
 		/// Take all subjects of the group from db
 		/// </summary>

@@ -44,6 +44,23 @@ namespace Kitias.API.Controllers
 		}
 
 		/// <summary>
+		/// Take all groups names from db
+		/// </summary>
+		/// <returns>Groups names</returns>
+		[HttpGet("names")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public ActionResult<IEnumerable<GroupNames>> TakeGroupsNames()
+		{
+			var result = _groupProvider.TakeGroupsNames();
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
 		/// Take group from db by id
 		/// </summary>
 		/// <param name="id">Id of group</param>
@@ -73,6 +90,24 @@ namespace Kitias.API.Controllers
 		public async Task<ActionResult<IEnumerable<StudentDto>>> TakeGroupStudentsByIdAsync(Guid id)
 		{
 			var result = await _groupProvider.TakeGroupStudentsAsync(id);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Take group students from db by id
+		/// </summary>
+		/// <param name="id">Id of group</param>
+		/// <returns>Students</returns>
+		[HttpGet("{id}/students/names")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<IEnumerable<string>>> TakeGroupStudentsNamesByIdAsync(Guid id)
+		{
+			var result = await _groupProvider.TakeGroupStudentsNamesAsync(id);
 
 			if (!result.IsSuccess)
 				return BadRequest(result.Error);

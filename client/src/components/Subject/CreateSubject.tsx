@@ -78,6 +78,42 @@ export const CreateSubject: React.FC<PropsType> = ({close}) => {
             }
           ];
         }
+        for (let i = 0; i < values.practiseCount; ++i) {
+          subjects = [
+            ...subjects, {
+              day: Days[values.practiseFirstDate.getDay()],
+              date: format(
+                values.practiseWeek === 'Еженедельно' ?
+                  addDays(values.practiseFirstDate, 7 * i) :
+                  addDays(values.practiseFirstDate, 14 * i),
+                'dd.MM.yyy'
+              ),
+              name: values.subjectName,
+              theme: values.newTheme,
+              time: format(values.practiseTime, 'hh:mm:ss'),
+              week: values.practiseWeek,
+              type: 'Практика'
+            }
+          ];
+        }
+        for (let i = 0; i < values.laborotoryCount; ++i) {
+          subjects = [
+            ...subjects, {
+              day: Days[values.laborotoryFirstDate.getDay()],
+              date: format(
+                values.laborotoryWeek === 'Еженедельно' ?
+                  addDays(values.laborotoryFirstDate, 7 * i) :
+                  addDays(values.laborotoryFirstDate, 14 * i),
+                'dd.MM.yyy'
+              ),
+              name: values.subjectName,
+              theme: values.newTheme,
+              time: format(values.laborotoryTime, 'hh:mm:ss'),
+              week: values.laborotoryWeek,
+              type: 'Лабораторная работа'
+            }
+          ];
+        }
         setNewSubjects(subjects);
         await dispatch(createSubjects(subjects));
         setNewSubjects([]);

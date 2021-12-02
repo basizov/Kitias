@@ -13,19 +13,14 @@ namespace Kitias.Persistence.Enums
 		[EnumMember(Value = "Еженедельно")]
 		Every = 0,
 		/// <summary>
-		/// Only even weeks
+		/// Every 2 weeks
 		/// </summary>
-		[EnumMember(Value = "Четная неделя")]
+		[EnumMember(Value = "Каждые 2 недели")]
 		Even = 1,
-		/// <summary>
-		/// Only odd weeks
-		/// </summary>
-		[EnumMember(Value = "Нечетная неделя")]
-		Odd = 2,
 		/// <summary>
 		/// Only by dates
 		/// </summary>
 		[EnumMember(Value = "По определенным данным")]
-		ByDate = 3
+		ByDate = 2
 	}
 }

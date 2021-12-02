@@ -8,9 +8,9 @@ namespace Kitias.Providers.Models.Attendances
 	public record ShedulerRequestModel
 	{
 		/// <summary>
-		/// Group number
+		/// Group id
 		/// </summary>
-		public string GroupNumber { get; init; }
+		public Guid? GroupNumber { get; init; }
 		/// <summary>
 		/// Sheduler name
 		/// </summary>
@@ -33,7 +33,7 @@ namespace Kitias.Providers.Models.Attendances
 		/// <summary>
 		/// Group number
 		/// </summary>
-		public string GroupNumber { get; init; }
+		public Guid? GroupNumber { get; init; }
 		/// <summary>
 		/// Sheduler name
 		/// </summary>

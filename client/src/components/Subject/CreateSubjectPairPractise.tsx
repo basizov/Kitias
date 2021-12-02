@@ -48,8 +48,7 @@ export const CreateSubjectPairPractise: React.FC<FormikProps<typeof initialSubje
             error={!!errors.practiseWeek}
             onChange={(e) => setFieldValue('practiseWeek', e.target.value)}
           >
-            <MenuItem value={'Четная неделя'}>Четная</MenuItem>
-            <MenuItem value={'Нечетная неделя'}>Нечетная</MenuItem>
+            <MenuItem value={'Каждые 2 недели'}>Через неделю</MenuItem>
             <MenuItem value={'Еженедельно'}>Еженедельно</MenuItem>
             <MenuItem value={'По определенным данным'}>По датам</MenuItem>
           </Select>
@@ -74,7 +73,7 @@ export const CreateSubjectPairPractise: React.FC<FormikProps<typeof initialSubje
               />
           </LocalizationProvider>
       </Grid>}
-      {values.laborotoryWeek !== '' && values.laborotoryWeek !== 'По определенным данным' &&
+      {values.practiseWeek !== '' && values.practiseWeek !== 'По определенным данным' &&
       <Grid item>
           <LocalizationProvider
               dateAdapter={AdapterDateFns}
@@ -83,12 +82,12 @@ export const CreateSubjectPairPractise: React.FC<FormikProps<typeof initialSubje
               <DatePicker
                   mask='__.__.____'
                   label='Дата первого занятия'
-                  value={values.laborotoryFirstDate}
-                  onChange={(newValue) => setFieldValue('laborotoryFirstDate', newValue)}
+                  value={values.practiseFirstDate}
+                  onChange={(newValue) => setFieldValue('practiseFirstDate', newValue)}
                   renderInput={(params) =>
                     <TextField
-                      id='lectureFirstDate'
-                      error={!!errors.laborotoryFirstDate}
+                      id='practiseFirstDate'
+                      error={!!errors.practiseFirstDate}
                       {...params}
                     />}
               />

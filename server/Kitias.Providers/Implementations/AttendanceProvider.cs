@@ -49,7 +49,24 @@ namespace Kitias.Providers.Implementations
 			return ResultHandler.OnSuccess(result);
 		}
 
-		public async Task<Result<IEnumerable<SubjectDto>>> TakeTeacherShedulerAsync(Guid id)
+		public async Task<Result<ShedulersListResult>> TakeTeacherShedulerAsync(Guid id)
+		{
+			var sheduler = await _unitOfWork.ShedulerAttendace
+				.FindByAndInclude(
+					s => s.Id == id,
+					s => s.Group
+				)
+				.SingleOrDefaultAsync();
+
+			if (sheduler == null)
+				return ReturnFailureResult<ShedulersListResult>($"Couldn't find sheduler with id {id}", "Couldn't find sheduler");
+			var result = _mapper.Map<ShedulersListResult>(sheduler);
+
+			_logger.LogInformation($"Take sheduler of with id {id}");
+			return ResultHandler.OnSuccess(result);
+		}
+
+		public async Task<Result<IEnumerable<SubjectDto>>> TakeTeacherShedulerSubjectsAsync(Guid id)
 		{
 			var sheduler = await _unitOfWork.ShedulerAttendace
 				.FindBy(s => s.Id == id)
@@ -125,7 +142,7 @@ namespace Kitias.Providers.Implementations
 				);
 			}
 			var subject = await _unitOfWork.Subject
-				.FindBy(s => s.Name == model.Name)
+				.FindBy(s => s.Name == model.SubjectName)
 				.FirstOrDefaultAsync();
 
 			if (subject == null)
@@ -137,7 +154,7 @@ namespace Kitias.Providers.Implementations
 			}
 			_logger.LogInformation($"Found teacher with id {teacher.Id}");
 			var group = await _unitOfWork.Group
-				.FindByAndInclude(g => g.Number == model.GroupNumber)
+				.FindByAndInclude(g => g.Id == model.GroupNumber)
 				.SingleOrDefaultAsync();
 
 			if (group != null)
@@ -187,7 +204,7 @@ namespace Kitias.Providers.Implementations
 			if (model.GroupNumber != null)
 			{
 				group = await _unitOfWork.Group
-					.FindByAndInclude(g => g.Number == model.GroupNumber)
+					.FindByAndInclude(g => g.Id == model.GroupNumber)
 					.SingleOrDefaultAsync();
 
 				if (group != null)

@@ -110,19 +110,19 @@ export const Sidebar: React.FC<PropsType> = ({
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton onClick={() => navigate('/calendar')}>
-            <ListItemIcon>
-              <EventAvailable/>
-            </ListItemIcon>
-            <ListItemText primary="Календарь"/>
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
           <ListItemButton onClick={() => navigate('/attendances')}>
             <ListItemIcon>
               <DateRange/>
             </ListItemIcon>
             <ListItemText primary="График посещений"/>
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => navigate('/calendar')}>
+            <ListItemIcon>
+              <EventAvailable/>
+            </ListItemIcon>
+            <ListItemText primary="Календарь"/>
           </ListItemButton>
         </ListItem>
       </List>

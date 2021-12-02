@@ -48,8 +48,7 @@ export const CreateSubjectPairLecture: React.FC<FormikProps<typeof initialSubjec
             error={!!errors.lectureWeek}
             onChange={(e) => setFieldValue('lectureWeek', e.target.value)}
           >
-            <MenuItem value={'Четная неделя'}>Четная</MenuItem>
-            <MenuItem value={'Нечетная неделя'}>Нечетная</MenuItem>
+            <MenuItem value={'Каждые 2 недели'}>Через неделю</MenuItem>
             <MenuItem value={'Еженедельно'}>Еженедельно</MenuItem>
             <MenuItem value={'По определенным данным'}>По датам</MenuItem>
           </Select>

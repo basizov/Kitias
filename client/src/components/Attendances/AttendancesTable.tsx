@@ -8,7 +8,10 @@ import {
   TableRow
 } from "@mui/material";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
-import {AttendenceType} from "../../model/Attendance/Attendence";
+import {
+  AttendancesByStudents,
+  AttendenceType
+} from "../../model/Attendance/Attendence";
 import {AttendanceCell} from "./AttendanceCell";
 
 const StyledTableRow = styled(TableRow)(({theme}) => ({
@@ -29,19 +32,29 @@ const StyledTableHead = styled(TableHead)(({theme}) => ({
 }));
 
 type PropsType = {
-  subjectType: 'Лекция' | 'Практика';
+  subjectType: 'Лекция' | 'Практика' | 'Лабораторная работа';
 };
 
 export const AttendancesTable: React.FC<PropsType> = ({
                                                         subjectType
                                                       }) => {
-  const pageSize = useMemo(() => 8, []);
+  const pageSize = useMemo(() => 4, []);
   const [page, setPage] = useState(0);
-  const {attendances} = useTypedSelector(s => s.attendance);
+  const {attendances, selectedSheduler} = useTypedSelector(s => s.attendance);
   const {subjects} = useTypedSelector(s => s.subject);
   const selectedSubject = useMemo(() => {
     return subjects.filter(s => s.type === subjectType);
-  }, [subjects, subjectType])
+  }, [subjects, subjectType]);
+  const selectedAttendances = useMemo(() => {
+    let result = {} as AttendancesByStudents;
+
+    Object.entries(attendances).forEach(([key, value]) => {
+      const filteredItems = [].filter.call(value, (a: AttendenceType) => a.type === subjectType);
+
+      result[key] = filteredItems;
+    });
+    return result;
+  }, [attendances, subjectType]);
 
   return (
     <TableContainer component={Paper}>
@@ -51,11 +64,11 @@ export const AttendancesTable: React.FC<PropsType> = ({
             <StyledTableHeadCell
               align='center' rowSpan={2}
               sx={{borderRight: 1, borderRightColor: 'grey.800'}}
-            >4443</StyledTableHeadCell>
+            >{selectedSheduler}</StyledTableHeadCell>
             {selectedSubject.map((s, i) => (
               <React.Fragment key={`name ${s.id}`}>
                 {s.type === subjectType &&
-                page * pageSize < i + 1 && i + 1 < (page + 1) * pageSize &&
+                page * pageSize < i + 1 && i + 1 <= (page + 1) * pageSize &&
                 <StyledTableHeadCell
                     align='center'
                     sx={{padding: 0}}
@@ -66,7 +79,7 @@ export const AttendancesTable: React.FC<PropsType> = ({
             {selectedSubject.map((s, i) => (
               <React.Fragment key={`date ${s.id}`}>
                 {s.type === subjectType &&
-                page * pageSize < i + 1 && i + 1 < (page + 1) * pageSize &&
+                page * pageSize < i + 1 && i + 1 <= (page + 1) * pageSize &&
                 <StyledTableHeadCell
                     align='center'
                     sx={{padding: 0}}
@@ -75,7 +88,7 @@ export const AttendancesTable: React.FC<PropsType> = ({
           </TableRow>
         </StyledTableHead>
         <TableBody>
-          {Object.entries(attendances).map(([key, value]) => (
+          {Object.entries(selectedAttendances).map(([key, value]) => (
             <StyledTableRow key={key}>
               <TableCell
                 sx={{width: '15rem', height: '2.35rem'}}
@@ -84,18 +97,18 @@ export const AttendancesTable: React.FC<PropsType> = ({
               {[].map.call(value, (a: AttendenceType, i) => (
                 <React.Fragment key={`data ${a.id}`}>
                   {a.type === subjectType &&
-                  page * pageSize < i + 1 && i + 1 < (page + 1) * pageSize &&
+                  page * pageSize < i + 1 && i + 1 <= (page + 1) * pageSize &&
                   <React.Fragment>
                       <AttendanceCell
-                        identifier={a.id}
-                        title={a.attended}
+                          identifier={a.id}
+                          title={a.attended}
                       />
                   </React.Fragment>}
                 </React.Fragment>))}
             </StyledTableRow>
           ))}
         </TableBody>
-        {selectedSubject.length > 8 && <TableFooter>
+        {selectedSubject.length > pageSize && <TableFooter>
             <TableRow>
                 <TablePagination
                     count={selectedSubject.length}

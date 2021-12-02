@@ -1,5 +1,6 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
+  Button,
   Grid,
   List,
   ListItem, ListItemButton,
@@ -14,31 +15,45 @@ import {
 import {useTypedSelector} from "../hooks/useTypedSelector";
 import {Groups} from "@mui/icons-material";
 import {Loading} from "../layout/Loading";
+import {ModalHoc} from "../components/HOC/ModalHoc";
+import {CreateAttendanceSheduler} from "../components/Attendances/CreateAttendanceSheduler";
+import {attendanceActions} from "../store/attendanceStore";
 
 export const ShedulersPage: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {shedulers, loading} = useTypedSelector(s => s.attendance);
+  const [openCreate, setOpenCreate] = useState(false);
+  const {shedulers, loadingInitial} = useTypedSelector(s => s.attendance);
 
   useEffect(() => {
     dispatch(getShedulers());
   }, [dispatch]);
 
-  if (loading) {
-    return <Loading loading={loading}/>;
+  const closeCreate = async () => {
+    await dispatch(getShedulers());
+    setOpenCreate(false);
+  };
+
+  if (loadingInitial) {
+    return <Loading loading={loadingInitial}/>;
   }
   return (
     <Grid
       container
       direction='column'
-      spacing={1}
     >
-      <Grid item>
-        <Typography
-          variant="h5"
-          component="div"
-          sx={{marginLeft: '.7rem'}}
-        >Ваши группы</Typography>
+      <Grid container>
+        <Grid item>
+          <Typography
+            variant="h5"
+            component="div"
+            sx={{marginLeft: '.7rem'}}
+          >Журналы посещений</Typography>
+        </Grid>
+        <Button
+          sx={{marginLeft: 'auto'}}
+          onClick={() => setOpenCreate(true)}
+        >Добавить новый журнал</Button>
       </Grid>
       <Grid item>
         <List sx={{padding: 0}}>
@@ -47,6 +62,7 @@ export const ShedulersPage: React.FC = () => {
               <ListItemButton
                 onClick={async () => {
                   navigate(`${s.id}`);
+                  dispatch(attendanceActions.setSelectedSheduler(s.name));
                 }}
               >
                 <ListItemIcon>
@@ -58,6 +74,10 @@ export const ShedulersPage: React.FC = () => {
           ))}
         </List>
       </Grid>
+      <ModalHoc
+        open={openCreate}
+        onClose={closeCreate}
+      ><CreateAttendanceSheduler close={closeCreate}/></ModalHoc>
     </Grid>
   );
 };

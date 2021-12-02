@@ -1442,12 +1442,7 @@
         </member>
         <member name="F:Kitias.Persistence.Enums.Week.Even">
             <summary>
-            Only even weeks
-            </summary>
-        </member>
-        <member name="F:Kitias.Persistence.Enums.Week.Odd">
-            <summary>
-            Only odd weeks
+            Every 2 weeks
             </summary>
         </member>
         <member name="F:Kitias.Persistence.Enums.Week.ByDate">

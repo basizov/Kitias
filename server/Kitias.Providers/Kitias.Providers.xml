@@ -152,6 +152,13 @@
             <param name="id">Identifier of sheduler</param>
             <returns>List shedulers info</returns>
         </member>
+        <member name="M:Kitias.Providers.Interfaces.IAttendanceProvider.TakeTeacherShedulerSubjectsAsync(System.Guid)">
+            <summary>
+            Take shedulersubjects of the teacher
+            </summary>
+            <param name="id">Identifier of sheduler</param>
+            <returns>List shedulers subjects info</returns>
+        </member>
         <member name="M:Kitias.Providers.Interfaces.IAttendanceProvider.TakeShedulerAttendancesAsync(System.Guid)">
             <summary>
             Take attendances of the sheduler
@@ -307,7 +314,20 @@
             </summary>
             <returns>Groups</returns>
         </member>
+        <member name="M:Kitias.Providers.Interfaces.IGroupProvider.TakeGroupsNames">
+            <summary>
+            Take all groups names from db
+            </summary>
+            <returns>Groups names</returns>
+        </member>
         <member name="M:Kitias.Providers.Interfaces.IGroupProvider.TakeGroupStudentsAsync(System.Guid)">
+            <summary>
+            Take all students of the group from db
+            </summary>
+            <param name="id">Id of the group to take</param>
+            <returns>Groups</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IGroupProvider.TakeGroupStudentsNamesAsync(System.Guid)">
             <summary>
             Take all students of the group from db
             </summary>
@@ -503,6 +523,13 @@
             <param name="email">Email of the teacher to take</param>
             <returns>Subjects</returns>
         </member>
+        <member name="M:Kitias.Providers.Interfaces.ITeacherProvider.TakeTeacherSubjectsNamesAsync(System.String)">
+            <summary>
+            Take all subjects names of the teacher
+            </summary>
+            <param name="email">Email of the teacher to take</param>
+            <returns>Subjects names</returns>
+        </member>
         <member name="M:Kitias.Providers.Interfaces.ITeacherProvider.TakeTeacherSubjectAsync(System.String,System.String)">
             <summary>
             Take subject of the teacher by name
@@ -572,7 +599,7 @@
         </member>
         <member name="P:Kitias.Providers.Models.Attendances.ShedulerRequestModel.GroupNumber">
             <summary>
-            Group number
+            Group id
             </summary>
         </member>
         <member name="P:Kitias.Providers.Models.Attendances.ShedulerRequestModel.Name">
@@ -778,6 +805,21 @@
         <member name="P:Kitias.Providers.Models.Group.CreateGroupModel.IssueDate">
             <summary>
             Grou issue date
+            </summary>
+        </member>
+        <member name="T:Kitias.Providers.Models.Group.GroupNames">
+            <summary>
+            Group names transfer object
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Group.GroupNames.Id">
+            <summary>
+            Group identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Group.GroupNames.Number">
+            <summary>
+            Group number
             </summary>
         </member>
         <member name="T:Kitias.Providers.Models.Group.UpdateGroupModel">

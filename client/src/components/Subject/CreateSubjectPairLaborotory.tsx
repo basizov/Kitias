@@ -48,8 +48,7 @@ export const CreateSubjectPairLaborotory: React.FC<FormikProps<typeof initialSub
             error={!!errors.laborotoryWeek}
             onChange={(e) => setFieldValue('laborotoryWeek', e.target.value)}
           >
-            <MenuItem value={'Четная неделя'}>Четная</MenuItem>
-            <MenuItem value={'Нечетная неделя'}>Нечетная</MenuItem>
+            <MenuItem value={'Каждые 2 недели'}>Через неделю</MenuItem>
             <MenuItem value={'Еженедельно'}>Еженедельно</MenuItem>
             <MenuItem value={'По определенным данным'}>По датам</MenuItem>
           </Select>
