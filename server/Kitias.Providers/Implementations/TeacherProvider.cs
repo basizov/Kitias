@@ -111,7 +111,9 @@ namespace Kitias.Providers.Implementations
 
 			_logger.LogInformation($"Take all subjects names of teacher {email}");
 			return ResultHandler.OnSuccess(teacher.Subjects
-				.Select(s => s.Name).Distinct()
+				.OrderBy(s => s.Date)
+				.Select(s => s.Name)
+				.Distinct()
 			);
 		}
 

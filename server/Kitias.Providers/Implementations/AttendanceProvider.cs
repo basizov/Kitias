@@ -66,6 +66,27 @@ namespace Kitias.Providers.Implementations
 			return ResultHandler.OnSuccess(result);
 		}
 
+		public async Task<Result<ShedulerStudentsGroup>> TakeShedulerStudentsGroupAsync(Guid id)
+		{
+			var sheduler = await _unitOfWork.ShedulerAttendace
+				.FindByAndInclude(
+					s => s.Id == id,
+					s => s.Group, s => s.Attendances
+				)
+				.SingleOrDefaultAsync();
+
+			if (sheduler == null)
+				return ReturnFailureResult<ShedulerStudentsGroup>($"Couldn't find sheduler with id {id}", "Couldn't find sheduler");
+			var students = sheduler.Attendances.Select(a => a.StudentName).Distinct();
+
+			_logger.LogInformation($"Take sheduler {id} students and gorup id");
+			return ResultHandler.OnSuccess(new ShedulerStudentsGroup
+			{
+				GroupId = sheduler.GroupId,
+				Students = students
+			});
+		}
+
 		public async Task<Result<IEnumerable<SubjectDto>>> TakeTeacherShedulerSubjectsAsync(Guid id)
 		{
 			var sheduler = await _unitOfWork.ShedulerAttendace
@@ -75,7 +96,8 @@ namespace Kitias.Providers.Implementations
 			if (sheduler == null)
 				return ReturnFailureResult<IEnumerable<SubjectDto>>($"Couldn't find sheduler with id {id}", "Couldn't find sheduler");
 			var subjects = _unitOfWork.Subject
-				.FindBy(s => s.Name == sheduler.SubjectName);
+				.FindBy(s => s.Name == sheduler.SubjectName)
+				.OrderBy(s => s.Date);
 
 			if (subjects == null)
 				return ReturnFailureResult<IEnumerable<SubjectDto>>($"Couldn't find subject of sheduler {id}", "Couldn't find subjects");
@@ -210,13 +232,9 @@ namespace Kitias.Providers.Implementations
 				if (group != null)
 					_logger.LogInformation($"Found group with id {group.Id}");
 				sheduler.GroupId = group.Id;
-				sheduler.Name = null;
 			}
-			else if (model.Name != null)
-			{
+			if (model.Name != null)
 				sheduler.Name = model.Name;
-				sheduler.GroupId = null;
-			}
 			return await TryCatchExecute(sheduler, async (parameter) =>
 			{
 				var newSheduler = _unitOfWork.ShedulerAttendace.Update(parameter);

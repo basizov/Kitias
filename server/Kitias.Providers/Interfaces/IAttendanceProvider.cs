@@ -26,6 +26,12 @@ namespace Kitias.Providers.Interfaces
 		/// <returns>List shedulers info</returns>
 		Task<Result<ShedulersListResult>> TakeTeacherShedulerAsync(Guid id);
 		/// <summary>
+		/// Take sheduler students and gorup id of the teacher
+		/// </summary>
+		/// <param name="id">Identifier of sheduler</param>
+		/// <returns>Students and group id</returns>
+		Task<Result<ShedulerStudentsGroup>> TakeShedulerStudentsGroupAsync(Guid id);
+		/// <summary>
 		/// Take shedulersubjects of the teacher
 		/// </summary>
 		/// <param name="id">Identifier of sheduler</param>

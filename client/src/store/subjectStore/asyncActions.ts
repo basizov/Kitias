@@ -50,7 +50,7 @@ export const getSubjects = (name: string): AsyncThunkType => {
 
 export const getSubjectsNames = (): AsyncThunkType => {
   return async dispatch => {
-    dispatch(subjectActions.setLoading(true));
+    dispatch(subjectActions.setLoadingHelper(true));
     try {
       const response = await API.subject.subjectsNames();
 
@@ -62,7 +62,7 @@ export const getSubjectsNames = (): AsyncThunkType => {
 
       console.log(error)
     } finally {
-      dispatch(subjectActions.setLoading(false));
+      dispatch(subjectActions.setLoadingHelper(false));
     }
   }
 };

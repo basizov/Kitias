@@ -29,6 +29,13 @@
             <param name="id">Sheduler identifier</param>
             <returns>Sheduler</returns>
         </member>
+        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.TakeShedulerStudentsGroupAsync(System.Guid)">
+            <summary>
+            Take sheduler students and group id by id
+            </summary>
+            <param name="id">Sheduler identifier</param>
+            <returns>Sheduler students and group id</returns>
+        </member>
         <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.TakeShedulerSubjectsAsync(System.Guid)">
             <summary>
             Take shedulre subjects by id

@@ -18,6 +18,7 @@ import {
   ShedulerType
 } from "../model/Attendance/CreateShedulerModel";
 import {CreateAttendanceType} from "../model/Attendance/CreateAttendanceModel";
+import {ShedulerStudentsGroupType} from "../model/Attendance/ShedulerStudentsGroup";
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
@@ -47,12 +48,16 @@ const auth = {
 
 const attendance = {
   shedulers: () => requests.get<ShedulerListType[]>(Paths.TAKE_SHEDULERS_PATH),
+  studentsGroup: (id: string) => requests.get<ShedulerStudentsGroupType>(`${Paths.TAKE_SHEDULERS_PATH}/${id}/students`),
   details: (id: string) => requests.get<ShedulerListType>(`${Paths.TAKE_SHEDULERS_PATH}/${id}`),
   attendances: (id: string) => requests.get<AttendancesByStudents[]>(`${Paths.TAKE_ATTENDANCES_PATH}${id}/attendances`),
   update: (id: string, payload: UpdateAttendaceType) => requests.put<AttendenceType>(`${Paths.TAKE_ATTENDANCES_PATH}${id}/attendances`, payload),
   subjects: (id: string) => requests.get<SubjectType[]>(`${Paths.TAKE_ATTENDANCES_PATH}${id}/subjects`),
   createSheduler: (payload: CreateShedulerTYpe) => requests
     .post<ShedulerType>(Paths.CREATE_ATTENDANCES_PATH, payload),
+  updateSheduler: (id: string, payload: CreateShedulerTYpe) => requests
+    .put<ShedulerType>(`${Paths.CREATE_ATTENDANCES_PATH}/${id}`, payload),
+  deleteSheduler: (id: string) => requests.delete(`${Paths.CREATE_ATTENDANCES_PATH}/${id}`),
   createAttendances: (id: string, payload: CreateAttendanceType[]) => requests
     .post<AttendenceType[]>(`${Paths.TAKE_ATTENDANCES_PATH}${id}/attendances`, payload)
 };

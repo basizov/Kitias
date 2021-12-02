@@ -131,6 +131,18 @@ namespace Kitias.Providers.Implementations
 
 					subjectsEntities.Add(newSubject);
 				}
+				var shedulers = await _unitOfWork.ShedulerAttendace
+					.FindBy(s => s.SubjectName == name)
+					.ToListAsync();
+				
+				if (shedulers != null)
+				{
+					foreach (var sheduler in shedulers)
+					{
+						sheduler.SubjectName = newName;
+						_unitOfWork.ShedulerAttendace.Update(sheduler);
+					}
+				}
 				var isSave = await _unitOfWork.SaveChangesAsync();
 
 				if (isSave <= 0)

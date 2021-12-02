@@ -7,9 +7,9 @@ import {
   getSubjectsNames
 } from "../../store/subjectStore/asyncActions";
 import {
-  Button,
+  Button, ButtonGroup,
   FormControl,
-  Grid,
+  Grid, IconButton,
   InputLabel, List, ListItem, ListItemText,
   MenuItem,
   Select, styled,
@@ -17,15 +17,18 @@ import {
   Typography
 } from "@mui/material";
 import {
-  createSheduler,
+  createSheduler, deleteSheduler,
   getGroupsNames,
-  getGroupStudents
+  getGroupStudents, updateSheduler
 } from "../../store/attendanceStore/asyncActions";
 import {attendanceActions} from "../../store/attendanceStore";
 import {CreateAttendanceType} from "../../model/Attendance/CreateAttendanceModel";
+import {ShedulerListType} from "../../model/Attendance/ShedulerList";
+import {Loading} from "../../layout/Loading";
+import {Delete} from "@mui/icons-material";
 
 const StyledList = styled(List)(({theme}) => ({
-  height: '7rem',
+  height: '7.5rem',
   overflowY: 'auto',
   position: 'relative',
   borderRadius: '.3rem',
@@ -33,34 +36,45 @@ const StyledList = styled(List)(({theme}) => ({
 }));
 
 type PropsType = {
+  attendace: ShedulerListType | null;
   close: () => void;
+  isUpdating?: boolean;
 };
 
-export const CreateAttendanceSheduler: React.FC<PropsType> = ({close}) => {
+export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
+                                                                attendace,
+                                                                close,
+                                                                isUpdating = false
+                                                              }) => {
   const dispatch = useDispatch();
   const {
+    loadingHelper: loadingSubject,
     subjectsNames,
     subjects
   } = useTypedSelector(s => s.subject);
   const {
+    loadingHelper,
     groupsNames,
-    groupStudents
+    groupStudents,
+    shedulerGroup
   } = useTypedSelector(s => s.attendance);
 
   useEffect(() => {
     dispatch(getSubjectsNames());
     dispatch(getGroupsNames());
-    dispatch(attendanceActions.setGroupStudents([]));
   }, [dispatch]);
 
+  if (loadingHelper || loadingSubject) {
+    return <Loading loading={loadingHelper || loadingSubject}/>;
+  }
   return (
     <Formik
       initialValues={{
-        selectedSubject: '',
-        selectedGroup: '',
-        name: '',
-        newStudent: ''
-      }}
+        selectedSubject: attendace ? attendace.subjectName : '' as string,
+        selectedGroup: attendace ? shedulerGroup : '' as string,
+        name: attendace ? attendace.name : '' as string,
+        newStudent: '' as string
+      } as const}
       onSubmit={async (values) => {
         let attendances = [] as CreateAttendanceType[];
 
@@ -72,11 +86,20 @@ export const CreateAttendanceSheduler: React.FC<PropsType> = ({close}) => {
             });
           });
         });
-        await dispatch(createSheduler({
-          groupNumber: values.selectedGroup,
-          subjectName: values.selectedSubject,
-          name: values.name
-        }, attendances));
+        if (isUpdating) {
+          await dispatch(updateSheduler(attendace!.id,
+            {
+              groupNumber: values.selectedGroup,
+              subjectName: values.selectedSubject,
+              name: values.name
+            }, attendances));
+        } else {
+          await dispatch(createSheduler({
+            groupNumber: values.selectedGroup,
+            subjectName: values.selectedSubject,
+            name: values.name
+          }, attendances));
+        }
         close();
       }}
     >
@@ -155,12 +178,21 @@ export const CreateAttendanceSheduler: React.FC<PropsType> = ({close}) => {
             <Grid item xs={6}>
               <StyledList>
                 {groupStudents.length > 0 && groupStudents.map(gs => (
-                  <ListItem key={gs} disablePadding>
+                  <ListItem key={gs} disablePadding sx={{
+                    position: 'relative'
+                  }}>
                     <ListItemText primary={gs} sx={{
                       textAlign: 'center',
-                      margin: '0 .5rem',
-
+                      margin: '0 .5rem'
                     }}/>
+                    <IconButton
+                      color='error'
+                      onClick={() => {
+                        dispatch(attendanceActions.setGroupStudents([
+                          ...groupStudents.filter(g => g !== gs)
+                        ]));
+                      }}
+                    ><Delete/></IconButton>
                   </ListItem>
                 ))}
                 {groupStudents.length === 0 && <Typography
@@ -200,10 +232,22 @@ export const CreateAttendanceSheduler: React.FC<PropsType> = ({close}) => {
                     setFieldValue('newStudent', '');
                   }}
                 >Добавить студента</Button>
-                <Button
-                  type='submit'
+                <ButtonGroup
                   sx={{marginLeft: 'auto', marginTop: '.3rem'}}
-                >Добавить журнал</Button>
+                  size={`${isUpdating ? 'small' : 'medium'}`}
+                  variant={`${isUpdating ? 'outlined' : 'text'}`}
+                >
+                  <Button
+                    type='submit'
+                  >{isUpdating ? ' Обновить журнал' : ' Добавить журнал'}</Button>
+                  {isUpdating && <Button
+                      color='error'
+                      onClick={async () => {
+                        await dispatch(deleteSheduler(attendace!.id));
+                        close();
+                      }}
+                  >Удалить</Button>}
+                </ButtonGroup>
               </Grid>
             </Grid>
           </Grid>

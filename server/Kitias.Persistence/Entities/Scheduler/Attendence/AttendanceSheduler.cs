@@ -24,7 +24,7 @@ namespace Kitias.Persistence.Entities.Scheduler.Attendence
 		/// <summary>
 		/// Subject name
 		/// </summary>
-		public string SubjectName { get; init; }
+		public string SubjectName { get; set; }
 		/// <summary>
 		/// Group identifier
 		/// </summary>

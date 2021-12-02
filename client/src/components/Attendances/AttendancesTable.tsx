@@ -116,6 +116,7 @@ export const AttendancesTable: React.FC<PropsType> = ({
                     page={page}
                     rowsPerPageOptions={[]}
                     onPageChange={(_, np) => setPage(np)}
+                    labelDisplayedRows={({from, to, count}) => `${from}-${to} из ${count}`}
                 />
             </TableRow>
         </TableFooter>}

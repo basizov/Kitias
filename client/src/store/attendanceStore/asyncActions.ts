@@ -50,6 +50,26 @@ export const getSheduler = (id: string): AsyncThunkType => {
   }
 };
 
+export const getShedulerStudentsGroup = (id: string): AsyncThunkType => {
+  return async dispatch => {
+    dispatch(attendanceActions.setLoadingHelper(true));
+    try {
+      const response = await API.attendance.studentsGroup(id);
+
+      if (response) {
+        dispatch(attendanceActions.setShedulerStudentsGroup(response.groupId));
+        dispatch(attendanceActions.setGroupStudents(response.students));
+      }
+    } catch (e) {
+      const error = e as ServerErrorType;
+
+      console.log(error)
+    } finally {
+      dispatch(attendanceActions.setLoadingHelper(false));
+    }
+  }
+};
+
 export const createSheduler = (
   payload: CreateShedulerTYpe,
   attendances: CreateAttendanceType[]
@@ -79,9 +99,61 @@ export const createSheduler = (
   }
 };
 
-export const getGroupsNames = (): AsyncThunkType => {
+export const updateSheduler = (
+  id: string,
+  payload: CreateShedulerTYpe,
+  attendances: CreateAttendanceType[]
+): AsyncThunkType => {
   return async dispatch => {
     dispatch(attendanceActions.setLoading(true));
+    try {
+      const response = await API.attendance.updateSheduler(id, payload);
+
+      if (response) {
+        // TODO: Update attendances
+        // const responseAttendances = await API.attendance.createAttendances(
+        //   response.id,
+        //   attendances
+        // );
+        //
+        // if (responseAttendances) {
+        //   dispatch(attendanceActions.setError(''));
+        // }
+      }
+    } catch (e) {
+      const error = e as ServerErrorType;
+
+      console.log(error)
+    } finally {
+      dispatch(attendanceActions.setLoading(false));
+    }
+  }
+};
+
+export const deleteSheduler = (
+  id: string
+): AsyncThunkType => {
+  return async dispatch => {
+    dispatch(attendanceActions.setLoading(true));
+    try {
+      const response = await API.attendance.deleteSheduler(id);
+
+      if (response) {
+        dispatch(attendanceActions.setError(''));
+      }
+    } catch (e) {
+      const error = e as ServerErrorType;
+
+      console.log(error)
+    } finally {
+      dispatch(attendanceActions.setLoading(false));
+    }
+  }
+};
+
+export const getGroupsNames = (): AsyncThunkType => {
+  return async dispatch => {
+    dispatch(attendanceActions.setLoadingHelper(true));
     try {
       const response = await API.group.groupNames();
 
@@ -93,7 +165,7 @@ export const getGroupsNames = (): AsyncThunkType => {
 
       console.log(error)
     } finally {
-      dispatch(attendanceActions.setLoading(false));
+      dispatch(attendanceActions.setLoadingHelper(false));
     }
   }
 };

@@ -7,6 +7,7 @@ export const initialState = {
   subjectsInfos: [] as SubjectInfoType[],
   error: '',
   loadingInitial: false,
+  loadingHelper: false,
   loading: false
 };
 
@@ -20,6 +21,8 @@ export const subjectReducer = (state = initialState, action: SubjectActionType) 
       return {...state, subjectsInfos: action.payload};
     case 'SET_SUBJECT_LOADING':
       return {...state, loading: action.payload};
+    case 'SET_SUBJECT_LOADING_HELPER':
+      return {...state, loadingHelper: action.payload};
     case 'SET_SUBJECT_LOADING_INITIAL':
       return {...state, loadingInitial: action.payload};
     case 'SET_SUBJECT_ERROR':
@@ -50,6 +53,10 @@ export const subjectActions = {
   } as const),
   setLoading: (payload: boolean) => ({
     type: 'SET_SUBJECT_LOADING',
+    payload
+  } as const),
+  setLoadingHelper: (payload: boolean) => ({
+    type: 'SET_SUBJECT_LOADING_HELPER',
     payload
   } as const),
   setLoadingInitial: (payload: boolean) => ({

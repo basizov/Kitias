@@ -5,12 +5,14 @@ import {GroupName} from "../../model/Group/GroupNames";
 
 const initialState = {
   shedulers: [] as ShedulerListType[],
+  shedulerGroup: '',
   selectedSheduler: '',
   groupsNames: [] as GroupName[],
   groupStudents: [] as string[],
   attendances: [] as AttendancesByStudents[],
   error: '',
   loadingInitial: false,
+  loadingHelper: false,
   loading: false
 };
 
@@ -20,6 +22,8 @@ export const attendanceReducer = (state = initialState, action: AttendanceAction
       return {...state, shedulers: action.payload};
     case 'SET_SELECTED_SHEDULER':
       return {...state, selectedSheduler: action.payload};
+    case 'SET_GROUP_SHEDULER':
+      return {...state, shedulerGroup: action.payload};
     case "SET_ATTENDANCES":
       return {...state, attendances: action.payload};
     case "SET_GROUPS_NAMES":
@@ -28,6 +32,8 @@ export const attendanceReducer = (state = initialState, action: AttendanceAction
       return {...state, groupStudents: action.payload};
     case 'SET_SHEDULER_LOADING':
       return {...state, loading: action.payload};
+    case 'SET_SHEDULER_LOADING_HELPER':
+      return {...state, loadingHelper: action.payload};
     case 'SET_SHEDULER_LOADING_INITIAL':
       return {...state, loadingInitial: action.payload};
     case 'SET_ATTENDANCE_ERROR':
@@ -42,6 +48,10 @@ export type AttendanceActionType = InferActionType<typeof attendanceActions>;
 export const attendanceActions = {
   setShedulers: (payload: ShedulerListType[]) => ({
     type: 'SET_SHEDULERS',
+    payload
+  } as const),
+  setShedulerStudentsGroup: (payload: string) => ({
+    type: 'SET_GROUP_SHEDULER',
     payload
   } as const),
   setSelectedSheduler: (payload: string) => ({
@@ -66,6 +76,10 @@ export const attendanceActions = {
   } as const),
   setLoading: (payload: boolean) => ({
     type: 'SET_SHEDULER_LOADING',
+    payload
+  } as const),
+  setLoadingHelper: (payload: boolean) => ({
+    type: 'SET_SHEDULER_LOADING_HELPER',
     payload
   } as const),
   setLoadingInitial: (payload: boolean) => ({

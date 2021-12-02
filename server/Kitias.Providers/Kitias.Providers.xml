@@ -152,6 +152,13 @@
             <param name="id">Identifier of sheduler</param>
             <returns>List shedulers info</returns>
         </member>
+        <member name="M:Kitias.Providers.Interfaces.IAttendanceProvider.TakeShedulerStudentsGroupAsync(System.Guid)">
+            <summary>
+            Take sheduler students and gorup id of the teacher
+            </summary>
+            <param name="id">Identifier of sheduler</param>
+            <returns>Students and group id</returns>
+        </member>
         <member name="M:Kitias.Providers.Interfaces.IAttendanceProvider.TakeTeacherShedulerSubjectsAsync(System.Guid)">
             <summary>
             Take shedulersubjects of the teacher
@@ -660,6 +667,21 @@
         <member name="P:Kitias.Providers.Models.Attendances.ShedulersListResult.SubjectName">
             <summary>
             Subject name
+            </summary>
+        </member>
+        <member name="T:Kitias.Providers.Models.Attendances.ShedulerStudentsGroup">
+            <summary>
+            Model to take sheduler students and group
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Attendances.ShedulerStudentsGroup.GroupId">
+            <summary>
+            Sheduler group id
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Attendances.ShedulerStudentsGroup.Students">
+            <summary>
+            Sheduler students
             </summary>
         </member>
         <member name="T:Kitias.Providers.Models.Attendances.StudentAttendanceRequestModel">
