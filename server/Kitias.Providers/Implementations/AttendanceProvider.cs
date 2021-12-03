@@ -472,6 +472,97 @@ namespace Kitias.Providers.Implementations
 			});
 		}
 
+
+		public async Task<Result<IEnumerable<AttendanceDto>>> UpdateAttendancesAsync(Guid id, IEnumerable<AttendanceRequestModel> models)
+		{
+			var sheduler = await _unitOfWork.ShedulerAttendace
+				.FindByAndInclude(s => s.Id == id, s => s.Attendances)
+				.SingleOrDefaultAsync();
+
+			if (sheduler == null)
+			{
+				return ReturnFailureResult<IEnumerable<AttendanceDto>>(
+					$"Couldn't find sheduler with id {id}",
+					"Couldn't find sheduler"
+				);
+			}
+			return await TryCatchExecute(models, async (parameter) =>
+			{
+				var attendances = new List<Attendance>();
+
+				foreach (var model in parameter)
+				{
+					if (await _unitOfWork.Attendance
+						.AnyAsync(a => a.StudentName == model.StudentName && a.SubjectId == model.SubjectId)
+					)
+						continue;
+					var subject = await _unitOfWork.Subject
+						.FindBy(s => s.Id == model.SubjectId)
+						.SingleOrDefaultAsync();
+
+					if (subject == null)
+					{
+						return ReturnFailureResult<IEnumerable<AttendanceDto>>(
+							$"Couldn't find subject with id {model.SubjectId}",
+							"Couldn't find subject"
+						);
+					}
+					var newAttendance = new Attendance
+					{
+						ShedulerId = id,
+						Score = byte.Parse(model.Score ?? "0"),
+						Attended = Helpers.GetEnumMemberFromString<AttendaceVariants>(model.Attended ?? "Н"),
+						SubjectId = model.SubjectId
+					};
+
+					if (model.StudentId != null)
+					{
+						var student = await _unitOfWork.Student
+							.FindBy(s => s.Id == model.StudentId)
+							.Include(s => s.Person)
+							.SingleOrDefaultAsync();
+
+						if (student == null)
+						{
+							return ReturnFailureResult<IEnumerable<AttendanceDto>>(
+								$"Couldn't find student with id {model.StudentId}",
+								"Couldn't find student"
+							);
+						}
+						newAttendance.StudentId = model.StudentId;
+						_unitOfWork.Attendance.Create(newAttendance);
+						newAttendance.Student = student;
+						newAttendance.Subject = subject;
+						attendances.Add(newAttendance);
+					}
+					else if (model.StudentName != null)
+					{
+						newAttendance.StudentName = model.StudentName;
+						_unitOfWork.Attendance.Create(newAttendance);
+						newAttendance.Subject = subject;
+						attendances.Add(newAttendance);
+					}
+					else
+						return ReturnFailureResult<IEnumerable<AttendanceDto>>("Enter students");
+					_logger.LogInformation($"Created new attendance with id {newAttendance.Id}");
+				}
+				var oldAttendances = sheduler.Attendances
+					.Where(a => !models.Any(m => m.StudentName == a.StudentName && m.SubjectId == a.SubjectId))
+					.ToList();
+
+				foreach (var attendance in oldAttendances)
+					_unitOfWork.Attendance.Delete(attendance);
+				var isSave = await _unitOfWork.SaveChangesAsync();
+
+				if (isSave <= 0)
+					throw new ApplicationException("Couldn't save new attendances");
+				var result = _mapper.Map<IEnumerable<AttendanceDto>>(attendances);
+
+				_logger.LogInformation("Attendance was successfully created");
+				return ResultHandler.OnSuccess(result);
+			});
+		}
+
 		public async Task<Result<AttendanceDto>> UpdateAttendanceAsync(Guid id, UpdateAttendanceModel model)
 		{
 			var attendance = await _unitOfWork.Attendance

@@ -59,7 +59,9 @@ const attendance = {
     .put<ShedulerType>(`${Paths.CREATE_ATTENDANCES_PATH}/${id}`, payload),
   deleteSheduler: (id: string) => requests.delete(`${Paths.CREATE_ATTENDANCES_PATH}/${id}`),
   createAttendances: (id: string, payload: CreateAttendanceType[]) => requests
-    .post<AttendenceType[]>(`${Paths.TAKE_ATTENDANCES_PATH}${id}/attendances`, payload)
+    .post<AttendenceType[]>(`${Paths.TAKE_ATTENDANCES_PATH}${id}/attendances`, payload),
+  updateAttendances: (id: string, payload: CreateAttendanceType[]) => requests
+    .put<AttendenceType[]>(`${Paths.TAKE_ATTENDANCES_PATH}${id}/attendances/all`, payload)
 };
 
 const subject = {

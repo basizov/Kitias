@@ -19,6 +19,7 @@ import {ModalHoc} from "../components/HOC/ModalHoc";
 import {UCAttendanceShedulerForm} from "../components/Attendances/UCAttendanceShedulerForm";
 import {attendanceActions} from "../store/attendanceStore";
 import {ShedulerListType} from "../model/Attendance/ShedulerList";
+import {getSubjects} from "../store/subjectStore/asyncActions";
 
 export const ShedulersPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -92,6 +93,7 @@ export const ShedulersPage: React.FC = () => {
                       transform: 'translateY(-50%)'
                     }}
                     onClick={async () => {
+                      await dispatch(getSubjects(s.name));
                       await dispatch(getShedulerStudentsGroup(s.id));
                       setSelectedSheduler(s);
                       setOpenUpdate(true);

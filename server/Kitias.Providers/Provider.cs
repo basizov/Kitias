@@ -36,7 +36,7 @@ namespace Kitias.Providers
 				return result;
 
 			}
-			catch (ApplicationException)
+			catch (ApplicationException ex)
 			{
 				throw;
 			}

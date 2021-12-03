@@ -110,6 +110,14 @@
             <param name="models">Model to craete attendace</param>
             <returns>Attendances</returns>
         </member>
+        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.UpdateAttendancesAsync(System.Guid,System.Collections.Generic.IEnumerable{Kitias.Providers.Models.Attendances.AttendanceRequestModel})">
+            <summary>
+            Update all attendances of the sheduler
+            </summary>
+            <param name="id">Id of sheduler</param>
+            <param name="models">Model to craete attendace</param>
+            <returns>Updated attendances</returns>
+        </member>
         <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.UpdateAttendanceAsync(System.Guid,Kitias.Providers.Models.Attendances.UpdateAttendanceModel)">
             <summary>
             Update attendance

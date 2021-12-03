@@ -28,7 +28,7 @@ import {Loading} from "../../layout/Loading";
 import {Delete} from "@mui/icons-material";
 
 const StyledList = styled(List)(({theme}) => ({
-  height: '7.5rem',
+  height: '9rem',
   overflowY: 'auto',
   position: 'relative',
   borderRadius: '.3rem',

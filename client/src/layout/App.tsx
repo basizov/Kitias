@@ -3,7 +3,7 @@ import {Sidebar} from "../components/Sidebar";
 import {
   Backdrop,
   CircularProgress,
-  createTheme,
+  createTheme, CssBaseline,
   IconButton, Paper, styled,
   ThemeProvider,
   useMediaQuery
@@ -79,6 +79,36 @@ export const App: React.FC = () => {
   const theme = useMemo(() => createTheme({
     palette: {
       mode: colorTheme
+    },
+    components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          body: {
+            scrollbarColor: "#6b6b6b #2b2b2b",
+            "&::-webkit-scrollbar, & *::-webkit-scrollbar": {
+              backgroundColor: "transparent",
+              height: 7,
+              width: 7
+            },
+            "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb": {
+              borderRadius: 8,
+              backgroundColor: "#6b6b6b"
+            },
+            "&::-webkit-scrollbar-thumb:focus, & *::-webkit-scrollbar-thumb:focus": {
+              backgroundColor: "#959595",
+            },
+            "&::-webkit-scrollbar-thumb:active, & *::-webkit-scrollbar-thumb:active": {
+              backgroundColor: "#959595",
+            },
+            "&::-webkit-scrollbar-thumb:hover, & *::-webkit-scrollbar-thumb:hover": {
+              backgroundColor: "#959595",
+            },
+            "&::-webkit-scrollbar-corner, & *::-webkit-scrollbar-corner": {
+              backgroundColor: "#2b2b2b",
+            },
+          }
+        }
+      }
     }
   }), [colorTheme]);
   const [open, setOpen] = useState(false);
@@ -97,6 +127,7 @@ export const App: React.FC = () => {
   return (
     <ColorModeContext.Provider value={changeColorTheme}>
       <ThemeProvider theme={theme}>
+        <CssBaseline/>
         <RootPaper>
           <Backdrop
             sx={{color: '#fff'}}

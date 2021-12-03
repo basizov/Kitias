@@ -110,15 +110,14 @@ export const updateSheduler = (
       const response = await API.attendance.updateSheduler(id, payload);
 
       if (response) {
-        // TODO: Update attendances
-        // const responseAttendances = await API.attendance.createAttendances(
-        //   response.id,
-        //   attendances
-        // );
-        //
-        // if (responseAttendances) {
-        //   dispatch(attendanceActions.setError(''));
-        // }
+        const responseAttendances = await API.attendance.updateAttendances(
+          id,
+          attendances
+        );
+
+        if (responseAttendances) {
+          dispatch(attendanceActions.setError(''));
+        }
       }
     } catch (e) {
       const error = e as ServerErrorType;

@@ -270,6 +270,25 @@ namespace Kitias.API.Controllers
 		}
 
 		/// <summary>
+		/// Update all attendances of the sheduler
+		/// </summary>
+		/// <param name="id">Id of sheduler</param>
+		/// <param name="models">Model to craete attendace</param>
+		/// <returns>Updated attendances</returns>
+		[HttpPut("{id}/attendances/all")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<IEnumerable<AttendanceDto>>> UpdateAttendancesAsync(Guid id, IEnumerable<AttendanceRequestModel> models)
+		{
+			var result = await _attendanceProvider.UpdateAttendancesAsync(id, models);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
 		/// Update attendance
 		/// </summary>
 		/// <param name="id">Id of attendace</param>

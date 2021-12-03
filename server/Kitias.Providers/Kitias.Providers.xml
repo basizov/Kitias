@@ -227,11 +227,19 @@
         </member>
         <member name="M:Kitias.Providers.Interfaces.IAttendanceProvider.CreateAttendancesAsync(System.Guid,System.Collections.Generic.IEnumerable{Kitias.Providers.Models.Attendances.AttendanceRequestModel})">
             <summary>
-            Create attendance
+            Create attendances
             </summary>
             <param name="id">Identifier of sheduler</param>
             <param name="models">Models to create attendances</param>
             <returns>List of created attendances</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.IAttendanceProvider.UpdateAttendancesAsync(System.Guid,System.Collections.Generic.IEnumerable{Kitias.Providers.Models.Attendances.AttendanceRequestModel})">
+            <summary>
+            Update attendances
+            </summary>
+            <param name="id">Identifier of sheduler</param>
+            <param name="models">Models to create attendances</param>
+            <returns>List of updated attendances</returns>
         </member>
         <member name="M:Kitias.Providers.Interfaces.IAttendanceProvider.UpdateAttendanceAsync(System.Guid,Kitias.Providers.Models.Attendances.UpdateAttendanceModel)">
             <summary>
