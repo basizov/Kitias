@@ -1,37 +1,34 @@
 import React, {useState} from 'react';
 import {Button, ButtonGroup, styled, TableCell} from "@mui/material";
-import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {useDispatch} from "react-redux";
 import {updateAttendance} from "../../store/attendanceStore/asyncActions";
 
 type PropsType = {
   identifier: string;
   title: string;
+  defaultScore: string;
 };
 
-const StyledTableCell = styled(TableCell)({
+export const StyledTableCell = styled(TableCell)({
   cursor: 'pointer',
   userSelect: 'none',
   width: '12rem'
 });
 
-export const AttendanceCell: React.FC<PropsType> = ({identifier, title}) => {
+export const AttendanceCell: React.FC<PropsType> = ({identifier, title, defaultScore}) => {
   const dispatch = useDispatch();
   const [showPop, setShowPop] = useState(false);
   const [changed, setChanged] = useState(false);
   const [attendace, setAttendace] = useState('');
-  const {error} = useTypedSelector(s => s.attendance);
 
   const changeAttendace = async (attendace: string) => {
     await dispatch(updateAttendance(identifier, {
       attended: attendace,
-      score: '0'
+      score: defaultScore
     }));
-    if (!error) {
-      setChanged(true);
-      setAttendace(attendace);
-      setShowPop(false);
-    }
+    setChanged(true);
+    setAttendace(attendace);
+    setShowPop(false);
   };
 
   return (

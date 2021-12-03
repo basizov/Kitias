@@ -5,7 +5,6 @@ import {
   Tab,
   Tabs
 } from "@mui/material";
-import {AttendanceTable} from "../components/Attendances/AttendanceTable";
 import {AttendancesTable} from "../components/Attendances/AttendancesTable";
 import {
   getAttendances,
@@ -61,7 +60,19 @@ export const AttendancesPage: React.FC = () => {
         {tab === 0 && <AttendancesTable subjectType='Лекция'/>}
         {tab === 1 && <AttendancesTable subjectType='Практика'/>}
         {tab === 2 && <AttendancesTable subjectType='Лабораторная работа'/>}
-        {tab === 6 && <AttendanceTable/>}
+        {tab === 3 && <AttendancesTable
+            subjectType='Лекция'
+            withScore={true}
+        />}
+        {tab === 4 && <AttendancesTable
+            subjectType='Практика'
+            withScore={true}
+        />}
+        {tab === 5 && <AttendancesTable
+            subjectType='Лабораторная работа'
+            withScore={true}
+        />}
+        {/*Σ*/}
       </Grid>
     </Grid>
   );
