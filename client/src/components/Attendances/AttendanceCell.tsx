@@ -42,7 +42,7 @@ export const AttendanceCell: React.FC<PropsType> = ({identifier, title, defaultS
           onClick={() => changeAttendace('Н')}
         >Н</Button>
         <Button
-          color='warning'
+          color='secondary'
           onClick={() => changeAttendace('О')}
         >О</Button>
         <Button

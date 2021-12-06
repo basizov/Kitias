@@ -19,6 +19,8 @@ import {
 } from "../model/Attendance/CreateShedulerModel";
 import {CreateAttendanceType} from "../model/Attendance/CreateAttendanceModel";
 import {ShedulerStudentsGroupType} from "../model/Attendance/ShedulerStudentsGroup";
+import {CreateStudentAttendanceType} from "../model/Attendance/CreateStudentAttendance";
+import {StudentAttendanceResultType} from "../model/Attendance/StudentAttendaceModel";
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
@@ -58,6 +60,10 @@ const attendance = {
   updateSheduler: (id: string, payload: CreateShedulerTYpe) => requests
     .put<ShedulerType>(`${Paths.CREATE_ATTENDANCES_PATH}/${id}`, payload),
   deleteSheduler: (id: string) => requests.delete(`${Paths.CREATE_ATTENDANCES_PATH}/${id}`),
+  createSAttendance: (id: string, payload: CreateStudentAttendanceType[]) => requests
+    .post(`${Paths.TAKE_ATTENDANCES_PATH}${id}/studentAttendances`, payload),
+  studentAttendances: (id: string) => requests
+    .get<StudentAttendanceResultType[]>(`${Paths.TAKE_ATTENDANCES_PATH}${id}/studentAttendances`),
   createAttendances: (id: string, payload: CreateAttendanceType[]) => requests
     .post<AttendenceType[]>(`${Paths.TAKE_ATTENDANCES_PATH}${id}/attendances`, payload),
   updateAttendances: (id: string, payload: CreateAttendanceType[]) => requests

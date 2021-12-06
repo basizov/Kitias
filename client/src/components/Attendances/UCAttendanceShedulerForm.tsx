@@ -26,6 +26,7 @@ import {CreateAttendanceType} from "../../model/Attendance/CreateAttendanceModel
 import {ShedulerListType} from "../../model/Attendance/ShedulerList";
 import {Loading} from "../../layout/Loading";
 import {Delete} from "@mui/icons-material";
+import {CreateStudentAttendanceType} from "../../model/Attendance/CreateStudentAttendance";
 
 const StyledList = styled(List)(({theme}) => ({
   height: '9rem',
@@ -55,8 +56,8 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
   const {
     loadingHelper,
     groupsNames,
-    groupStudents,
-    shedulerGroup
+    shedulerGroup,
+    groupStudents
   } = useTypedSelector(s => s.attendance);
 
   useEffect(() => {
@@ -77,6 +78,7 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
       } as const}
       onSubmit={async (values) => {
         let attendances = [] as CreateAttendanceType[];
+        let sAttendances = [] as CreateStudentAttendanceType[];
 
         subjects.forEach(s => {
           groupStudents.forEach(gs => {
@@ -86,6 +88,10 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
             });
           });
         });
+        groupStudents.forEach(gs => sAttendances.push({
+          studentName: gs,
+          subjectName: values.name
+        }));
         if (isUpdating) {
           await dispatch(updateSheduler(attendace!.id,
             {
@@ -98,7 +104,7 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
             groupNumber: values.selectedGroup,
             subjectName: values.selectedSubject,
             name: values.name
-          }, attendances));
+          }, attendances, sAttendances));
         }
         close();
       }}

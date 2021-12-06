@@ -6,6 +6,7 @@ import {subjectActions, SubjectActionType} from "../subjectStore";
 import {UpdateAttendaceType} from "../../model/Attendance/UpdateAttendace";
 import {CreateShedulerTYpe} from "../../model/Attendance/CreateShedulerModel";
 import {CreateAttendanceType} from "../../model/Attendance/CreateAttendanceModel";
+import {CreateStudentAttendanceType} from "../../model/Attendance/CreateStudentAttendance";
 
 type AsyncThunkType = ThunkAction<Promise<void>,
   null,
@@ -70,9 +71,30 @@ export const getShedulerStudentsGroup = (id: string): AsyncThunkType => {
   }
 };
 
+export const getShedulerSAttendaces = (id: string): AsyncThunkType => {
+  return async dispatch => {
+    dispatch(attendanceActions.setLoadingSA(true));
+    try {
+      const response = await API.attendance.studentAttendances(id);
+
+      console.log(response)
+      if (response) {
+        dispatch(attendanceActions.setSAttendances(response));
+      }
+    } catch (e) {
+      const error = e as ServerErrorType;
+
+      console.log(error)
+    } finally {
+      dispatch(attendanceActions.setLoadingSA(false));
+    }
+  }
+};
+
 export const createSheduler = (
   payload: CreateShedulerTYpe,
-  attendances: CreateAttendanceType[]
+  attendances: CreateAttendanceType[],
+  sAttendances: CreateStudentAttendanceType[]
 ): AsyncThunkType => {
   return async dispatch => {
     dispatch(attendanceActions.setLoading(true));
@@ -84,8 +106,12 @@ export const createSheduler = (
           response.id,
           attendances
         );
+        const responseSAttendances = await API.attendance.createSAttendance(
+          response.id,
+          sAttendances
+        );
 
-        if (responseAttendances) {
+        if (responseAttendances && responseSAttendances) {
           dispatch(attendanceActions.setError(''));
         }
       }

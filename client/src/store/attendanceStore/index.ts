@@ -2,9 +2,11 @@ import {InferActionType} from "../index";
 import {ShedulerListType} from "../../model/Attendance/ShedulerList";
 import {AttendancesByStudents} from "../../model/Attendance/Attendence";
 import {GroupName} from "../../model/Group/GroupNames";
+import {StudentAttendanceResultType} from "../../model/Attendance/StudentAttendaceModel";
 
 const initialState = {
   shedulers: [] as ShedulerListType[],
+  sAttendances: [] as StudentAttendanceResultType[],
   shedulerGroup: '',
   selectedSheduler: '',
   groupsNames: [] as GroupName[],
@@ -13,6 +15,7 @@ const initialState = {
   error: '',
   loadingInitial: false,
   loadingHelper: false,
+  loadingSA: false,
   loading: false
 };
 
@@ -20,6 +23,8 @@ export const attendanceReducer = (state = initialState, action: AttendanceAction
   switch (action.type) {
     case 'SET_SHEDULERS':
       return {...state, shedulers: action.payload};
+    case 'SET_SATTENDACES':
+      return {...state, sAttendances: action.payload};
     case 'SET_SELECTED_SHEDULER':
       return {...state, selectedSheduler: action.payload};
     case 'SET_GROUP_SHEDULER':
@@ -34,6 +39,8 @@ export const attendanceReducer = (state = initialState, action: AttendanceAction
       return {...state, loading: action.payload};
     case 'SET_SHEDULER_LOADING_HELPER':
       return {...state, loadingHelper: action.payload};
+    case 'SET_SHEDULER_LOADING_SA':
+      return {...state, loadingSA: action.payload};
     case 'SET_SHEDULER_LOADING_INITIAL':
       return {...state, loadingInitial: action.payload};
     case 'SET_ATTENDANCE_ERROR':
@@ -48,6 +55,10 @@ export type AttendanceActionType = InferActionType<typeof attendanceActions>;
 export const attendanceActions = {
   setShedulers: (payload: ShedulerListType[]) => ({
     type: 'SET_SHEDULERS',
+    payload
+  } as const),
+  setSAttendances: (payload: StudentAttendanceResultType[]) => ({
+    type: 'SET_SATTENDACES',
     payload
   } as const),
   setShedulerStudentsGroup: (payload: string) => ({
@@ -80,6 +91,10 @@ export const attendanceActions = {
   } as const),
   setLoadingHelper: (payload: boolean) => ({
     type: 'SET_SHEDULER_LOADING_HELPER',
+    payload
+  } as const),
+  setLoadingSA: (payload: boolean) => ({
+    type: 'SET_SHEDULER_LOADING_SA',
     payload
   } as const),
   setLoadingInitial: (payload: boolean) => ({

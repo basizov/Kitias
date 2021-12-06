@@ -2,8 +2,6 @@ import React, {useState} from 'react';
 import {
   Box,
   FormControl, IconButton, OutlinedInput,
-  styled,
-  TableCell
 } from "@mui/material";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {useDispatch} from "react-redux";
@@ -55,6 +53,10 @@ export const AttendanceCellScore: React.FC<PropsType> = ({
             id="score"
             type='number'
             value={Number(score)}
+            onDoubleClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
             onChange={(e) => {
               const nbr = Number(e.target.value);
 

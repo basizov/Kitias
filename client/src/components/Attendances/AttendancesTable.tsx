@@ -24,11 +24,11 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
   }
 }));
 
-const StyledTableHeadCell = styled(TableCell)(({theme}) => ({
+export const StyledTableHeadCell = styled(TableCell)(({theme}) => ({
   backgroundColor: theme.palette.action.hover
 }));
 
-const StyledTableHead = styled(TableHead)(({theme}) => ({
+export const StyledTableHead = styled(TableHead)(({theme}) => ({
   backgroundColor: theme.palette.action.selected
 }));
 

@@ -14,6 +14,7 @@ import {useDispatch} from "react-redux";
 import {useParams} from "react-router";
 import {useTypedSelector} from "../hooks/useTypedSelector";
 import {Loading} from "../layout/Loading";
+import {TotalResult} from "../components/Attendances/TotalResult";
 
 const StyledTab = styled(Tab)({
   fontSize: '.7rem'
@@ -72,6 +73,7 @@ export const AttendancesPage: React.FC = () => {
             subjectType='Лабораторная работа'
             withScore={true}
         />}
+        {tab === 6 && <TotalResult/>}
         {/*Σ*/}
       </Grid>
     </Grid>
