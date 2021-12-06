@@ -13,7 +13,6 @@ import {useTypedSelector} from "../hooks/useTypedSelector";
 import {ColorEnums, defaultActions} from "../store/defaultStore";
 import {Brightness4, Brightness7} from "@mui/icons-material";
 import {PrivateRoute} from "./PrivateRoute";
-import {HomePage} from "../pages/HomePage";
 import {Routes, Route} from "react-router-dom";
 import {AuthPage} from "../pages/AuthPage";
 import {PublicRoute} from "./PublicRoute";
@@ -59,7 +58,7 @@ const Main = styled('main', {shouldForwardProp: (prop) => prop !== 'open'})<{
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
-    marginLeft: 300,
+    // marginLeft: 300,
   }),
 }));
 
@@ -138,7 +137,7 @@ export const App: React.FC = () => {
               <Main open={open} sx={{height: 'calc(100% - 16px)'}}>
                   <Routes>
                       <Route path='/' element={<PrivateRoute>
-                        <HomePage/>
+                        <CalendarPage/>
                       </PrivateRoute>}/>
                       <Route path='/subjects' element={<PrivateRoute>
                         <SubjectsPage/>
@@ -148,9 +147,6 @@ export const App: React.FC = () => {
                       </PrivateRoute>}/>
                       <Route path='/attendances' element={<PrivateRoute>
                         <ShedulersPage/>
-                      </PrivateRoute>}/>
-                      <Route path='/calendar' element={<PrivateRoute>
-                        <CalendarPage/>
                       </PrivateRoute>}/>
                       <Route path='/login' element={<PublicRoute>
                         <AuthPage/>

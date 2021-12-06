@@ -11,7 +11,6 @@ import {
 import {
   ChevronLeft,
   Menu,
-  EventAvailable,
   Home,
   DateRange, FeaturedPlayList
 } from "@mui/icons-material";
@@ -94,7 +93,10 @@ export const Sidebar: React.FC<PropsType> = ({
       <Divider/>
       <List>
         <ListItem disablePadding>
-          <ListItemButton onClick={() => navigate('/')}>
+          <ListItemButton onClick={() => {
+            navigate('/');
+            setOpen(false);
+          }}>
             <ListItemIcon>
               <Home/>
             </ListItemIcon>
@@ -102,7 +104,10 @@ export const Sidebar: React.FC<PropsType> = ({
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton onClick={() => navigate('/subjects')}>
+          <ListItemButton onClick={() => {
+            navigate('/subjects');
+            setOpen(false);
+          }}>
             <ListItemIcon>
               <FeaturedPlayList/>
             </ListItemIcon>
@@ -110,19 +115,14 @@ export const Sidebar: React.FC<PropsType> = ({
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton onClick={() => navigate('/attendances')}>
+          <ListItemButton onClick={() => {
+            navigate('/attendances');
+            setOpen(false);
+          }}>
             <ListItemIcon>
               <DateRange/>
             </ListItemIcon>
-            <ListItemText primary="График посещений"/>
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton onClick={() => navigate('/calendar')}>
-            <ListItemIcon>
-              <EventAvailable/>
-            </ListItemIcon>
-            <ListItemText primary="Календарь"/>
+            <ListItemText primary="Журналы посещений"/>
           </ListItemButton>
         </ListItem>
       </List>

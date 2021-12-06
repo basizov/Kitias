@@ -118,8 +118,8 @@ namespace Kitias.Providers.Interfaces
 		/// <summary>
 		/// Export sheduler with id
 		/// </summary>
-		/// <param name="id">Identifier of sheduler</param>
+		/// <param name="name">Name of subject</param>
 		/// <returns>Byte file</returns>
-		Task<Result<byte[]>> ExportShedulerAsync(Guid id);
+		Task<Result<byte[]>> ExportShedulerAsync(string name);
 	}
 }

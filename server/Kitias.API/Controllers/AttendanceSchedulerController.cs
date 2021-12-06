@@ -328,19 +328,99 @@ namespace Kitias.API.Controllers
 		/// <summary>
 		/// Export to excel
 		/// </summary>
-		/// <param name="id">Id of sheduler</param>
+		/// <param name="name">Name of subject</param>
 		/// <returns>Status message</returns>
-		[HttpGet("sheduler/{id}/export")]
+		[HttpGet("{name}/export")]
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-		public async Task<ActionResult> ExportFileAsync(Guid id)
+		public async Task<ActionResult> ExportFileAsync(string name)
 		{
-			var result = await _attendanceProvider.ExportShedulerAsync(id);
+			var result = await _attendanceProvider.ExportShedulerAsync(name);
 
 			if (!result.IsSuccess)
 				return BadRequest(result.Error);
-			return File(result.Value, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Sheduler-{id}.xlsx");
+			Response.Headers.Add("Access-Control-Expose-Headers", $"Content-Disposition");
+			Response.Headers.Add("Content-Disposition", $"attachment;filename=\"{ConvertToAscii(name)}.xlsx\"");
+			return File(result.Value, $"application/octet-stream", $"{ConvertToAscii(name)}.xlsx");
+		}
+
+		private static string ConvertToAscii(string word)
+		{
+			var convertation = new Dictionary<char, string>
+			{
+				{ ' ', "-" },
+				{ 'а', "a" },
+				{ 'б', "b" },
+				{ 'в', "v" },
+				{ 'г', "g" },
+				{ 'д', "d" },
+				{ 'е', "e" },
+				{ 'ё', "yo" },
+				{ 'ж', "zh" },
+				{ 'з', "z" },
+				{ 'и', "i" },
+				{ 'й', "j" },
+				{ 'к', "k" },
+				{ 'л', "l" },
+				{ 'м', "m" },
+				{ 'н', "n" },
+				{ 'о', "o" },
+				{ 'п', "p" },
+				{ 'р', "r" },
+				{ 'с', "s" },
+				{ 'т', "t" },
+				{ 'у', "u" },
+				{ 'ф', "f" },
+				{ 'х', "h" },
+				{ 'ц', "c" },
+				{ 'ч', "ch" },
+				{ 'ш', "sh" },
+				{ 'щ', "sch" },
+				{ 'ъ', "j" },
+				{ 'ы', "i" },
+				{ 'ь', "j" },
+				{ 'э', "e" },
+				{ 'ю', "yu" },
+				{ 'я', "ya" },
+				{ 'А', "A" },
+				{ 'Б', "B" },
+				{ 'В', "V" },
+				{ 'Г', "G" },
+				{ 'Д', "D" },
+				{ 'Е', "E" },
+				{ 'Ё', "Yo" },
+				{ 'Ж', "Zh" },
+				{ 'З', "Z" },
+				{ 'И', "I" },
+				{ 'Й', "J" },
+				{ 'К', "K" },
+				{ 'Л', "L" },
+				{ 'М', "M" },
+				{ 'Н', "N" },
+				{ 'О', "O" },
+				{ 'П', "P" },
+				{ 'Р', "R" },
+				{ 'С', "S" },
+				{ 'Т', "T" },
+				{ 'У', "U" },
+				{ 'Ф', "F" },
+				{ 'Х', "H" },
+				{ 'Ц', "C" },
+				{ 'Ч', "Ch" },
+				{ 'Ш', "Sh" },
+				{ 'Щ', "Sch" },
+				{ 'Ъ', "J" },
+				{ 'Ы', "I" },
+				{ 'Ь', "J" },
+				{ 'Э', "E" },
+				{ 'Ю', "Yu" },
+				{ 'Я', "Ya" }
+			};
+
+			return string.Concat(
+				word.Select(ch => convertation.GetValueOrDefault(ch) != null ? convertation[ch] : $"{ch}")
+			);
 		}
 	}
 }

@@ -143,7 +143,7 @@ export const CreateSubject: React.FC<PropsType> = ({close}) => {
               />
               <FormControlLabel
                 sx={{marginLeft: 'auto'}}
-                control={<Checkbox id='themes' defaultChecked/>}
+                control={<Checkbox id='themes'/>}
                 label="Использовать темы предметов"
                 value={props.values.themes}
                 onChange={props.handleChange}

@@ -1,6 +1,6 @@
 import {instance} from "./instance";
 import {SignInType} from "../model/User/SignInModel";
-import {AxiosResponse} from "axios";
+import {AxiosRequestConfig, AxiosResponse} from "axios";
 import {ShedulerListType} from "../model/Attendance/ShedulerList";
 import {
   AttendancesByStudents, AttendenceType,
@@ -21,6 +21,7 @@ import {CreateAttendanceType} from "../model/Attendance/CreateAttendanceModel";
 import {ShedulerStudentsGroupType} from "../model/Attendance/ShedulerStudentsGroup";
 import {CreateStudentAttendanceType} from "../model/Attendance/CreateStudentAttendance";
 import {StudentAttendanceResultType} from "../model/Attendance/StudentAttendaceModel";
+import {saveAs} from "file-saver";
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
@@ -40,7 +41,36 @@ const requests = {
   get: <T>(url: string) => instance.get<T>(url).then(responseBody),
   post: <T>(url: string, body: {}) => instance.post<T>(url, body).then(responseBody),
   put: <T>(url: string, body: {}) => instance.put<T>(url, body).then(responseBody),
-  delete: (url: string, body?: {}) => instance.delete(url, body).then(responseBody)
+  delete: (url: string, body?: {}) => instance.delete(url, body).then(responseBody),
+  getBlob: (url: string) => instance.request<any>({
+    url: url,
+    method: "GET",
+    responseType: 'blob'
+  } as AxiosRequestConfig)
+    .then((response: AxiosResponse) => {
+      if (response && response.headers) {
+        const header = response.headers['content-disposition'];
+
+        if (header) {
+          const splitHeader = header.split(';');
+
+          if (splitHeader) {
+            const filenameHeader = splitHeader
+              .find((n: any) => n.includes('filename='));
+
+            if (filenameHeader) {
+              const filename = filenameHeader
+                .replace('filename=', '')
+                .trim();
+              const url = window.URL
+                .createObjectURL(new Blob([response.data]));
+
+              saveAs(url, filename);
+            }
+          }
+        }
+      }
+    })
 };
 
 const auth = {
@@ -55,6 +85,7 @@ const attendance = {
   attendances: (id: string) => requests.get<AttendancesByStudents[]>(`${Paths.TAKE_ATTENDANCES_PATH}${id}/attendances`),
   update: (id: string, payload: UpdateAttendaceType) => requests.put<AttendenceType>(`${Paths.TAKE_ATTENDANCES_PATH}${id}/attendances`, payload),
   subjects: (id: string) => requests.get<SubjectType[]>(`${Paths.TAKE_ATTENDANCES_PATH}${id}/subjects`),
+  export: (id: string) => requests.getBlob(`${Paths.TAKE_ATTENDANCES_PATH}${id}/export`),
   createSheduler: (payload: CreateShedulerTYpe) => requests
     .post<ShedulerType>(Paths.CREATE_ATTENDANCES_PATH, payload),
   updateSheduler: (id: string, payload: CreateShedulerTYpe) => requests
@@ -72,6 +103,7 @@ const attendance = {
 
 const subject = {
   subjects: (payload: string) => requests.get<SubjectType[]>(`${Paths.TAKE_SUBJECTS}/${payload}`),
+  sheduler: (name: string) => requests.get<ShedulerType>(`${Paths.TAKE_SUBJECT}/${name}/sheduler`),
   subjectsNames: () => requests.get<string[]>(`${Paths.TAKE_SUBJECTS}/names`),
   subjectsInfos: () => requests.get<SubjectInfoType[]>(Paths.TAKE_SUBJECTS_INFOS),
   allSubjects: () => requests.get<SubjectType[]>(Paths.TAKE_SUBJECTS),

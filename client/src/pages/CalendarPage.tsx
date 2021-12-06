@@ -1,4 +1,5 @@
 import React, {useEffect, useMemo} from 'react';
+import {useNavigate} from "react-router-dom";
 import {
   Calendar,
   dateFnsLocalizer,
@@ -14,9 +15,10 @@ import {
 } from 'date-fns';
 import {ru} from "date-fns/locale";
 import {useDispatch} from "react-redux";
-import {getAllSubjects} from "../store/subjectStore/asyncActions";
+import {getAllSubjects, getSheduler} from "../store/subjectStore/asyncActions";
 import {useTypedSelector} from "../hooks/useTypedSelector";
 import {Loading} from "../layout/Loading";
+import {subjectActions} from "../store/subjectStore";
 
 const locales = {
   ru: ru,
@@ -32,11 +34,18 @@ const localizer = dateFnsLocalizer({
 
 export const CalendarPage: React.FC = () => {
   const dispatch = useDispatch();
-  const {subjects, loadingInitial} = useTypedSelector(s => s.subject);
+  const navigate = useNavigate();
+  const {
+    sheduler,
+    subjects,
+    loadingInitial
+  } = useTypedSelector(s => s.subject);
   const events = useMemo(() => {
     const result = subjects.map((subject => ({
       title: <>
-        <div>{subject.name} {subject.type} {subject.time.slice(0, -3)}</div>
+        <div
+          onClick={async () => await dispatch(getSheduler(subject.name))}
+        >{subject.name} {subject.type} {subject.time.slice(0, -3)}</div>
       </>,
       startDate: parse(
         `${subject.date} ${subject.time.slice(0, -3)}`,
@@ -49,7 +58,14 @@ export const CalendarPage: React.FC = () => {
     })));
 
     return result;
-  }, [subjects]);
+  }, [dispatch, subjects]);
+
+  useEffect(() => {
+    if (sheduler) {
+      navigate(`/attendances/${sheduler.id}`);
+      dispatch(subjectActions.setSheduler(null));
+    }
+  }, [dispatch, navigate, sheduler]);
 
   useEffect(() => {
     dispatch(getAllSubjects());
@@ -81,6 +97,7 @@ export const CalendarPage: React.FC = () => {
           event: 'Событие',
           noEventsInRange: 'Нет занятий на текущий месяц'
         }}
+
         events={events}
         style={{flexGrow: 1}}
       />

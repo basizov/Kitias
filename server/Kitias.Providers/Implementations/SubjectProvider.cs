@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Kitias.Persistence.DTOs;
 using Kitias.Persistence.Entities.Scheduler;
-using Kitias.Persistence.Enums;
 using Kitias.Providers.Interfaces;
 using Kitias.Providers.Models;
 using Kitias.Providers.Models.Subject;
@@ -318,6 +317,29 @@ namespace Kitias.Providers.Implementations
 				_logger.LogInformation($"Groups was successfully deleted from the subject {id}");
 				return ResultHandler.OnSuccess("Groups was successfully deleted from the subject");
 			});
+		}
+
+		public async Task<Result<AttendanceShedulerDto>> TakeSubjectShedulerAsync(string name)
+		{
+			var sheduler = await _unitOfWork.ShedulerAttendace
+				.FindByAndInclude(
+					s => s.SubjectName == name,
+					s => s.Group
+				)
+				.Include(s => s.Teacher)
+				.ThenInclude(s => s.Person)
+				.SingleOrDefaultAsync();
+
+			if (sheduler == null)
+			{
+				return ReturnFailureResult<AttendanceShedulerDto>(
+					$"Sheduler with subjectName ${name} doesn't existed",
+					"Couldn't find sheduler for this subject"
+				);
+			}
+			var result = _mapper.Map<AttendanceShedulerDto>(sheduler);
+
+			return ResultHandler.OnSuccess(result);
 		}
 	}
 }

@@ -256,11 +256,11 @@
             <param name="id">Identifier of attendance</param>
             <returns>Status message</returns>
         </member>
-        <member name="M:Kitias.Providers.Interfaces.IAttendanceProvider.ExportShedulerAsync(System.Guid)">
+        <member name="M:Kitias.Providers.Interfaces.IAttendanceProvider.ExportShedulerAsync(System.String)">
             <summary>
             Export sheduler with id
             </summary>
-            <param name="id">Identifier of sheduler</param>
+            <param name="name">Name of subject</param>
             <returns>Byte file</returns>
         </member>
         <member name="T:Kitias.Providers.Interfaces.IAuthProvider">
@@ -450,6 +450,13 @@
             <summary>
             Take all subjects from db
             </summary>
+            <returns>Subjects</returns>
+        </member>
+        <member name="M:Kitias.Providers.Interfaces.ISubjectProvider.TakeSubjectShedulerAsync(System.String)">
+            <summary>
+            Take subject sheduler from db
+            </summary>
+            <param name="name">Name of the subject to take</param>
             <returns>Subjects</returns>
         </member>
         <member name="M:Kitias.Providers.Interfaces.ISubjectProvider.TakeSubjectByIdAsync(System.Guid)">

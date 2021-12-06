@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {
-  Box, Button,
+  Box, Button, ButtonGroup,
   CircularProgress,
   Grid, IconButton, TextField,
   Typography
@@ -15,6 +15,7 @@ import {
 import {ModalHoc} from "../HOC/ModalHoc";
 import {UpdateSubject} from "./UpdateSubject";
 import {Form, Formik} from "formik";
+import {exportSheduler} from "../../store/attendanceStore/asyncActions";
 
 export type PropsType = {
   name: string;
@@ -114,14 +115,24 @@ export const SubjectsInfos: React.FC<PropsType> = ({
           </Grid>
         ))}
       </Grid>
-      <Button
-        color='error'
+      <ButtonGroup
         sx={{marginLeft: 'auto'}}
-        onClick={async () => {
-          await dispatch(deleteSubjectByName(name));
-          close();
-        }}
-      >Удалить предмет</Button>
+      >
+        <Button
+          color='success'
+          onClick={async () => {
+            await dispatch(exportSheduler(name));
+            close();
+          }}
+        >Экспортировать предмет</Button>
+        <Button
+          color='error'
+          onClick={async () => {
+            await dispatch(deleteSubjectByName(name));
+            close();
+          }}
+        >Удалить предмет</Button>
+      </ButtonGroup>
       <ModalHoc
         open={updateOpen}
         onClose={() => setUpdateOpen(false)}

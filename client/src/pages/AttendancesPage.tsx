@@ -74,7 +74,6 @@ export const AttendancesPage: React.FC = () => {
             withScore={true}
         />}
         {tab === 6 && <TotalResult/>}
-        {/*Σ*/}
       </Grid>
     </Grid>
   );

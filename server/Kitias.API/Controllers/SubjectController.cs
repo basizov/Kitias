@@ -63,6 +63,24 @@ namespace Kitias.API.Controllers
 		}
 
 		/// <summary>
+		/// Take sheduler of the subject from db by id
+		/// </summary>
+		/// <param name="name">Name of subject</param>
+		/// <returns>Sheduler</returns>
+		[HttpGet("{name}/sheduler")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<AttendanceShedulerDto>> TakeSubjectShedulerAsync(string name)
+		{
+			var result = await _subjectProvider.TakeSubjectShedulerAsync(name);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
 		/// Take subject groups from db by id
 		/// </summary>
 		/// <param name="id">Id of subject</param>

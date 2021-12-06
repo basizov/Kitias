@@ -4,11 +4,12 @@ import {ServerErrorType} from "../../model/ServerError";
 import {subjectActions, SubjectActionType} from "./index";
 import {CreateSubjectType} from "../../model/Subject/CreateSubjectModel";
 import {RootState} from "../index";
+import {attendanceActions, AttendanceActionType} from "../attendanceStore";
 
 type AsyncThunkType = ThunkAction<Promise<void>,
   RootState,
   unknown,
-  SubjectActionType>;
+  SubjectActionType | AttendanceActionType>;
 
 export const getSubjectsInfos = (): AsyncThunkType => {
   return async dispatch => {
@@ -82,6 +83,25 @@ export const createSubjects = (subjects: CreateSubjectType[]): AsyncThunkType =>
       dispatch(subjectActions.setError(error.message));
     } finally {
       dispatch(subjectActions.setLoading(false));
+    }
+  }
+};
+
+export const getSheduler = (name: string): AsyncThunkType => {
+  return async dispatch => {
+    dispatch(attendanceActions.setLoadingInitial(true));
+    try {
+      const response = await API.subject.sheduler(name);
+
+      if (response) {
+        dispatch(subjectActions.setSheduler(response));
+      }
+    } catch (e) {
+      const error = e as ServerErrorType;
+
+      dispatch(subjectActions.setError(error.message));
+    } finally {
+      dispatch(attendanceActions.setLoadingInitial(false));
     }
   }
 };

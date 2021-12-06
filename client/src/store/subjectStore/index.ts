@@ -1,8 +1,10 @@
 import {InferActionType} from "../index";
 import {SubjectInfoType, SubjectType} from "../../model/Subject/Subject";
+import {ShedulerType} from "../../model/Attendance/CreateShedulerModel";
 
 export const initialState = {
   subjects: [] as SubjectType[],
+  sheduler: null as ShedulerType | null,
   subjectsNames: [] as string[],
   subjectsInfos: [] as SubjectInfoType[],
   error: '',
@@ -15,6 +17,8 @@ export const subjectReducer = (state = initialState, action: SubjectActionType) 
   switch (action.type) {
     case "SET_SUBJECTS":
       return {...state, subjects: action.payload};
+    case "SET_SUBJECT_SHEDULER":
+      return {...state, sheduler: action.payload};
     case "SET_SUBJECTS_NAMES":
       return {...state, subjectsNames: action.payload};
     case "SET_SUBJECTS_INFOS":
@@ -37,6 +41,10 @@ export type SubjectActionType = InferActionType<typeof subjectActions>;
 export const subjectActions = {
   setSubjects: (payload: SubjectType[]) => ({
     type: 'SET_SUBJECTS',
+    payload
+  } as const),
+  setSheduler: (payload: ShedulerType | null) => ({
+    type: 'SET_SUBJECT_SHEDULER',
     payload
   } as const),
   setSubjectsNames: (payload: string[]) => ({

@@ -133,11 +133,11 @@
             <param name="id">Id of attendace</param>
             <returns>Status message</returns>
         </member>
-        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.ExportFileAsync(System.Guid)">
+        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.ExportFileAsync(System.String)">
             <summary>
             Export to excel
             </summary>
-            <param name="id">Id of sheduler</param>
+            <param name="name">Name of subject</param>
             <returns>Status message</returns>
         </member>
         <member name="T:Kitias.API.Controllers.AuthController">
@@ -341,6 +341,13 @@
             </summary>
             <param name="id">Id of subject</param>
             <returns>Subject</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.SubjectController.TakeSubjectShedulerAsync(System.String)">
+            <summary>
+            Take sheduler of the subject from db by id
+            </summary>
+            <param name="name">Name of subject</param>
+            <returns>Sheduler</returns>
         </member>
         <member name="M:Kitias.API.Controllers.SubjectController.TakeGroupSubjectsByIdAsync(System.Guid)">
             <summary>

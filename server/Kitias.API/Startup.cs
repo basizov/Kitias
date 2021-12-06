@@ -31,6 +31,7 @@ namespace Kitias.API
 			services.AddControllers();
 			services.AddCors(o => o.AddPolicy("CorsPolicy", policy => policy
 				.WithOrigins("http://localhost:3000")
+				.WithExposedHeaders("Access-Control-Expose-Headers", "Content-Disposition")
 				.AllowAnyHeader()
 				.AllowAnyMethod()
 				.AllowCredentials()

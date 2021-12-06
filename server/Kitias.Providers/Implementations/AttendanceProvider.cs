@@ -129,6 +129,7 @@ namespace Kitias.Providers.Implementations
 			_logger.LogInformation($"Take all attendances of the sheduer {id}");
 			return ResultHandler.OnSuccess(result
 				.GroupBy(r => r.FullName)
+				.OrderBy(r => r.Key)
 				.ToDictionary(d => d.Key)
 			);
 		}
@@ -160,14 +161,14 @@ namespace Kitias.Providers.Implementations
 					Grade = Helpers.GetEnumMemberAttrValue(sAttendance.Grade),
 					Raiting = sAttendance.Raiting.ToString(),
 					StudentName = sAttendance.StudentName,
-					Lectures = _mapper.Map<IEnumerable<SubjectTypeInfo>>(studentAttendances.Where(a => a.Subject.Type == SubjectType.Lecture)),
-					Laborotories = _mapper.Map<IEnumerable<SubjectTypeInfo>>(studentAttendances.Where(a => a.Subject.Type == SubjectType.Laborotory)),
-					Practises = _mapper.Map<IEnumerable<SubjectTypeInfo>>(studentAttendances.Where(a => a.Subject.Type == SubjectType.Practise))
+					Lectures = _mapper.Map<IEnumerable<SubjectTypeInfo>>(studentAttendances.Where(a => a.Subject.Type == SubjectType.Lecture).OrderBy(s => s.Subject.Date)),
+					Laborotories = _mapper.Map<IEnumerable<SubjectTypeInfo>>(studentAttendances.Where(a => a.Subject.Type == SubjectType.Laborotory).OrderBy(s => s.Subject.Date)),
+					Practises = _mapper.Map<IEnumerable<SubjectTypeInfo>>(studentAttendances.Where(a => a.Subject.Type == SubjectType.Practise).OrderBy(s => s.Subject.Date))
 				});
 			}
 
 			_logger.LogInformation($"Take all student attendances of the scheduler {id}");
-			return ResultHandler.OnSuccess(result as IEnumerable<StudentAttendanceResult>);
+			return ResultHandler.OnSuccess(result.OrderBy(s => s.StudentName) as IEnumerable<StudentAttendanceResult>);
 		}
 
 		public async Task<Result<AttendanceShedulerDto>> CreateShedulerAsync(ShedulerProviderRequestModel model)
@@ -645,10 +646,10 @@ namespace Kitias.Providers.Implementations
 			});
 		}
 
-		public async Task<Result<byte[]>> ExportShedulerAsync(Guid id)
+		public async Task<Result<byte[]>> ExportShedulerAsync(string name)
 		{
 			var sheduler = await _unitOfWork.ShedulerAttendace
-				.FindBy(s => s.Id == id)
+				.FindBy(s => s.SubjectName == name)
 				.Include(s => s.Attendances)
 				.ThenInclude(a => a.Subject)
 				.Include(s => s.StudentAttendances)
@@ -657,7 +658,7 @@ namespace Kitias.Providers.Implementations
 			if (sheduler == null)
 			{
 				return ReturnFailureResult<byte[]>(
-					$"Couldn't find sheduler with id {id}",
+					$"Couldn't find sheduler with subjectname {name}",
 					"Couldn't find sheduler"
 				);
 			}
@@ -672,7 +673,7 @@ namespace Kitias.Providers.Implementations
 			).Merge();
 			++currentColumn;
 			var subjects = await _unitOfWork.Subject
-				.FindBy(s => s.Name == sheduler.SubjectName)
+				.FindBy(s => s.Name == name)
 				.OrderBy(s => s.Date)
 				.ToListAsync();
 

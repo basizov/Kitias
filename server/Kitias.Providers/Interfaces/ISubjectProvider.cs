@@ -18,6 +18,12 @@ namespace Kitias.Providers.Interfaces
 		/// <returns>Subjects</returns>
 		Result<IEnumerable<SubjectDto>> TakeSubjects();
 		/// <summary>
+		/// Take subject sheduler from db
+		/// </summary>
+		/// <param name="name">Name of the subject to take</param>
+		/// <returns>Subjects</returns>
+		Task<Result<AttendanceShedulerDto>> TakeSubjectShedulerAsync(string name);
+		/// <summary>
 		/// Take only one subject from db
 		/// </summary>
 		/// <param name="id">Id of the subject to take</param>

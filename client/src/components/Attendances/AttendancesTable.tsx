@@ -86,34 +86,38 @@ export const AttendancesTable: React.FC<PropsType> = ({
                 <StyledTableHeadCell
                     align='center'
                     sx={{padding: 0}}
-                >{s.date}</StyledTableHeadCell>}
+                >{withScore ? s.theme || 'Нет темы' : s.date}</StyledTableHeadCell>}
               </React.Fragment>))}
           </TableRow>
         </StyledTableHead>
         <TableBody>
           {Object.entries(selectedAttendances).map(([key, value]) => (
-            <StyledTableRow key={key}>             <TableCell
+            <StyledTableRow key={key}>
+              <TableCell
                 sx={{width: '15rem', height: '2.35rem'}}
                 aria-describedby={key}
               >{key}</TableCell>
-              {[].map.call(value, (a: AttendenceType, i) => (
-                <React.Fragment key={`data ${a.id}`}>
-                  {a.type === subjectType &&
-                  page * pageSize < i + 1 && i + 1 <= (page + 1) * pageSize &&
-                  <React.Fragment>
-                    {!withScore ? <AttendanceCell
+              {[].map.call(value, (a: AttendenceType, i) => {
+                if (a.type === subjectType &&
+                  page * pageSize < i + 1 && i + 1 <= (page + 1) * pageSize) {
+                  if (!withScore) {
+                    return <AttendanceCell
+                      key={`data ${a.id}`}
                       identifier={a.id}
                       title={a.attended}
                       defaultScore={a.score}
-                    /> : <AttendanceCellScore
-                      identifier={a.id}
-                      title={a.score}
-                      defaultAttended={a.attended}
-                      ownKey={key}
-                      base={a}
-                    />}
-                  </React.Fragment>}
-                </React.Fragment>))}
+                    />;
+                  }
+                  return <AttendanceCellScore
+                    key={`data ${a.id}`}
+                    identifier={a.id}
+                    title={a.score}
+                    defaultAttended={a.attended}
+                    ownKey={key}
+                    base={a}
+                  />;
+                }
+              })}
             </StyledTableRow>
           ))}
         </TableBody>

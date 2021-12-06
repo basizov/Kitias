@@ -77,7 +77,6 @@ export const getShedulerSAttendaces = (id: string): AsyncThunkType => {
     try {
       const response = await API.attendance.studentAttendances(id);
 
-      console.log(response)
       if (response) {
         dispatch(attendanceActions.setSAttendances(response));
       }
@@ -87,6 +86,21 @@ export const getShedulerSAttendaces = (id: string): AsyncThunkType => {
       console.log(error)
     } finally {
       dispatch(attendanceActions.setLoadingSA(false));
+    }
+  }
+};
+
+export const exportSheduler = (id: string): AsyncThunkType => {
+  return async dispatch => {
+    dispatch(attendanceActions.setLoading(true));
+    try {
+      await API.attendance.export(id);
+    } catch (e) {
+      const error = e as ServerErrorType;
+
+      console.log(error)
+    } finally {
+      dispatch(attendanceActions.setLoading(false));
     }
   }
 };

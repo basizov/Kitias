@@ -69,7 +69,7 @@ export const TotalResult: React.FC = () => {
     if (params.id) {
       dispatch(getShedulerSAttendaces(params.id));
     }
-  }, []);
+  }, [dispatch, params.id]);
 
   if (loadingSA) {
     return <Loading loading={loadingSA}/>
@@ -142,6 +142,9 @@ export const TotalResult: React.FC = () => {
               >{s.raiting}</TableCell>
               <TableCell
                 align='center'
+                sx={{
+                  backgroundColor: selectGrade(s.grade)
+                }}
               >{s.grade}</TableCell>
             </TableRow>
           ))}
