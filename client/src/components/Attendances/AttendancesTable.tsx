@@ -106,6 +106,8 @@ export const AttendancesTable: React.FC<PropsType> = ({
                       identifier={a.id}
                       title={a.attended}
                       defaultScore={a.score}
+                      ownKey={key}
+                      base={a}
                     />;
                   }
                   return <AttendanceCellScore

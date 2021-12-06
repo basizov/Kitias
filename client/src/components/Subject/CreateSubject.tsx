@@ -54,66 +54,83 @@ export const CreateSubject: React.FC<PropsType> = ({close}) => {
     'Воскресенье'
   ], []);
 
+  const setNewSubjectHandler = (
+    count: number,
+    firstDate: Date,
+    time: Date,
+    week: string,
+    subjectName: string,
+    subjectTypeName: string,
+    theme: string
+  ): CreateSubjectType[] => {
+    let subjects = [] as CreateSubjectType[];
+
+    for (let i = 0; i < count; ++i) {
+      subjects = [
+        ...subjects, {
+          day: Days[firstDate.getDay()],
+          date: format(
+            week === 'Еженедельно' ?
+              addDays(firstDate, 7 * i) :
+              addDays(firstDate, 14 * i),
+            'dd.MM.yyy'
+          ),
+          name: subjectName,
+          theme: theme,
+          time: format(time, 'hh:mm:ss'),
+          week: week,
+          type: subjectTypeName
+        }
+      ];
+    }
+    return subjects;
+  };
+
+  const getSubjectsFromValues = (
+    values: typeof initialSubjectTypeState
+  ): CreateSubjectType[] => {
+    const lectures = setNewSubjectHandler(
+      values.lectureCount,
+      values.lectureFirstDate,
+      values.lectureTime,
+      values.lectureWeek,
+      values.subjectName,
+      'Лекция',
+      values.newTheme
+    );
+    const practises = setNewSubjectHandler(
+      values.practiseCount,
+      values.practiseFirstDate,
+      values.practiseTime,
+      values.practiseWeek,
+      values.subjectName,
+      'Практика',
+      values.newTheme
+    );
+    const laborotories = setNewSubjectHandler(
+      values.laborotoryCount,
+      values.laborotoryFirstDate,
+      values.laborotoryTime,
+      values.laborotoryWeek,
+      values.subjectName,
+      'Лабораторная работа',
+      values.newTheme
+    );
+
+    return [
+      ...lectures,
+      ...practises,
+      ...laborotories,
+      ...newSubjects
+    ];
+  };
+
   return (
     <Formik
       initialValues={initialSubjectTypeState}
       onSubmit={async (values) => {
-        let subjects = newSubjects;
+        const subjects = getSubjectsFromValues(values);
 
-        for (let i = 0; i < values.lectureCount; ++i) {
-          subjects = [
-            ...subjects, {
-              day: Days[values.lectureFirstDate.getDay()],
-              date: format(
-                values.lectureWeek === 'Еженедельно' ?
-                  addDays(values.lectureFirstDate, 7 * i) :
-                  addDays(values.lectureFirstDate, 14 * i),
-                'dd.MM.yyy'
-              ),
-              name: values.subjectName,
-              theme: values.newTheme,
-              time: format(values.lectureTime, 'hh:mm:ss'),
-              week: values.lectureWeek,
-              type: 'Лекция'
-            }
-          ];
-        }
-        for (let i = 0; i < values.practiseCount; ++i) {
-          subjects = [
-            ...subjects, {
-              day: Days[values.practiseFirstDate.getDay()],
-              date: format(
-                values.practiseWeek === 'Еженедельно' ?
-                  addDays(values.practiseFirstDate, 7 * i) :
-                  addDays(values.practiseFirstDate, 14 * i),
-                'dd.MM.yyy'
-              ),
-              name: values.subjectName,
-              theme: values.newTheme,
-              time: format(values.practiseTime, 'hh:mm:ss'),
-              week: values.practiseWeek,
-              type: 'Практика'
-            }
-          ];
-        }
-        for (let i = 0; i < values.laborotoryCount; ++i) {
-          subjects = [
-            ...subjects, {
-              day: Days[values.laborotoryFirstDate.getDay()],
-              date: format(
-                values.laborotoryWeek === 'Еженедельно' ?
-                  addDays(values.laborotoryFirstDate, 7 * i) :
-                  addDays(values.laborotoryFirstDate, 14 * i),
-                'dd.MM.yyy'
-              ),
-              name: values.subjectName,
-              theme: values.newTheme,
-              time: format(values.laborotoryTime, 'hh:mm:ss'),
-              week: values.laborotoryWeek,
-              type: 'Лабораторная работа'
-            }
-          ];
-        }
         setNewSubjects(subjects);
         await dispatch(createSubjects(subjects));
         setNewSubjects([]);
@@ -200,7 +217,11 @@ export const CreateSubject: React.FC<PropsType> = ({close}) => {
                 sx={{marginLeft: 'auto', marginTop: '.3rem'}}
               >
                 {props.values.themes && <Button
+                    type='button'
                     onClick={() => {
+                      const subjects = getSubjectsFromValues(props.values);
+
+                      setNewSubjects(subjects);
                       props.setValues({
                         ...initialSubjectTypeState,
                         themesList: [props.values.newTheme, ...props.values.themesList]

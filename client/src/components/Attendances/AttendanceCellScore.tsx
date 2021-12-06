@@ -19,7 +19,7 @@ type PropsType = {
   title: string;
   defaultAttended: string;
   ownKey: string;
-  base: AttendenceType
+  base: AttendenceType;
 };
 
 export const AttendanceCellScore: React.FC<PropsType> = ({
