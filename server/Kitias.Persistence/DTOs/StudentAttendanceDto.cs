@@ -23,5 +23,9 @@ namespace Kitias.Persistence.DTOs
 		/// Student grade
 		/// </summary>
 		public string Grade { get; init; }
+		/// <summary>
+		/// Subject name
+		/// </summary>
+		public string SubjectName { get; set; }
 	}
 }

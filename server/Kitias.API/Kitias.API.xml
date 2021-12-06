@@ -133,6 +133,13 @@
             <param name="id">Id of attendace</param>
             <returns>Status message</returns>
         </member>
+        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.ExportFileAsync(System.Guid)">
+            <summary>
+            Export to excel
+            </summary>
+            <param name="id">Id of sheduler</param>
+            <returns>Status message</returns>
+        </member>
         <member name="T:Kitias.API.Controllers.AuthController">
             <summary>
             Authorization endpoint

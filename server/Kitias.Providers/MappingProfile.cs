@@ -58,6 +58,9 @@ namespace Kitias.Providers
 				.ForMember(s => s.Filter, o => o.MapFrom(s => s.Filter.Select(f => Helpers.GetEnumMemberAttrValue(f))));
 			CreateMap<Store, StoreDto>()
 				.ForMember(s => s.Size, o => o.MapFrom(s => $"{Helpers.GetFileSizeFromNumber(s.ActualSize)} / {Helpers.GetFileSizeFromNumber(s.MaxSize)}"));
+			CreateMap<Attendance, SubjectTypeInfo>()
+				.ForMember(s => s.Score, o => o.MapFrom(s => s.Score.ToString()))
+				.ForMember(s => s.Attended, o => o.MapFrom(s => Helpers.GetEnumMemberAttrValue(s.Attended)));
 			CreateMap<Attendance, AttendanceDto>()
 				.ForMember(s => s.Date, o => o.MapFrom(s => s.Subject.Date.ToString("dd.MM.yyyy")))
 				.ForMember(s => s.Theme, o => o.MapFrom(s => s.Subject.Theme))

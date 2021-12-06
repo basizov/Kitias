@@ -256,6 +256,13 @@
             <param name="id">Identifier of attendance</param>
             <returns>Status message</returns>
         </member>
+        <member name="M:Kitias.Providers.Interfaces.IAttendanceProvider.ExportShedulerAsync(System.Guid)">
+            <summary>
+            Export sheduler with id
+            </summary>
+            <param name="id">Identifier of sheduler</param>
+            <returns>Byte file</returns>
+        </member>
         <member name="T:Kitias.Providers.Interfaces.IAuthProvider">
             <summary>
             USer authorization methods
@@ -715,6 +722,71 @@
         <member name="P:Kitias.Providers.Models.Attendances.StudentAttendanceRequestModel.StudentName">
             <summary>
             Students name
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Attendances.StudentAttendanceRequestModel.SubjectName">
+            <summary>
+            Subject name
+            </summary>
+        </member>
+        <member name="T:Kitias.Providers.Models.Attendances.StudentAttendanceResult">
+            <summary>
+            Result of student attendace
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Attendances.StudentAttendanceResult.Id">
+            <summary>
+            StudentAttendance identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Attendances.StudentAttendanceResult.StudentName">
+            <summary>
+            Student name
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Attendances.StudentAttendanceResult.Raiting">
+            <summary>
+            Student raiting
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Attendances.StudentAttendanceResult.Grade">
+            <summary>
+            Student grade
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Attendances.StudentAttendanceResult.Lectures">
+            <summary>
+            Student lectures result
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Attendances.StudentAttendanceResult.Laborotories">
+            <summary>
+            Student laborotories result
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Attendances.StudentAttendanceResult.Practises">
+            <summary>
+            Student practises result
+            </summary>
+        </member>
+        <member name="T:Kitias.Providers.Models.Attendances.SubjectTypeInfo">
+            <summary>
+            Type info of the subjct
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Attendances.SubjectTypeInfo.Id">
+            <summary>
+            Attendance identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Attendances.SubjectTypeInfo.Attended">
+            <summary>
+            Flag student is attended
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Attendances.SubjectTypeInfo.Score">
+            <summary>
+            Score
             </summary>
         </member>
         <member name="T:Kitias.Providers.Models.Attendances.UpdateAttendanceModel">

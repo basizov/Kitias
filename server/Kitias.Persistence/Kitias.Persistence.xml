@@ -356,6 +356,11 @@
             Student grade
             </summary>
         </member>
+        <member name="P:Kitias.Persistence.DTOs.StudentAttendanceDto.SubjectName">
+            <summary>
+            Subject name
+            </summary>
+        </member>
         <member name="T:Kitias.Persistence.DTOs.StudentDto">
             <summary>
             Student data transfer object
@@ -1003,6 +1008,11 @@
         <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.StudentAttendance.Student">
             <summary>
             Student info
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.StudentAttendance.SubjectName">
+            <summary>
+            Subject name
             </summary>
         </member>
         <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.StudentAttendance.Raiting">

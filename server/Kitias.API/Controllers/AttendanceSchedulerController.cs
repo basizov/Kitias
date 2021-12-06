@@ -185,7 +185,7 @@ namespace Kitias.API.Controllers
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-		public async Task<ActionResult<IEnumerable<StudentAttendanceDto>>> TakeShedulerByIdAsync(Guid id)
+		public async Task<ActionResult<IEnumerable<StudentAttendanceResult>>> TakeShedulerByIdAsync(Guid id)
 		{
 			var result = await _attendanceProvider.TakeShedulerStudentAttendancesAsync(id);
 
@@ -323,6 +323,24 @@ namespace Kitias.API.Controllers
 			if (!result.IsSuccess)
 				return BadRequest(result.Error);
 			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Export to excel
+		/// </summary>
+		/// <param name="id">Id of sheduler</param>
+		/// <returns>Status message</returns>
+		[HttpGet("sheduler/{id}/export")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult> ExportFileAsync(Guid id)
+		{
+			var result = await _attendanceProvider.ExportShedulerAsync(id);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return File(result.Value, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Sheduler-{id}.xlsx");
 		}
 	}
 }

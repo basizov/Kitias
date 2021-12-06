@@ -23,5 +23,9 @@ namespace Kitias.Providers.Models.Attendances
 		/// Students name
 		/// </summary>
 		public string StudentName { get; init; }
+		/// <summary>
+		/// Subject name
+		/// </summary>
+		public string SubjectName { get; set; }
 	}
 }

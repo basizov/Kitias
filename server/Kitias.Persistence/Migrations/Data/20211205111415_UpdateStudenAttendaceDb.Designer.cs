@@ -3,15 +3,17 @@ using System;
 using Kitias.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Kitias.Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211205111415_UpdateStudenAttendaceDb")]
+    partial class UpdateStudenAttendaceDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -183,14 +185,16 @@ namespace Kitias.Persistence.Migrations
                     b.Property<string>("StudentName")
                         .HasColumnType("text");
 
-                    b.Property<string>("SubjectName")
-                        .HasColumnType("text");
+                    b.Property<Guid>("SubjectId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ShedulerId");
 
                     b.HasIndex("StudentId");
+
+                    b.HasIndex("SubjectId");
 
                     b.ToTable("StudentAttendances");
                 });
@@ -387,9 +391,17 @@ namespace Kitias.Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("StudentId");
 
+                    b.HasOne("Kitias.Persistence.Entities.Scheduler.Subject", "Subject")
+                        .WithMany()
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Sheduler");
 
                     b.Navigation("Student");
+
+                    b.Navigation("Subject");
                 });
 
             modelBuilder.Entity("Kitias.Persistence.Entities.Scheduler.Subject", b =>

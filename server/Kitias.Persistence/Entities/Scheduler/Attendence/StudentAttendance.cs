@@ -37,6 +37,10 @@ namespace Kitias.Persistence.Entities.Scheduler.Attendence
 		/// </summary>
 		public virtual Student Student { get; set; }
 		/// <summary>
+		/// Subject name
+		/// </summary>
+		public string SubjectName { get; set; }
+		/// <summary>
 		/// Student raiting
 		/// </summary>
 		public byte Raiting{ get; set; }

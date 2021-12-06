@@ -48,7 +48,7 @@ namespace Kitias.Providers.Interfaces
 		/// </summary>
 		/// <param name="id">Identifier of sheduler</param>
 		/// <returns>List student attandances</returns>
-		Task<Result<IEnumerable<StudentAttendanceDto>>> TakeShedulerStudentAttendancesAsync(Guid id);
+		Task<Result<IEnumerable<StudentAttendanceResult>>> TakeShedulerStudentAttendancesAsync(Guid id);
 		/// <summary>
 		/// Create sheduler for teacher
 		/// </summary>
@@ -115,5 +115,11 @@ namespace Kitias.Providers.Interfaces
 		/// <param name="id">Identifier of attendance</param>
 		/// <returns>Status message</returns>
 		Task<Result<string>> DeleteAttendanceAsync(Guid id);
+		/// <summary>
+		/// Export sheduler with id
+		/// </summary>
+		/// <param name="id">Identifier of sheduler</param>
+		/// <returns>Byte file</returns>
+		Task<Result<byte[]>> ExportShedulerAsync(Guid id);
 	}
 }

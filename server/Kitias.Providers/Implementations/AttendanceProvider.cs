@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ClosedXML.Excel;
 using Kitias.Persistence.DTOs;
 using Kitias.Persistence.Entities.Scheduler;
 using Kitias.Persistence.Entities.Scheduler.Attendence;
@@ -11,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -130,22 +133,41 @@ namespace Kitias.Providers.Implementations
 			);
 		}
 
-		public async Task<Result<IEnumerable<StudentAttendanceDto>>> TakeShedulerStudentAttendancesAsync(Guid id)
+		public async Task<Result<IEnumerable<StudentAttendanceResult>>> TakeShedulerStudentAttendancesAsync(Guid id)
 		{
 			var sheduler = await _unitOfWork.ShedulerAttendace
 				.FindBy(s => s.Id == id)
 				.Include(s => s.Group)
+				.Include(s => s.Attendances)
+				.ThenInclude(s => s.Subject)
 				.Include(s => s.StudentAttendances)
 				.ThenInclude(s => s.Student)
 				.ThenInclude(s => s.Person)
 				.SingleOrDefaultAsync();
 
 			if (sheduler == null)
-				return ReturnFailureResult<IEnumerable<StudentAttendanceDto>>($"Couldn't find sheduler with id {id}", "Couldn't find sheduler");
-			var result = _mapper.Map<IEnumerable<StudentAttendanceDto>>(sheduler.StudentAttendances);
+				return ReturnFailureResult<IEnumerable<StudentAttendanceResult>>($"Couldn't find sheduler with id {id}", "Couldn't find sheduler");
+			var result = new List<StudentAttendanceResult>();
+
+			foreach (var sAttendance in sheduler.StudentAttendances)
+			{
+				var studentAttendances = sheduler.Attendances
+					.Where(a => a.StudentName == sAttendance.StudentName);
+
+				result.Add(new()
+				{
+					Id = sAttendance.Id,
+					Grade = Helpers.GetEnumMemberAttrValue(sAttendance.Grade),
+					Raiting = sAttendance.Raiting.ToString(),
+					StudentName = sAttendance.StudentName,
+					Lectures = _mapper.Map<IEnumerable<SubjectTypeInfo>>(studentAttendances.Where(a => a.Subject.Type == SubjectType.Lecture)),
+					Laborotories = _mapper.Map<IEnumerable<SubjectTypeInfo>>(studentAttendances.Where(a => a.Subject.Type == SubjectType.Laborotory)),
+					Practises = _mapper.Map<IEnumerable<SubjectTypeInfo>>(studentAttendances.Where(a => a.Subject.Type == SubjectType.Practise))
+				});
+			}
 
 			_logger.LogInformation($"Take all student attendances of the scheduler {id}");
-			return ResultHandler.OnSuccess(result);
+			return ResultHandler.OnSuccess(result as IEnumerable<StudentAttendanceResult>);
 		}
 
 		public async Task<Result<AttendanceShedulerDto>> CreateShedulerAsync(ShedulerProviderRequestModel model)
@@ -295,7 +317,8 @@ namespace Kitias.Providers.Implementations
 					{
 						Grade = Helpers.GetEnumMemberFromString<Grade>(model.Grade ?? "-"),
 						Raiting = byte.Parse(model.Raiting ?? "0"),
-						ShedulerId = id
+						ShedulerId = id,
+						SubjectName = model.SubjectName
 					};
 
 					if (model.StudentId != null)
@@ -620,6 +643,147 @@ namespace Kitias.Providers.Implementations
 				_logger.LogInformation($"Attendance with id {id} is successfully deleted");
 				return ResultHandler.OnSuccess("Attendance successfully deleted");
 			});
+		}
+
+		public async Task<Result<byte[]>> ExportShedulerAsync(Guid id)
+		{
+			var sheduler = await _unitOfWork.ShedulerAttendace
+				.FindBy(s => s.Id == id)
+				.Include(s => s.Attendances)
+				.ThenInclude(a => a.Subject)
+				.Include(s => s.StudentAttendances)
+				.SingleOrDefaultAsync();
+
+			if (sheduler == null)
+			{
+				return ReturnFailureResult<byte[]>(
+					$"Couldn't find sheduler with id {id}",
+					"Couldn't find sheduler"
+				);
+			}
+			using var workbook = new XLWorkbook();
+			var worksheet = workbook.Worksheets.Add(sheduler.Name);
+			var (currentRow, currentColumn) = (1, 1);
+
+			worksheet.Cell(currentRow, currentColumn).Value = sheduler.Name;
+			worksheet.Range(
+				worksheet.Cell(currentRow, currentColumn),
+				worksheet.Cell(currentRow + 1, currentColumn)
+			).Merge();
+			++currentColumn;
+			var subjects = await _unitOfWork.Subject
+				.FindBy(s => s.Name == sheduler.SubjectName)
+				.OrderBy(s => s.Date)
+				.ToListAsync();
+
+			if (subjects == null)
+			{
+				return ReturnFailureResult<byte[]>(
+					$"Couldn't find subjects with name {sheduler.SubjectName}",
+					"Couldn't find subjects"
+				);
+			}
+			var lectures = subjects.Where(s => s.Type == SubjectType.Lecture).ToList();
+			var practises = subjects.Where(s => s.Type == SubjectType.Practise).ToList();
+			var laborotories = subjects.Where(s => s.Type == SubjectType.Laborotory).ToList();
+
+			for (var i = 0; i < lectures.Count; ++i)
+				worksheet.Cell(currentRow, currentColumn++).Value = $"Лекция {i + 1}";
+			for (var i = 0; i < practises.Count; ++i)
+				worksheet.Cell(currentRow, currentColumn++).Value = $"Практика {i + 1}";
+			for (var i = 0; i < laborotories.Count; ++i)
+				worksheet.Cell(currentRow, currentColumn++).Value = $"Лабороторная работа {i + 1}";
+			worksheet.Cell(currentRow, currentColumn).Value = "Итого";
+			worksheet.Range(
+				worksheet.Cell(currentRow, currentColumn),
+				worksheet.Cell(currentRow + 1, currentColumn)
+			).Merge();
+			++currentRow;
+			currentColumn = 2;
+			foreach (var lecture in lectures)
+				worksheet.Cell(currentRow, currentColumn++).Value = lecture.Date.ToString("dd.MM.yyyy");
+			foreach (var practise in practises)
+				worksheet.Cell(currentRow, currentColumn++).Value = practise.Date.ToString("dd.MM.yyyy");
+			foreach (var laborotory in laborotories)
+				worksheet.Cell(currentRow, currentColumn++).Value = laborotory.Date.ToString("dd.MM.yyyy");
+			currentColumn = 1;
+			++currentRow;
+			var groupingAttendances = sheduler.Attendances
+				.GroupBy(a => a.StudentName)
+				.ToList();
+
+			foreach (var attendace in groupingAttendances)
+			{
+				worksheet.Cell(currentRow, currentColumn++).Value = attendace.Key;
+				var value = attendace.ToList();
+				var lecturesAtt = value
+					.Where(a => a.Subject.Type == SubjectType.Lecture)
+					.OrderBy(a => a.Subject.Date)
+					.ToList();
+				var practisesAtt = value
+					.Where(a => a.Subject.Type == SubjectType.Practise)
+					.OrderBy(a => a.Subject.Date)
+					.ToList();
+				var laborotoriesAtt = value
+					.Where(a => a.Subject.Type == SubjectType.Laborotory)
+					.OrderBy(a => a.Subject.Date)
+					.ToList();
+
+				foreach (var item in lecturesAtt)
+				{
+					worksheet.Cell(currentRow, currentColumn).Value = item.Score;
+					worksheet.Cell(currentRow, currentColumn).Style.Fill.BackgroundColor = ColorizedCell(item.Attended);
+					++currentColumn;
+				}
+				foreach (var item in practisesAtt)
+				{
+					worksheet.Cell(currentRow, currentColumn).Value = item.Score;
+					worksheet.Cell(currentRow, currentColumn).Style.Fill.BackgroundColor = ColorizedCell(item.Attended);
+					++currentColumn;
+				}
+				foreach (var item in laborotoriesAtt)
+				{
+					worksheet.Cell(currentRow, currentColumn).Value = item.Score;
+					worksheet.Cell(currentRow, currentColumn).Style.Fill.BackgroundColor = ColorizedCell(item.Attended);
+					++currentColumn;
+				}
+				var sAttendace = await _unitOfWork.StudentAttendace
+					.FindBy(s => s.StudentName == attendace.Key)
+					.SingleOrDefaultAsync();
+
+				worksheet.Cell(currentRow, currentColumn).Value = Helpers.GetEnumMemberAttrValue(sAttendace.Grade);
+				worksheet.Cell(currentRow, currentColumn).Style.Fill.BackgroundColor = ColorizedCell(sAttendace.Raiting);
+				currentColumn = 1;
+				++currentRow;
+			}
+			using var stream = new MemoryStream();
+
+			workbook.SaveAs(stream);
+			var result = stream.ToArray();
+
+			return ResultHandler.OnSuccess(result);
+		}
+
+		private static XLColor ColorizedCell(AttendaceVariants variant)
+		{
+			if (variant == AttendaceVariants.Was)
+				return XLColor.Green;
+			else if (variant == AttendaceVariants.WasIll)
+				return XLColor.YellowGreen;
+			else if (variant == AttendaceVariants.WasNotByReason)
+				return XLColor.Yellow;
+			return XLColor.Red;
+		}
+
+		private static XLColor ColorizedCell(byte result)
+		{
+			if (result > 80)
+				return XLColor.Green;
+			else if (result > 71)
+				return XLColor.YellowGreen;
+			else if (result > 50)
+				return XLColor.Yellow;
+			return XLColor.Red;
 		}
 	}
 }
