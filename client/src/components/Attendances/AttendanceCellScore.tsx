@@ -9,7 +9,6 @@ import {updateAttendance} from "../../store/attendanceStore/asyncActions";
 import {Check} from "@mui/icons-material";
 import {attendanceActions} from "../../store/attendanceStore";
 import {
-  AttendancesByStudents,
   AttendenceType
 } from "../../model/Attendance/Attendence";
 import {StyledTableCell} from "./AttendanceCell";
@@ -84,12 +83,15 @@ export const AttendanceCellScore: React.FC<PropsType> = ({
 
             setChanged(true);
             setShowPop(false);
-            dispatch(attendanceActions.setAttendances(
+            const newAttendances =
               Object.entries(attendances).map(([key, value]) =>
-                key === ownKey ?
-                  [].map.call(value, (a: AttendenceType) => a.id === identifier ? updatedAttendace : a)
-                  : value
-              ) as AttendancesByStudents[]
+                key !== ownKey ?
+                  [key, value] :
+                  [key, [].map.call(value, (a: AttendenceType) => a.id === identifier ? updatedAttendace : a)]
+              );
+
+            dispatch(attendanceActions.setAttendances(
+              Object.fromEntries(newAttendances)
             ));
           }}
         >

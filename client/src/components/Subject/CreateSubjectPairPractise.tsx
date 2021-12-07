@@ -12,6 +12,7 @@ import {
 import {DatePicker, LocalizationProvider, TimePicker} from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import {ru} from "date-fns/locale";
+import {MultipleDatePicker} from "../MultipleDatePicker";
 
 export const CreateSubjectPairPractise: React.FC<FormikProps<typeof initialSubjectTypeState>> = ({
                                                                                                    values,
@@ -54,7 +55,7 @@ export const CreateSubjectPairPractise: React.FC<FormikProps<typeof initialSubje
           </Select>
         </FormControl>
       </Grid>
-      {values.practiseWeek !== '' && values.practiseWeek !== 'По определенным данным' &&
+      {values.practiseWeek !== '' &&
       <Grid item>
           <LocalizationProvider
               dateAdapter={AdapterDateFns}
@@ -95,12 +96,10 @@ export const CreateSubjectPairPractise: React.FC<FormikProps<typeof initialSubje
       </Grid>}
       {values.practiseWeek === 'По определенным данным' &&
       <Grid item>
-        {/*<DatePicker*/}
-        {/*    id='lectureDates'*/}
-        {/*    multiple*/}
-        {/*    value={values.lectureDates}*/}
-        {/*    onChange={handleChange}*/}
-        {/*/>*/}
+          <MultipleDatePicker
+              dates={values.practiseDates}
+              setDates={(dates: Date[]) => setFieldValue('practiseDates', dates)}
+          />
       </Grid>}
     </Grid>
   );

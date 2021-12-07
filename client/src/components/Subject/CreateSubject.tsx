@@ -61,7 +61,8 @@ export const CreateSubject: React.FC<PropsType> = ({close}) => {
     week: string,
     subjectName: string,
     subjectTypeName: string,
-    theme: string
+    theme: string,
+    dates: Date[]
   ): CreateSubjectType[] => {
     let subjects = [] as CreateSubjectType[];
 
@@ -69,12 +70,12 @@ export const CreateSubject: React.FC<PropsType> = ({close}) => {
       subjects = [
         ...subjects, {
           day: Days[firstDate.getDay()],
-          date: format(
+          date: dates.length === 0 ? format(
             week === 'Еженедельно' ?
               addDays(firstDate, 7 * i) :
               addDays(firstDate, 14 * i),
-            'dd.MM.yyy'
-          ),
+            'dd.MM.yyyy'
+          ) : format(dates[i], "dd.MM.yyyy"),
           name: subjectName,
           theme: theme,
           time: format(time, 'hh:mm:ss'),
@@ -96,7 +97,8 @@ export const CreateSubject: React.FC<PropsType> = ({close}) => {
       values.lectureWeek,
       values.subjectName,
       'Лекция',
-      values.newTheme
+      values.newTheme,
+      values.lectureDates
     );
     const practises = setNewSubjectHandler(
       values.practiseCount,
@@ -105,7 +107,8 @@ export const CreateSubject: React.FC<PropsType> = ({close}) => {
       values.practiseWeek,
       values.subjectName,
       'Практика',
-      values.newTheme
+      values.newTheme,
+      values.practiseDates
     );
     const laborotories = setNewSubjectHandler(
       values.laborotoryCount,
@@ -114,7 +117,8 @@ export const CreateSubject: React.FC<PropsType> = ({close}) => {
       values.laborotoryWeek,
       values.subjectName,
       'Лабораторная работа',
-      values.newTheme
+      values.newTheme,
+      values.laborotoryDates
     );
 
     return [

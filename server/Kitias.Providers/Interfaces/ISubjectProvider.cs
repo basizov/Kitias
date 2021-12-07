@@ -67,8 +67,9 @@ namespace Kitias.Providers.Interfaces
 		/// Delete subjects by name
 		/// </summary>
 		/// <param name="name">Name of the subjects</param>
+		/// <param name="email">Email of the teacher</param>
 		/// <returns>Status message</returns>
-		Task<Result<string>> DeleteSubjectsByNameAsync(string name);
+		Task<Result<string>> DeleteSubjectsByNameAsync(string name, string email);
 		/// <summary>
 		/// Delete subject from db
 		/// </summary>

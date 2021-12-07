@@ -93,17 +93,6 @@ namespace Kitias.Identity.Server.Controllers
 
 			if (!result.IsSuccess)
 				return BadRequest(result.Error);
-			Response.Cookies.Append(
-				".AspNetCore.Application.Guid",
-				$"{model.Token}",
-				new()
-				{
-					HttpOnly = true,
-					Path = "/auth",
-					Expires = DateTime.UtcNow.AddDays(7),
-					MaxAge = TimeSpan.FromDays(7)
-				}
-			);
 			return Ok(result.Value);
 		}
 
@@ -122,56 +111,23 @@ namespace Kitias.Identity.Server.Controllers
 
 			if (!result.IsSuccess)
 				return BadRequest(result.Error);
-			Response.Cookies.Append(
-				".AspNetCore.Application.Guid",
-				$"{model.NewToken}",
-				new()
-				{
-					HttpOnly = true,
-					Path = "/auth",
-					Expires = DateTime.UtcNow.AddDays(7),
-					MaxAge = TimeSpan.FromDays(7)
-				}
-			);
 			return Ok(result.Value);
-		}
-
-		/// <summary>
-		/// Take refresh token from cookies
-		/// </summary>
-		/// <returns>Refresh token</returns>
-		[HttpGet("token")]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-		public ActionResult<string> TakeToken()
-		{
-			if (!Request.Cookies.TryGetValue(".AspNetCore.Application.Guid", out var refreshToken))
-				return BadRequest("Token doesn't existed");
-			return Ok(refreshToken);
 		}
 
 		/// <summary>
 		/// Logout from accout
 		/// </summary>
 		/// <returns>Status message</returns>
-		[HttpGet("logout")]
+		[HttpPost("logout")]
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-		public ActionResult<string> Logout()
+		public async Task<ActionResult<string>> LogoutAsync([FromBody] string token)
 		{
-			if (!Request.Cookies.TryGetValue(".AspNetCore.Application.Guid", out var refreshToken))
-				return BadRequest("Token doesn't existed");
-			Response.Cookies.Append(
-				".AspNetCore.Application.Guid",
-				"",
-				new()
-				{
-					HttpOnly = true,
-					Path = "/auth",
-					Expires = DateTime.UtcNow.AddDays(-1)
-				}
-			);
+			var result = await _authProvider.LogoutAsync(token);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
 			return Ok("User was successfully logout");
 		}
 

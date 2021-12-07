@@ -749,7 +749,7 @@ namespace Kitias.Providers.Implementations
 					++currentColumn;
 				}
 				var sAttendace = await _unitOfWork.StudentAttendace
-					.FindBy(s => s.StudentName == attendace.Key)
+					.FindBy(s => s.StudentName == attendace.Key && s.SubjectName == sheduler.SubjectName)
 					.SingleOrDefaultAsync();
 
 				worksheet.Cell(currentRow, currentColumn).Value = Helpers.GetEnumMemberAttrValue(sAttendace.Grade);

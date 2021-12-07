@@ -70,13 +70,7 @@
             <param name="model">Model to update token</param>
             <returns>Status message</returns>
         </member>
-        <member name="M:Kitias.Identity.Server.Controllers.AuthController.TakeToken">
-            <summary>
-            Take refresh token from cookies
-            </summary>
-            <returns>Refresh token</returns>
-        </member>
-        <member name="M:Kitias.Identity.Server.Controllers.AuthController.Logout">
+        <member name="M:Kitias.Identity.Server.Controllers.AuthController.LogoutAsync(System.String)">
             <summary>
             Logout from accout
             </summary>

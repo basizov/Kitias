@@ -3,7 +3,6 @@ import {Button, ButtonGroup, styled, TableCell} from "@mui/material";
 import {useDispatch} from "react-redux";
 import {updateAttendance} from "../../store/attendanceStore/asyncActions";
 import {
-  AttendancesByStudents,
   AttendenceType
 } from "../../model/Attendance/Attendence";
 import {attendanceActions} from "../../store/attendanceStore";
@@ -47,12 +46,15 @@ export const AttendanceCell: React.FC<PropsType> = ({
     setChanged(true);
     setAttendace(attendace);
     setShowPop(false);
-    dispatch(attendanceActions.setAttendances(
+    const newAttendances =
       Object.entries(attendances).map(([key, value]) =>
-        key === ownKey ?
-          [].map.call(value, (a: AttendenceType) => a.id === identifier ? updatedAttendace : a)
-          : value
-      ) as AttendancesByStudents[]
+        key !== ownKey ?
+          [key, value] :
+          [key, [].map.call(value, (a: AttendenceType) => a.id === identifier ? updatedAttendace : a)]
+      );
+
+    dispatch(attendanceActions.setAttendances(
+      Object.fromEntries(newAttendances)
     ));
   };
 

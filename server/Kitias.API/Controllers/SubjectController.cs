@@ -188,7 +188,10 @@ namespace Kitias.API.Controllers
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
 		public async Task<ActionResult<string>> DeleteSubjectsByName(string name)
 		{
-			var result = await _subjectProvider.DeleteSubjectsByNameAsync(name);
+			var result = await _subjectProvider.DeleteSubjectsByNameAsync(
+				name,
+				User.FindFirst(ClaimTypes.Email)?.Value ?? ""
+			);
 
 			if (!result.IsSuccess)
 				return BadRequest(result.Error);

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Kitias.Persistence.Enums;
+using System.Collections.Generic;
 
 namespace Kitias.Providers.Models
 {
@@ -10,7 +11,7 @@ namespace Kitias.Providers.Models
 		/// <summary>
 		/// New user variant
 		/// </summary>
-		public string PersonType { get; init; }
+		public string PersonType { get; init; } = RolesNames.TEACHER_ROLE;
 		/// <summary>
 		/// New user email
 		/// </summary>
@@ -42,6 +43,9 @@ namespace Kitias.Providers.Models
 		/// <summary>
 		/// User roles
 		/// </summary>
-		public IEnumerable<string> Roles { get; init; }
+		public IEnumerable<string> Roles { get; init; } = new List<string>
+		{
+			RolesNames.TEACHER_ROLE
+		};
 	}
 }

@@ -21,6 +21,7 @@ import {ShedulersPage} from "../pages/ShedulersPage";
 import {AttendancesPage} from "../pages/AttendancesPage";
 import {SubjectsPage} from "../pages/SubjectsPage";
 import {CalendarPage} from "../pages/CalendarPage";
+import {SignUpPage} from "../pages/SignUpPage";
 
 const RootPaper = styled(Paper)({
   position: 'absolute',
@@ -150,6 +151,9 @@ export const App: React.FC = () => {
                       </PrivateRoute>}/>
                       <Route path='/login' element={<PublicRoute>
                         <AuthPage/>
+                      </PublicRoute>}/>
+                      <Route path='/register' element={<PublicRoute>
+                        <SignUpPage/>
                       </PublicRoute>}/>
                   </Routes>
               </Main>

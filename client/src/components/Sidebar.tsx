@@ -12,9 +12,12 @@ import {
   ChevronLeft,
   Menu,
   Home,
-  DateRange, FeaturedPlayList
+  DateRange, FeaturedPlayList, Logout
 } from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {logoutAsync} from "../store/defaultStore/asyncActions";
+import {useTypedSelector} from "../hooks/useTypedSelector";
 
 const openMixin = (theme: Theme): CSSObject => ({
   width: 300,
@@ -76,6 +79,8 @@ export const Sidebar: React.FC<PropsType> = ({
                                                setOpen
                                              }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const {isAuth} = useTypedSelector(s => s.common);
 
   return (
     <StyledDrawer variant="permanent" open={open}>
@@ -91,7 +96,7 @@ export const Sidebar: React.FC<PropsType> = ({
           ><ChevronLeft/></IconButton>
         </StyledLeftArrow>}
       <Divider/>
-      <List>
+      <List sx={{height: '100%'}}>
         <ListItem disablePadding>
           <ListItemButton onClick={() => {
             navigate('/');
@@ -125,6 +130,20 @@ export const Sidebar: React.FC<PropsType> = ({
             <ListItemText primary="Журналы посещений"/>
           </ListItemButton>
         </ListItem>
+        {isAuth && <ListItem disablePadding sx={{
+          position: 'absolute',
+          bottom: '.3rem'
+        }}>
+            <ListItemButton onClick={async () => {
+              await dispatch(logoutAsync());
+              setOpen(false);
+            }}>
+                <ListItemIcon>
+                    <Logout/>
+                </ListItemIcon>
+                <ListItemText primary="Выйти"/>
+            </ListItemButton>
+        </ListItem>}
       </List>
     </StyledDrawer>
   );

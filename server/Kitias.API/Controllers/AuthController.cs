@@ -2,7 +2,6 @@
 using Kitias.Persistence.DTOs;
 using Kitias.Persistence.Entities.Default;
 using Kitias.Persistence.Enums;
-using Kitias.Providers;
 using Kitias.Providers.Interfaces;
 using Kitias.Providers.Models;
 using Kitias.Providers.Models.Request;
@@ -61,18 +60,15 @@ namespace Kitias.API.Controllers
 			if (token == null)
 			{
 				var identityDomain = _config.GetConnectionString("IdentityServerDomain");
-				var (newRefreshResponse, refreshClient, discovery) = await GetNewTokenAsync(identityDomain);
+				var (refreshClient, discovery) = await GetNewTokenAsync(identityDomain);
 
-				if (newRefreshResponse.StatusCode != HttpStatusCode.OK)
-				{
-					_logger.LogError("Couln't take old refreshToken");
-					return Unauthorized("Please enter to the app");
-				}
+				if (!Request.Cookies.TryGetValue(".AspNetCore.Application.Guidance", out var refreshToken))
+					return Unauthorized("Token doesn't existed");
 				var (saveRefreshResponse, tokenResponse) = await ReloadTokenAsync(
-					newRefreshResponse,
 					refreshClient,
 					discovery,
-					identityDomain
+					identityDomain,
+					refreshToken
 				);
 
 				if (saveRefreshResponse.StatusCode != HttpStatusCode.OK)
@@ -80,7 +76,7 @@ namespace Kitias.API.Controllers
 					_logger.LogError("Couln't update refresh token into identity-db");
 					return BadRequest(await saveRefreshResponse.Content.ReadAsStringAsync());
 				}
-				SaveAccessToken(tokenResponse);
+				SaveTokens(tokenResponse);
 			}
 			return Ok("User is auth");
 		}
@@ -91,7 +87,8 @@ namespace Kitias.API.Controllers
 		/// <param name="model">Model with user and student data</param>
 		/// <returns>Status message</returns>
 		[HttpPost("signUp")]
-		[Authorize(Roles = RolesNames.ADMIN_ROLE)]
+		//[Authorize(Roles = RolesNames.ADMIN_ROLE)]
+		[AllowAnonymous]
 		[Produces("application/json")]
 		[ProducesResponseType(typeof(IEnumerable<StudentDto>), StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -203,7 +200,7 @@ namespace Kitias.API.Controllers
 				_logger.LogError("Couln't save refresh token to identity-db");
 				return BadRequest(await saveRefreshResponse.Content.ReadAsStringAsync());
 			}
-			SaveAccessToken(tokenResponse);
+			SaveTokens(tokenResponse);
 			return Ok("User was successfully logged in");
 		}
 
@@ -220,18 +217,15 @@ namespace Kitias.API.Controllers
 		public async Task<ActionResult<string>> TakeNewTokenAsync()
 		{
 			var identityDomain = _config.GetConnectionString("IdentityServerDomain");
-			var (newRefreshResponse, refreshClient, discovery) = await GetNewTokenAsync(identityDomain);
+			var (refreshClient, discovery) = await GetNewTokenAsync(identityDomain);
 
-			if (newRefreshResponse.StatusCode != HttpStatusCode.OK)
-			{
-				_logger.LogError("Couln't take old refreshToken");
-				return Unauthorized("Please enter to the app");
-			}
+			if (!Request.Cookies.TryGetValue(".AspNetCore.Application.Guidance", out var refreshToken))
+				return Unauthorized("Token doesn't existed");
 			var (saveRefreshResponse, tokenResponse) = await ReloadTokenAsync(
-				newRefreshResponse,
 				refreshClient,
 				discovery,
-				identityDomain
+				identityDomain,
+				refreshToken
 			);
 
 			if (saveRefreshResponse.StatusCode != HttpStatusCode.OK)
@@ -239,22 +233,25 @@ namespace Kitias.API.Controllers
 				_logger.LogError("Couln't update refresh token into identity-db");
 				return BadRequest(await saveRefreshResponse.Content.ReadAsStringAsync());
 			}
-			SaveAccessToken(tokenResponse);
+			SaveTokens(tokenResponse);
 			return Ok("User was successfully reconnected");
 		}
 
-		private async Task<(HttpResponseMessage, HttpClient, DiscoveryDocumentResponse)> GetNewTokenAsync(string identityDomain)
+		private async Task<(HttpClient, DiscoveryDocumentResponse)> GetNewTokenAsync(string identityDomain)
 		{
 			var refreshClient = _clientFactory.CreateClient();
 			var discovery = await refreshClient.GetDiscoveryDocumentAsync(_secureOptions.Value.Authority);
-			var newRefreshResponse = await refreshClient.GetAsync($"{identityDomain}/auth/token");
 
-			return (newRefreshResponse, refreshClient, discovery);
+			return (refreshClient, discovery);
 		}
 
-		private async Task<(HttpResponseMessage, TokenResponse)> ReloadTokenAsync(HttpResponseMessage newRefreshResponse, HttpClient refreshClient, DiscoveryDocumentResponse discovery, string identityDomain)
+		private async Task<(HttpResponseMessage, TokenResponse)> ReloadTokenAsync(
+			HttpClient refreshClient,
+			DiscoveryDocumentResponse discovery,
+			string identityDomain,
+			string oldToken
+		)
 		{
-			var oldToken = await newRefreshResponse.Content.ReadAsStringAsync();
 			var tokenResponse = await refreshClient.RequestRefreshTokenAsync(new()
 			{
 				Address = discovery.TokenEndpoint,
@@ -282,7 +279,7 @@ namespace Kitias.API.Controllers
 			return (saveRefreshResponse, tokenResponse);
 		}
 
-		private void SaveAccessToken(TokenResponse tokenResponse)
+		private void SaveTokens(TokenResponse tokenResponse)
 		{
 			Response.Cookies.Append(
 				".AspNetCore.Application.Guid",
@@ -293,6 +290,17 @@ namespace Kitias.API.Controllers
 					Path = "/api",
 					Expires = DateTime.UtcNow.AddHours(1),
 					MaxAge = TimeSpan.FromHours(1)
+				}
+			);
+			Response.Cookies.Append(
+				".AspNetCore.Application.Guidance",
+				$"{tokenResponse.RefreshToken}",
+				new()
+				{
+					HttpOnly = true,
+					Path = "/api/Auth",
+					Expires = DateTime.UtcNow.AddDays(7),
+					MaxAge = TimeSpan.FromDays(7)
 				}
 			);
 		}
@@ -306,9 +314,16 @@ namespace Kitias.API.Controllers
 		[ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
 		public async Task<ActionResult<string>> LogoutAsync()
 		{
+			if (!Request.Cookies.TryGetValue(".AspNetCore.Application.Guidance", out var refreshToken))
+				return Unauthorized("Token doesn't existed");
 			var identityDomain = _config.GetConnectionString("IdentityServerDomain");
 			var logoutClient = _clientFactory.CreateClient();
-			var newRefreshResponse = await logoutClient.GetAsync($"{identityDomain}/auth/logout");
+			var newRefreshResponse = await logoutClient.PostAsync($"{identityDomain}/auth/logout", new StringContent
+			(
+				JsonSerializer.Serialize(refreshToken),
+				Encoding.UTF8,
+				"application/json"
+			));
 
 			if (newRefreshResponse.StatusCode != HttpStatusCode.OK)
 			{
@@ -322,6 +337,16 @@ namespace Kitias.API.Controllers
 				{
 					HttpOnly = true,
 					Path = "/api",
+					Expires = DateTime.UtcNow.AddDays(-1)
+				}
+			);
+			Response.Cookies.Append(
+				".AspNetCore.Application.Guidance",
+				"",
+				new()
+				{
+					HttpOnly = true,
+					Path = "/api/Auth",
 					Expires = DateTime.UtcNow.AddDays(-1)
 				}
 			);

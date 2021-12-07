@@ -22,12 +22,15 @@ import {ShedulerStudentsGroupType} from "../model/Attendance/ShedulerStudentsGro
 import {CreateStudentAttendanceType} from "../model/Attendance/CreateStudentAttendance";
 import {StudentAttendanceResultType} from "../model/Attendance/StudentAttendaceModel";
 import {saveAs} from "file-saver";
+import {SignUpType} from "../model/User/SugnUpModel";
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
 enum Paths {
   IS_AUTH_PATH = '/Auth',
+  LOGOUT_PATH = '/Auth/logout',
   SIGN_IN_PATH = '/Auth/signIn',
+  SIGN_UP_PATH = '/Auth/signUp',
   TAKE_GROUP = '/Group',
   TAKE_SUBJECTS = '/Teacher/subjects',
   TAKE_SUBJECTS_INFOS = '/Teacher/subjectsInfos',
@@ -75,7 +78,9 @@ const requests = {
 
 const auth = {
   isAuth: () => requests.get<string>(Paths.IS_AUTH_PATH),
-  signIn: (payload: SignInType) => requests.post(Paths.SIGN_IN_PATH, payload)
+  logout: () => requests.get<string>(Paths.LOGOUT_PATH),
+  signIn: (payload: SignInType) => requests.post(Paths.SIGN_IN_PATH, payload),
+  signUp: (payload: SignUpType) => requests.post(Paths.SIGN_UP_PATH, payload)
 };
 
 const attendance = {

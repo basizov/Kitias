@@ -153,17 +153,23 @@ namespace Kitias.Providers.Implementations
 			});
 		}
 
-		public async Task<Result<string>> DeleteSubjectsByNameAsync(string name)
+		public async Task<Result<string>> DeleteSubjectsByNameAsync(string name, string email)
 		{
-			var subjects = _unitOfWork.Subject.FindBy(s => s.Name == name);
+			var teacher = await _unitOfWork.Teacher
+				.FindByAndInclude(
+					s => s.Person.Email == email,
+					s => s.Person, s => s.Subjects
+				)
+				.SingleOrDefaultAsync();
 
-			if (subjects == null)
-				return ReturnFailureResult<string>($"Couldn't find subjects with name {name}", "Couldn't find subjects");
-			return await TryCatchExecute(subjects, async (parameter) =>
+			if (teacher == null)
+				return ReturnFailureResult<string>($"Couldn't find teacher with email {email}", "Couldn't find teacher");
+			return await TryCatchExecute(teacher.Subjects.Where(s => s.Name == name), async (parameter) =>
 			{
 				foreach (var subject in parameter)
 				{
 					var subjectEntity = _mapper.Map<Subject>(subject);
+
 					_unitOfWork.Subject.Delete(subjectEntity);
 				}
 				var isSave = await _unitOfWork.SaveChangesAsync();

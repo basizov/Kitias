@@ -12,13 +12,14 @@ import {
 import {DatePicker, LocalizationProvider, TimePicker} from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import {ru} from "date-fns/locale";
+import {MultipleDatePicker} from "../MultipleDatePicker";
 
 export const CreateSubjectPairLaborotory: React.FC<FormikProps<typeof initialSubjectTypeState>> = ({
-                                                                                                   values,
-                                                                                                   handleChange,
-                                                                                                   errors,
-                                                                                                   setFieldValue
-                                                                                                 }) => {
+                                                                                                     values,
+                                                                                                     handleChange,
+                                                                                                     errors,
+                                                                                                     setFieldValue
+                                                                                                   }) => {
   return (
     <Grid container direction='column' spacing={2}>
       <Grid item>
@@ -54,7 +55,7 @@ export const CreateSubjectPairLaborotory: React.FC<FormikProps<typeof initialSub
           </Select>
         </FormControl>
       </Grid>
-      {values.laborotoryWeek !== '' && values.laborotoryWeek !== 'По определенным данным' &&
+      {values.laborotoryWeek !== '' &&
       <Grid item>
           <LocalizationProvider
               dateAdapter={AdapterDateFns}
@@ -95,12 +96,10 @@ export const CreateSubjectPairLaborotory: React.FC<FormikProps<typeof initialSub
       </Grid>}
       {values.laborotoryWeek === 'По определенным данным' &&
       <Grid item>
-        {/*<DatePicker*/}
-        {/*    id='lectureDates'*/}
-        {/*    multiple*/}
-        {/*    value={values.lectureDates}*/}
-        {/*    onChange={handleChange}*/}
-        {/*/>*/}
+          <MultipleDatePicker
+              dates={values.laborotoryDates}
+              setDates={(dates: Date[]) => setFieldValue('laborotoryDates', dates)}
+          />
       </Grid>}
     </Grid>
   );

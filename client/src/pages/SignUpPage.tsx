@@ -1,42 +1,34 @@
 import React from 'react';
-import {
-  Button,
-  ButtonGroup, CircularProgress,
-  Grid,
-  Paper,
-  styled,
-  TextField, Typography
-} from "@mui/material";
 import {useDispatch} from "react-redux";
-import {Form, Formik} from "formik";
-import {SignInType} from "../model/User/SignInModel";
-import {signInAsync} from "../store/defaultStore/asyncActions";
+import {useTypedSelector} from "../hooks/useTypedSelector";
 import {SchemaOptions} from "yup/es/schema";
 import {object, string} from "yup/es";
-import {useTypedSelector} from "../hooks/useTypedSelector";
-import {useNavigate} from "react-router-dom";
+import {SignUpType} from "../model/User/SugnUpModel";
+import {Form, Formik} from "formik";
+import {signUpAsync} from "../store/defaultStore/asyncActions";
+import {
+  Button,
+  ButtonGroup,
+  CircularProgress,
+  Grid,
+  TextField,
+  Typography
+} from "@mui/material";
+import {useNavigate} from "react-router";
+import {AuthPaper} from "./AuthPage";
 import {defaultActions} from "../store/defaultStore";
 
-export const AuthPaper = styled(Paper)({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  width: '100%',
-  minHeight: '100vh',
-  borderRadius: 0,
-  zIndex: 10000,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center'
-});
-
-export const AuthPage: React.FC = () => {
+export const SignUpPage: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {error, loading} = useTypedSelector(s => s.common);
-  const validationSchema: SchemaOptions<SignInType> = object({
+  const validationSchema: SchemaOptions<SignUpType> = object({
     userName: string().required(),
-    password: string().required()
+    password: string().required(),
+    email: string().required(),
+    name: string().required(),
+    surname: string().required(),
+    patronymic: string().required()
   });
 
   return (
@@ -44,11 +36,15 @@ export const AuthPage: React.FC = () => {
       <Formik
         initialValues={{
           userName: '',
-          password: ''
-        } as SignInType}
+          password: '',
+          email: '',
+          name: '',
+          surname: '',
+          patronymic: ''
+        } as SignUpType}
         validationSchema={validationSchema}
         onSubmit={async (values) => {
-          await dispatch(signInAsync(values));
+          await dispatch(signUpAsync(values));
         }}
       >
         {({
@@ -67,7 +63,21 @@ export const AuthPage: React.FC = () => {
               spacing={1}
               sx={{maxWidth: '30rem'}}
             >
-              <Grid item xs={12}>
+              <Grid item xs={6}>
+                <TextField
+                  id="email"
+                  type="text"
+                  variant="filled"
+                  fullWidth
+                  onBlur={handleBlur}
+                  value={values.email}
+                  onChange={handleChange}
+                  onFocus={(e) => e.target.select()}
+                  error={!!errors.email}
+                  label="E-mail"
+                />
+              </Grid>
+              <Grid item xs={6}>
                 <TextField
                   id="userName"
                   type="text"
@@ -78,7 +88,49 @@ export const AuthPage: React.FC = () => {
                   onChange={handleChange}
                   onFocus={(e) => e.target.select()}
                   error={!!errors.userName}
-                  label="Введите ваш логин..."
+                  label="Логин"
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  id="name"
+                  type="text"
+                  variant="filled"
+                  fullWidth
+                  onBlur={handleBlur}
+                  value={values.name}
+                  onChange={handleChange}
+                  onFocus={(e) => e.target.select()}
+                  error={!!errors.name}
+                  label="Имя"
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  id="surname"
+                  type="text"
+                  variant="filled"
+                  fullWidth
+                  onBlur={handleBlur}
+                  value={values.surname}
+                  onChange={handleChange}
+                  onFocus={(e) => e.target.select()}
+                  error={!!errors.surname}
+                  label="Фамилия"
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  id="patronymic"
+                  type="text"
+                  variant="filled"
+                  fullWidth
+                  onBlur={handleBlur}
+                  value={values.patronymic}
+                  onChange={handleChange}
+                  onFocus={(e) => e.target.select()}
+                  error={!!errors.patronymic}
+                  label="Отчество"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -92,7 +144,7 @@ export const AuthPage: React.FC = () => {
                   onChange={handleChange}
                   onFocus={(e) => e.target.select()}
                   error={!!errors.password}
-                  label="Введите ваш пароль..."
+                  label="Пароль"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -100,14 +152,13 @@ export const AuthPage: React.FC = () => {
                   container
                   justifyContent="space-between"
                   alignItems="center"
-                  sx={{marginTop: '.5rem'}}
+                  spacing={1}
                 >
                   <Grid item>
                     <Typography
                       variant="caption"
                       component="div"
                       color='error'
-                      sx={{paddingLeft: '.5rem'}}
                     >{error || ''}</Typography>
                   </Grid>
                   <Grid item>
@@ -125,7 +176,7 @@ export const AuthPage: React.FC = () => {
                         <CircularProgress
                           color="inherit"
                           size={14}
-                        /> : 'Войти'}</Button>
+                        /> : 'Создать'}</Button>
                     </ButtonGroup>
                   </Grid>
                 </Grid>
@@ -136,9 +187,9 @@ export const AuthPage: React.FC = () => {
                 sx={{marginLeft: 'auto'}}
                 onClick={() => {
                   dispatch(defaultActions.setError(''))
-                  navigate('/register');
+                  navigate('/login');
                 }}
-              >У вас еще нет аккаунта?</Button>
+              >У вас уже есть аккаунт?</Button>
             </Grid>
           </Form>
         )}
