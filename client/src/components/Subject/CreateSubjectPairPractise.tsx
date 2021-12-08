@@ -68,8 +68,8 @@ export const CreateSubjectPairPractise: React.FC<FormikProps<typeof initialSubje
                   renderInput={(params) =>
                     <TextField
                       id='practiseTime'
-                      error={!!errors.practiseTime}
                       {...params}
+                      error={!!errors.practiseTime}
                     />}
               />
           </LocalizationProvider>
@@ -88,8 +88,8 @@ export const CreateSubjectPairPractise: React.FC<FormikProps<typeof initialSubje
                   renderInput={(params) =>
                     <TextField
                       id='practiseFirstDate'
-                      error={!!errors.practiseFirstDate}
                       {...params}
+                      error={!!errors.practiseFirstDate}
                     />}
               />
           </LocalizationProvider>
@@ -99,6 +99,7 @@ export const CreateSubjectPairPractise: React.FC<FormikProps<typeof initialSubje
           <MultipleDatePicker
               dates={values.practiseDates}
               setDates={(dates: Date[]) => setFieldValue('practiseDates', dates)}
+              error={!!errors.practiseDates}
           />
       </Grid>}
     </Grid>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {useDispatch} from "react-redux";
 import {useTypedSelector} from "../hooks/useTypedSelector";
 import {SchemaOptions} from "yup/es/schema";
@@ -22,14 +22,16 @@ export const SignUpPage: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {error, loading} = useTypedSelector(s => s.common);
-  const validationSchema: SchemaOptions<SignUpType> = object({
-    userName: string().required(),
-    password: string().required(),
-    email: string().required(),
-    name: string().required(),
-    surname: string().required(),
-    patronymic: string().required()
-  });
+  const validationSchema: SchemaOptions<SignUpType> = useMemo(() => {
+    return object({
+      userName: string().required(),
+      password: string().required(),
+      email: string().required(),
+      name: string().required(),
+      surname: string().required(),
+      patronymic: string().required()
+    });
+  }, []);
 
   return (
     <AuthPaper>

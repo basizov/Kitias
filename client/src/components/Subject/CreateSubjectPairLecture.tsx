@@ -68,8 +68,8 @@ export const CreateSubjectPairLecture: React.FC<FormikProps<typeof initialSubjec
                   renderInput={(params) =>
                     <TextField
                       id='lectureTime'
-                      error={!!errors.lectureTime}
                       {...params}
+                      error={!!errors.lectureTime}
                     />}
               />
           </LocalizationProvider>
@@ -88,8 +88,8 @@ export const CreateSubjectPairLecture: React.FC<FormikProps<typeof initialSubjec
                   renderInput={(params) =>
                     <TextField
                       id='lectureFirstDate'
-                      error={!!errors.lectureFirstDate}
                       {...params}
+                      error={!!errors.lectureFirstDate}
                     />}
               />
           </LocalizationProvider>
@@ -99,6 +99,7 @@ export const CreateSubjectPairLecture: React.FC<FormikProps<typeof initialSubjec
           <MultipleDatePicker
               dates={values.lectureDates}
               setDates={(dates: Date[]) => setFieldValue('lectureDates', dates)}
+              error={!!errors.lectureDates}
           />
       </Grid>}
     </Grid>

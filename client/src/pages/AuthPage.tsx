@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {
   Button,
   ButtonGroup, CircularProgress,
@@ -34,10 +34,12 @@ export const AuthPage: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {error, loading} = useTypedSelector(s => s.common);
-  const validationSchema: SchemaOptions<SignInType> = object({
-    userName: string().required(),
-    password: string().required()
-  });
+  const validationSchema: SchemaOptions<SignInType> = useMemo(() => {
+    return object({
+      userName: string().required(),
+      password: string().required()
+    });
+  }, []);
 
   return (
     <AuthPaper>

@@ -61,6 +61,9 @@ namespace Kitias.Persistence.Contexts
 			builder.ApplyConfiguration(new SubjectConfiguration());
 			builder.ApplyConfiguration(new TeacherConfiguration());
 			builder.ApplyConfiguration(new PersonConfiguration());
+			builder.ApplyConfiguration(new AttendanceConfiguration());
+			builder.ApplyConfiguration(new StudentAttendaceConfiguration());
+			builder.ApplyConfiguration(new ShedulerConfiguration());
 			base.OnModelCreating(builder);
 		}
 	}

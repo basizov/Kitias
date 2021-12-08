@@ -3,15 +3,17 @@ using System;
 using Kitias.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Kitias.Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211208200656_UpdateAttendaceDbConfigurations")]
+    partial class UpdateAttendaceDbConfigurations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -204,13 +206,13 @@ namespace Kitias.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("StudentName", "SubjectName", "ShedulerId");
+                    b.HasAlternateKey("StudentName", "SubjectName");
 
                     b.HasIndex("ShedulerId");
 
                     b.HasIndex("StudentId");
 
-                    b.HasIndex("StudentName", "SubjectName", "ShedulerId")
+                    b.HasIndex("StudentName", "SubjectName")
                         .IsUnique()
                         .HasDatabaseName("StudentNameIndex")
                         .HasFilter("\"StudentName\" IS NOT NULL");

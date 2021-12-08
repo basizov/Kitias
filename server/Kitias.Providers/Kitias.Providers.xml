@@ -159,11 +159,12 @@
             <param name="id">Identifier of sheduler</param>
             <returns>Students and group id</returns>
         </member>
-        <member name="M:Kitias.Providers.Interfaces.IAttendanceProvider.TakeTeacherShedulerSubjectsAsync(System.Guid)">
+        <member name="M:Kitias.Providers.Interfaces.IAttendanceProvider.TakeTeacherShedulerSubjectsAsync(System.Guid,System.String)">
             <summary>
             Take shedulersubjects of the teacher
             </summary>
             <param name="id">Identifier of sheduler</param>
+            <param name="email">Teacher email</param>
             <returns>List shedulers subjects info</returns>
         </member>
         <member name="M:Kitias.Providers.Interfaces.IAttendanceProvider.TakeShedulerAttendancesAsync(System.Guid)">

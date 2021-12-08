@@ -4,6 +4,11 @@
         <name>Kitias.Persistence</name>
     </assembly>
     <members>
+        <member name="T:Kitias.Persistence.Configurations.Data.AttendanceConfiguration">
+            <summary>
+            Fluent Validtion for attendance
+            </summary>
+        </member>
         <member name="T:Kitias.Persistence.Configurations.Data.GroupConfiguraion">
             <summary>
             Fluent Validtion for group
@@ -12,6 +17,16 @@
         <member name="T:Kitias.Persistence.Configurations.Data.PersonConfiguration">
             <summary>
             Fluent Validtion for person
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Configurations.Data.ShedulerConfiguration">
+            <summary>
+            Fluent Validtion for attendance sheduler
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Configurations.Data.StudentAttendaceConfiguration">
+            <summary>
+            Fluent Validtion for studentAttendance
             </summary>
         </member>
         <member name="T:Kitias.Persistence.Configurations.Data.StudentConfiguration">

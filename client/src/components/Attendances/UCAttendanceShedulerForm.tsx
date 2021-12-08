@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {Form, Formik} from "formik";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {useDispatch} from "react-redux";
@@ -27,6 +27,8 @@ import {ShedulerListType} from "../../model/Attendance/ShedulerList";
 import {Loading} from "../../layout/Loading";
 import {Delete} from "@mui/icons-material";
 import {CreateStudentAttendanceType} from "../../model/Attendance/CreateStudentAttendance";
+import {SchemaOptions} from "yup/es/schema";
+import {object, string} from "yup/es";
 
 const StyledList = styled(List)(({theme}) => ({
   height: '9rem',
@@ -60,6 +62,22 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
     groupStudents
   } = useTypedSelector(s => s.attendance);
 
+  const initialState = useMemo(() => ({
+    selectedSubject: attendace ? attendace.subjectName : '' as string,
+    selectedGroup: attendace ? shedulerGroup : '' as string,
+    name: attendace ? attendace.name : '' as string,
+    newStudent: '' as string
+  } as const), [attendace, shedulerGroup]);
+
+  const validationSchema: SchemaOptions<typeof initialState> = useMemo(() => {
+    return object({
+      selectedSubject: string().required(),
+      selectedGroup: string(),
+      name: string().required(),
+      newStudent: string()
+    });
+  }, []);
+
   useEffect(() => {
     dispatch(getSubjectsNames());
     dispatch(getGroupsNames());
@@ -70,12 +88,8 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
   }
   return (
     <Formik
-      initialValues={{
-        selectedSubject: attendace ? attendace.subjectName : '' as string,
-        selectedGroup: attendace ? shedulerGroup : '' as string,
-        name: attendace ? attendace.name : '' as string,
-        newStudent: '' as string
-      } as const}
+      initialValues={initialState}
+      validationSchema={validationSchema}
       onSubmit={async (values) => {
         let attendances = [] as CreateAttendanceType[];
         let sAttendances = [] as CreateStudentAttendanceType[];
@@ -231,11 +245,13 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
                   variant='outlined'
                   sx={{marginLeft: 'auto', marginTop: '.3rem'}}
                   onClick={() => {
-                    dispatch(attendanceActions.setGroupStudents([
-                      values.newStudent,
-                      ...groupStudents
-                    ]));
-                    setFieldValue('newStudent', '');
+                    if (values.name && values.selectedSubject && values.newStudent) {
+                      dispatch(attendanceActions.setGroupStudents([
+                        values.newStudent,
+                        ...groupStudents
+                      ]));
+                      setFieldValue('newStudent', '');
+                    }
                   }}
                 >Добавить студента</Button>
                 <ButtonGroup

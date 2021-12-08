@@ -90,7 +90,7 @@ namespace Kitias.API.Controllers
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
 		public async Task<ActionResult<IEnumerable<SubjectDto>>> TakeShedulerSubjectsAsync(Guid id)
 		{
-			var result = await _attendanceProvider.TakeTeacherShedulerSubjectsAsync(id);
+			var result = await _attendanceProvider.TakeTeacherShedulerSubjectsAsync(id, User.FindFirst(ClaimTypes.Email)?.Value ?? "");
 
 			if (!result.IsSuccess)
 				return BadRequest(result.Error);

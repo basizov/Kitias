@@ -22,6 +22,7 @@ namespace Kitias.Persistence.Configurations.Data
 				.IsRequired()
 				.HasColumnType("time");
 			builder.Property(g => g.Date)
+				.IsRequired()
 				.HasColumnType("date");
 			builder.Property(g => g.Week)
 				.HasConversion<string>()
@@ -30,12 +31,11 @@ namespace Kitias.Persistence.Configurations.Data
 				.IsRequired()
 				.HasConversion<string>()
 				.HasMaxLength(20);
-			//builder.HasAlternateKey(g => g.Name);
-			//builder.HasIndex(g => g.Name)
-			//	.IsUnique()
-			//	.IsUnique()
-			//	.HasFilter(@"""Name"" IS NOT NULL")
-			//	.HasDatabaseName("SubjectName");
+			builder.HasAlternateKey(g => new { g.Date, g.Time, g.TeacherId });
+			builder.HasIndex(g => new { g.Date, g.Time, g.TeacherId })
+				.IsUnique()
+				.HasFilter(@"""Date"" IS NOT NULL")
+				.HasDatabaseName("DateTimeIndex");
 		}
 	}
 }

@@ -10,11 +10,13 @@ import {SubjectType} from "../../model/Subject/Subject";
 import {Form, Formik} from "formik";
 import {useDispatch} from "react-redux";
 import {updateSubject} from "../../store/subjectStore/asyncActions";
-import React from "react";
+import React, {useMemo} from "react";
 import {DatePicker, LocalizationProvider, TimePicker} from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import {ru} from "date-fns/locale";
 import {format, parse} from "date-fns";
+import {SchemaOptions} from "yup/es/schema";
+import {object, string} from "yup/es";
 
 type PropsType = {
   subject: SubjectType;
@@ -26,6 +28,14 @@ export const UpdateSubject: React.FC<PropsType> = ({
                                                      close
                                                    }) => {
   const dispatch = useDispatch();
+  const validationSchema: SchemaOptions<SubjectType> = useMemo(() => {
+    return object({
+      type: string().required(),
+      time: string().required(),
+      date: string().required(),
+      theme: string()
+    });
+  }, []);
 
   return (
     <Formik
@@ -34,6 +44,7 @@ export const UpdateSubject: React.FC<PropsType> = ({
         time: parse(subject.time, 'H:mm:ss', new Date()),
         date: parse(subject.date, 'dd.MM.yyyy', new Date())
       }}
+      validationSchema={validationSchema}
       onSubmit={async (values) => {
         await dispatch(updateSubject(
           subject.id,

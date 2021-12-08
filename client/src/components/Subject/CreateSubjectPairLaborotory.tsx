@@ -68,8 +68,8 @@ export const CreateSubjectPairLaborotory: React.FC<FormikProps<typeof initialSub
                   renderInput={(params) =>
                     <TextField
                       id='laborotoryTime'
-                      error={!!errors.laborotoryTime}
                       {...params}
+                      error={!!errors.laborotoryTime}
                     />}
               />
           </LocalizationProvider>
@@ -88,8 +88,8 @@ export const CreateSubjectPairLaborotory: React.FC<FormikProps<typeof initialSub
                   renderInput={(params) =>
                     <TextField
                       id='laborotoryFirstDate'
-                      error={!!errors.laborotoryFirstDate}
                       {...params}
+                      error={!!errors.laborotoryFirstDate}
                     />}
               />
           </LocalizationProvider>
@@ -99,6 +99,7 @@ export const CreateSubjectPairLaborotory: React.FC<FormikProps<typeof initialSub
           <MultipleDatePicker
               dates={values.laborotoryDates}
               setDates={(dates: Date[]) => setFieldValue('laborotoryDates', dates)}
+              error={!!errors.laborotoryDates}
           />
       </Grid>}
     </Grid>

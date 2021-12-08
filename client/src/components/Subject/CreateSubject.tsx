@@ -14,6 +14,8 @@ import {CreateSubjectType} from "../../model/Subject/CreateSubjectModel";
 import {createSubjects} from "../../store/subjectStore/asyncActions";
 import {addDays, format} from "date-fns";
 import {useDispatch} from "react-redux";
+import {object, string, number, date, array, ref} from "yup/es";
+import {SchemaOptions} from "yup/es/schema";
 
 export const initialSubjectTypeState = {
   subjectName: '' as string,
@@ -53,6 +55,69 @@ export const CreateSubject: React.FC<PropsType> = ({close}) => {
     'Суббота',
     'Воскресенье'
   ], []);
+
+  const validationSchema: SchemaOptions<typeof initialSubjectTypeState> = useMemo(() => {
+    return object({
+      subjectName: string().required(),
+      lectureCount: number().min(0).max(100),
+      lectureWeek: string().when('lectureCount', {
+        is: (lectureCount: number) => lectureCount > 0,
+        then: string().required()
+      }),
+      lectureFirstDate: date().when('lectureWeek', {
+        is: (lectureWeek: string) => lectureWeek === 'По определенным данным',
+        then: date().required()
+      }),
+      practiseFirstDate: date().when('practiseWeek', {
+        is: (practiseWeek: string) => practiseWeek === 'По определенным данным',
+        then: date().required()
+      }),
+      laborotoryFirstDate: date().when('laborotoryWeek', {
+        is: (laborotoryWeek: string) => laborotoryWeek === 'По определенным данным',
+        then: date().required()
+      }),
+      lectureTime: date().when('lectureCount', {
+        is: (lectureCount: number) => lectureCount > 0,
+        then: date().required()
+      }),
+      lectureDates: array().when('lectureWeek', {
+        is: (lectureWeek: string) => lectureWeek === 'По определенным данным',
+        then: array().of(date())
+          .min(ref('lectureCount'))
+          .max(ref('lectureCount'))
+      }),
+      practiseCount: number().min(0).max(100),
+      practiseWeek: string().when('practiseCount', {
+        is: (practiseCount: number) => practiseCount > 0,
+        then: string().required()
+      }),
+      practiseTime: date().when('practiseCount', {
+        is: (practiseCount: number) => practiseCount > 0,
+        then: date().required()
+      }),
+      practiseDates: array().when('practiseWeek', {
+        is: (practiseWeek: string) => practiseWeek === 'По определенным данным',
+        then: array().of(date())
+          .min(ref('practiseCount'))
+          .max(ref('practiseCount'))
+      }),
+      laborotoryCount: number().min(0).max(100),
+      laborotoryWeek: string().when('laborotoryCount', {
+        is: (laborotoryCount: number) => laborotoryCount > 0,
+        then: string().required()
+      }),
+      laborotoryTime: date().when('laborotoryCount', {
+        is: (laborotoryCount: number) => laborotoryCount > 0,
+        then: date().required()
+      }),
+      laborotoryDates: array().when('laborotoryWeek', {
+        is: (laborotoryWeek: string) => laborotoryWeek === 'По определенным данным',
+        then: array().of(date())
+          .min(ref('laborotoryCount'))
+          .max(ref('laborotoryCount'))
+      })
+    });
+  }, []);
 
   const setNewSubjectHandler = (
     count: number,
@@ -132,6 +197,7 @@ export const CreateSubject: React.FC<PropsType> = ({close}) => {
   return (
     <Formik
       initialValues={initialSubjectTypeState}
+      validationSchema={validationSchema}
       onSubmit={async (values) => {
         const subjects = getSubjectsFromValues(values);
 
@@ -223,13 +289,15 @@ export const CreateSubject: React.FC<PropsType> = ({close}) => {
                 {props.values.themes && <Button
                     type='button'
                     onClick={() => {
-                      const subjects = getSubjectsFromValues(props.values);
+                      if (props.values.newTheme) {
+                        const subjects = getSubjectsFromValues(props.values);
 
-                      setNewSubjects(subjects);
-                      props.setValues({
-                        ...initialSubjectTypeState,
-                        themesList: [props.values.newTheme, ...props.values.themesList]
-                      });
+                        setNewSubjects(subjects);
+                        props.setValues({
+                          ...initialSubjectTypeState,
+                          themesList: [props.values.newTheme, ...props.values.themesList]
+                        });
+                      }
                     }}
                 >Добавить тему</Button>}
                 <Button

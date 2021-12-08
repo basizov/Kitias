@@ -35,8 +35,9 @@ namespace Kitias.Providers.Interfaces
 		/// Take shedulersubjects of the teacher
 		/// </summary>
 		/// <param name="id">Identifier of sheduler</param>
+		/// <param name="email">Teacher email</param>
 		/// <returns>List shedulers subjects info</returns>
-		Task<Result<IEnumerable<SubjectDto>>> TakeTeacherShedulerSubjectsAsync(Guid id);
+		Task<Result<IEnumerable<SubjectDto>>> TakeTeacherShedulerSubjectsAsync(Guid id, string email);
 		/// <summary>
 		/// Take attendances of the sheduler
 		/// </summary>

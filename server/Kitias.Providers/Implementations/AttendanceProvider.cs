@@ -90,7 +90,7 @@ namespace Kitias.Providers.Implementations
 			});
 		}
 
-		public async Task<Result<IEnumerable<SubjectDto>>> TakeTeacherShedulerSubjectsAsync(Guid id)
+		public async Task<Result<IEnumerable<SubjectDto>>> TakeTeacherShedulerSubjectsAsync(Guid id, string email)
 		{
 			var sheduler = await _unitOfWork.ShedulerAttendace
 				.FindBy(s => s.Id == id)
@@ -100,6 +100,9 @@ namespace Kitias.Providers.Implementations
 				return ReturnFailureResult<IEnumerable<SubjectDto>>($"Couldn't find sheduler with id {id}", "Couldn't find sheduler");
 			var subjects = _unitOfWork.Subject
 				.FindBy(s => s.Name == sheduler.SubjectName)
+				.Include(s => s.Teacher)
+				.ThenInclude(t => t.Person)
+				.Where(s => s.Teacher.Person.Email == email)
 				.OrderBy(s => s.Date);
 
 			if (subjects == null)

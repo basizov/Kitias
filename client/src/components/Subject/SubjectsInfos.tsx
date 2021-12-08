@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {
   Box, Button, ButtonGroup,
   CircularProgress,
@@ -16,6 +16,8 @@ import {ModalHoc} from "../HOC/ModalHoc";
 import {UpdateSubject} from "./UpdateSubject";
 import {Form, Formik} from "formik";
 import {exportSheduler} from "../../store/attendanceStore/asyncActions";
+import {object, string} from "yup/es";
+import {SchemaOptions} from "yup/es/schema";
 
 export type PropsType = {
   name: string;
@@ -36,6 +38,16 @@ export const SubjectsInfos: React.FC<PropsType> = ({
   const [updateOpen, setUpdateOpen] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState<SubjectType | null>(null);
 
+  const initialState = useMemo(() => ({
+    name: name
+  } as const), [name]);
+
+  const validationSchema: SchemaOptions<typeof initialState> = useMemo(() => {
+    return object({
+      name: string().required()
+    });
+  }, []);
+
   if (loading) {
     return <CircularProgress color='inherit'/>;
   }
@@ -43,7 +55,8 @@ export const SubjectsInfos: React.FC<PropsType> = ({
     <Grid container>
       <Grid item xs={12}>
         <Formik
-          initialValues={{name: name}}
+          initialValues={initialState}
+          validationSchema={validationSchema}
           onSubmit={async (values) => {
             setName(values.name);
             await dispatch(updateSubjectsNames(name, values.name));
