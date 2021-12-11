@@ -21,15 +21,18 @@ import {useTypedSelector} from "../hooks/useTypedSelector";
 
 const openMixin = (theme: Theme): CSSObject => ({
   width: 300,
-  transition: theme.transitions.create('width', {
+  transition: theme.transitions.create(['width', 'height'], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen
   }),
-  overflowX: 'hidden'
+  overflowX: 'hidden',
+  [theme.breakpoints.down('sm')]: {
+    width: '100%'
+  }
 });
 
 const closeMixin = (theme: Theme): CSSObject => ({
-  transition: theme.transitions.create('width', {
+  transition: theme.transitions.create(['width', 'height'], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen
   }),
@@ -37,6 +40,11 @@ const closeMixin = (theme: Theme): CSSObject => ({
   width: `calc(${theme.spacing(5)} + 1px)`,
   [theme.breakpoints.up('sm')]: {
     width: `calc(${theme.spacing(7)} + 1px)`
+  },
+  [theme.breakpoints.down('sm')]: {
+    width: '100%',
+    height: `calc(${theme.spacing(7)} + 1px)`,
+    overflow: 'hidden'
   }
 });
 
@@ -44,13 +52,21 @@ const DrawerHeader = styled('div')(({theme}) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  ...theme.mixins.toolbar
+  ...theme.mixins.toolbar,
+  [theme.breakpoints.down('sm')]: {
+    justifyContent: 'flex-start',
+    marginLeft: '1rem',
+    minHeight: `${theme.spacing(7)} !important`
+  },
+  [theme.breakpoints.down('xs')]: {
+    minHeight: '0 !important'
+  }
 }));
 
-const StyledLeftArrow = styled(DrawerHeader)({
+const StyledLeftArrow = styled(DrawerHeader)(({theme}) => ({
   justifyContent: 'flex-end',
   marginRight: '1rem'
-});
+}));
 
 const StyledDrawer = styled(Drawer, {
   shouldForwardProp: (prop) => prop !== 'open'
@@ -66,7 +82,25 @@ const StyledDrawer = styled(Drawer, {
   ...(!open && {
     ...closeMixin(theme),
     '& .MuiDrawer-paper': closeMixin(theme)
-  })
+  }),
+  [theme.breakpoints.down('sm')]: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    flexDirection: 'row'
+  }
+}));
+
+const StyledListItem = styled(ListItem)(({theme}) => ({
+  [theme.breakpoints.down('sm')]: {
+    display: 'none'
+  }
+}));
+
+const LogoutItem = styled(ListItem)(({theme}) => ({
+  position: 'absolute',
+  bottom: '.3rem'
 }));
 
 type PropsType = {
@@ -97,7 +131,7 @@ export const Sidebar: React.FC<PropsType> = ({
         </StyledLeftArrow>}
       <Divider/>
       <List sx={{height: '100%'}}>
-        <ListItem disablePadding>
+        <StyledListItem disablePadding>
           <ListItemButton onClick={() => {
             navigate('/');
             setOpen(false);
@@ -107,7 +141,7 @@ export const Sidebar: React.FC<PropsType> = ({
             </ListItemIcon>
             <ListItemText primary="Главная"/>
           </ListItemButton>
-        </ListItem>
+        </StyledListItem>
         <ListItem disablePadding>
           <ListItemButton onClick={() => {
             navigate('/subjects');
@@ -130,10 +164,7 @@ export const Sidebar: React.FC<PropsType> = ({
             <ListItemText primary="Журналы посещений"/>
           </ListItemButton>
         </ListItem>
-        {isAuth && <ListItem disablePadding sx={{
-          position: 'absolute',
-          bottom: '.3rem'
-        }}>
+        {isAuth && <LogoutItem disablePadding>
             <ListItemButton onClick={async () => {
               await dispatch(logoutAsync());
               setOpen(false);
@@ -143,7 +174,7 @@ export const Sidebar: React.FC<PropsType> = ({
                 </ListItemIcon>
                 <ListItemText primary="Выйти"/>
             </ListItemButton>
-        </ListItem>}
+        </LogoutItem>}
       </List>
     </StyledDrawer>
   );

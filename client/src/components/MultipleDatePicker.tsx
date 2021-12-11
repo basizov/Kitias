@@ -11,12 +11,14 @@ import {ru} from "date-fns/locale";
 import {format, isSameDay} from "date-fns";
 
 type PropsType = {
+  id: string;
   dates: Date[];
   error: boolean;
   setDates: (dates: Date[]) => void;
 };
 
 export const MultipleDatePicker: React.FC<PropsType> = ({
+                                                          id,
                                                           dates,
                                                           setDates,
                                                           error
@@ -63,6 +65,7 @@ export const MultipleDatePicker: React.FC<PropsType> = ({
             disableCloseOnSelect
             allowSameDateSelection
             views={['day']}
+            label='Даты проведения'
             value={dates.length > 0 ? dates[dates.length - 1] : null}
             onChange={(newDate) => {
               const curDate = format(newDate!, 'dd.MM.yyyy');
@@ -81,8 +84,9 @@ export const MultipleDatePicker: React.FC<PropsType> = ({
             renderDay={renderSelecetedDays}
             renderInput={(params) =>
               <TextField
+                id={id}
                 {...params}
-                helperText={null}
+                fullWidth
                 error={error}
               />}
           />

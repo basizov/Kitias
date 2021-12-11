@@ -19,7 +19,8 @@ type PropsType = {
 export const StyledTableCell = styled(TableCell)({
   cursor: 'pointer',
   userSelect: 'none',
-  width: '12rem'
+  maxWidth: '12rem',
+  minWidth: '9rem'
 });
 
 export const AttendanceCell: React.FC<PropsType> = ({
@@ -61,24 +62,44 @@ export const AttendanceCell: React.FC<PropsType> = ({
   return (
     <StyledTableCell
       align='center'
-      onDoubleClick={() => setShowPop((prev) => !prev)}
+      onClick={() => setShowPop((prev) => !prev)}
     >
       {showPop ? <ButtonGroup>
         <Button
           color='error'
-          onClick={() => changeAttendace('Н')}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            changeAttendace('Н');
+          }}
+          size='small'
         >Н</Button>
         <Button
           color='secondary'
-          onClick={() => changeAttendace('О')}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            changeAttendace('О');
+          }}
+          size='small'
         >О</Button>
         <Button
           color='warning'
-          onClick={() => changeAttendace('Б')}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            changeAttendace('Б');
+          }}
+          size='small'
         >Б</Button>
         <Button
           color='success'
-          onClick={() => changeAttendace('+')}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            changeAttendace('+');
+          }}
+          size='small'
         >+</Button>
       </ButtonGroup> : changed ? attendace : title}
     </StyledTableCell>

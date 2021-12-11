@@ -14,7 +14,7 @@ import {
   MenuItem,
   Select, styled,
   TextField,
-  Typography
+  Typography, useMediaQuery
 } from "@mui/material";
 import {
   createSheduler, deleteSheduler,
@@ -50,6 +50,8 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
                                                                 isUpdating = false
                                                               }) => {
   const dispatch = useDispatch();
+  const isTablet = useMediaQuery('(min-width: 600px)');
+  const isMobile = useMediaQuery('(min-width: 440px)');
   const {
     loadingHelper: loadingSubject,
     subjectsNames,
@@ -132,8 +134,12 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
           setFieldValue
         }) => (
         <Form onSubmit={handleSubmit}>
-          <Grid container sx={{minWidth: '35rem'}} spacing={1}>
-            <Grid item xs={4}>
+          <Grid
+            container
+            sx={{minWidth: `${isTablet ? '35rem' : isMobile ? '25rem' : '18rem'}`}}
+            spacing={1}
+          >
+            <Grid item xs={12} sm={4}>
               <TextField
                 id="name"
                 type="text"
@@ -147,7 +153,7 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
                 label="Название журнала"
               />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={4}>
               <FormControl fullWidth>
                 <InputLabel id="selectedSubject-label"
                 >Предмет</InputLabel>
@@ -171,7 +177,7 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={4}>
               <FormControl fullWidth>
                 <InputLabel id="selectedGroup-label"
                 >Группа</InputLabel>
@@ -195,7 +201,7 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <StyledList>
                 {groupStudents.length > 0 && groupStudents.map(gs => (
                   <ListItem key={gs} disablePadding sx={{
@@ -225,8 +231,8 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
                 >...Студенты...</Typography>}
               </StyledList>
             </Grid>
-            <Grid item xs={6}>
-              <Grid container>
+            <Grid item xs={12} sm={6}>
+              <Grid container spacing={1}>
                 <Grid item xs={12}>
                   <TextField
                     id="newStudent"
@@ -241,19 +247,22 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
                     label="Новый студент"
                   />
                 </Grid>
-                <Button
-                  variant='outlined'
-                  sx={{marginLeft: 'auto', marginTop: '.3rem'}}
-                  onClick={() => {
-                    if (values.name && values.selectedSubject && values.newStudent) {
-                      dispatch(attendanceActions.setGroupStudents([
-                        values.newStudent,
-                        ...groupStudents
-                      ]));
-                      setFieldValue('newStudent', '');
-                    }
-                  }}
-                >Добавить студента</Button>
+                <Grid item xs={12}
+                      sx={{display: 'flex', justifyContent: 'end'}}>
+                  <Button
+                    variant='outlined'
+                    sx={{marginLeft: 'auto'}}
+                    onClick={() => {
+                      if (values.name && values.selectedSubject && values.newStudent) {
+                        dispatch(attendanceActions.setGroupStudents([
+                          values.newStudent,
+                          ...groupStudents
+                        ]));
+                        setFieldValue('newStudent', '');
+                      }
+                    }}
+                  >Добавить студента</Button>
+                </Grid>
                 <ButtonGroup
                   sx={{marginLeft: 'auto', marginTop: '.3rem'}}
                   size={`${isUpdating ? 'small' : 'medium'}`}
@@ -261,7 +270,7 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
                 >
                   <Button
                     type='submit'
-                  >{isUpdating ? ' Обновить журнал' : ' Добавить журнал'}</Button>
+                  >{isUpdating ? ' Обновить журнал' : ' Создать журнал'}</Button>
                   {isUpdating && <Button
                       color='error'
                       onClick={async () => {

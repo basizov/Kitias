@@ -69,6 +69,7 @@ export const CreateSubjectPairLaborotory: React.FC<FormikProps<typeof initialSub
                     <TextField
                       id='laborotoryTime'
                       {...params}
+                      fullWidth
                       error={!!errors.laborotoryTime}
                     />}
               />
@@ -89,6 +90,7 @@ export const CreateSubjectPairLaborotory: React.FC<FormikProps<typeof initialSub
                     <TextField
                       id='laborotoryFirstDate'
                       {...params}
+                      fullWidth
                       error={!!errors.laborotoryFirstDate}
                     />}
               />
@@ -97,6 +99,7 @@ export const CreateSubjectPairLaborotory: React.FC<FormikProps<typeof initialSub
       {values.laborotoryWeek === 'По определенным данным' &&
       <Grid item>
           <MultipleDatePicker
+              id='laborotoryDates'
               dates={values.laborotoryDates}
               setDates={(dates: Date[]) => setFieldValue('laborotoryDates', dates)}
               error={!!errors.laborotoryDates}

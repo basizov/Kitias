@@ -4,7 +4,7 @@ import {
   Checkbox,
   FormControlLabel,
   Grid, List, ListItem, ListItemText,
-  TextField
+  TextField, useMediaQuery
 } from "@mui/material";
 import {Form, Formik} from "formik";
 import {CreateSubjectPairLecture} from "./CreateSubjectPairLecture";
@@ -28,15 +28,15 @@ export const initialSubjectTypeState = {
   practiseFirstDate: new Date(),
   laborotoryFirstDate: new Date(),
   lectureTime: new Date(),
-  lectureDates: [] as Date[],
+  lectureDates: [new Date()] as Date[],
   practiseCount: 0 as number,
   practiseWeek: '' as string,
   practiseTime: new Date(),
-  practiseDates: [] as Date[],
+  practiseDates: [new Date()] as Date[],
   laborotoryCount: 0 as number,
   laborotoryWeek: '' as string,
   laborotoryTime: new Date(),
-  laborotoryDates: [] as Date[]
+  laborotoryDates: [new Date()] as Date[]
 } as const;
 
 type PropsType = {
@@ -46,6 +46,7 @@ type PropsType = {
 export const CreateSubject: React.FC<PropsType> = ({close}) => {
   const dispatch = useDispatch();
   const [newSubjects, setNewSubjects] = useState<CreateSubjectType[]>([]);
+  const isMobile = useMediaQuery('(min-width: 450px)');
   const Days = useMemo(() => [
     'Понедельник',
     'Вторник',
@@ -213,7 +214,7 @@ export const CreateSubject: React.FC<PropsType> = ({close}) => {
             container
             spacing={1}
             direction='column'
-            sx={{minWidth: '25rem'}}
+            sx={{minWidth: `${isMobile ? '25rem' : '18rem'}`}}
           >
             <Grid container sx={{paddingTop: '0 !important'}}>
               <TextField
@@ -273,17 +274,18 @@ export const CreateSubject: React.FC<PropsType> = ({close}) => {
                 </List>
             </Grid>}
             <Grid container spacing={2} sx={{marginTop: '.3rem'}}>
-              <Grid item xs={4}>
+              <Grid item xs={12} sm={4}>
                 <CreateSubjectPairLecture {...props}/>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={12} sm={4}>
                 <CreateSubjectPairPractise {...props}/>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={12} sm={4}>
                 <CreateSubjectPairLaborotory {...props}/>
               </Grid>
               <ButtonGroup
                 variant='outlined'
+                size='small'
                 sx={{marginLeft: 'auto', marginTop: '.3rem'}}
               >
                 {props.values.themes && <Button
@@ -302,7 +304,7 @@ export const CreateSubject: React.FC<PropsType> = ({close}) => {
                 >Добавить тему</Button>}
                 <Button
                   type='submit'
-                >Добавить предмет</Button>
+                >Создать предмет</Button>
               </ButtonGroup>
             </Grid>
           </Grid>

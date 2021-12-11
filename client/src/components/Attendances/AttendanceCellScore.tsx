@@ -37,7 +37,7 @@ export const AttendanceCellScore: React.FC<PropsType> = ({
   return (
     <StyledTableCell
       align='center'
-      onDoubleClick={() => setShowPop((prev) => !prev)}
+      onClick={() => setShowPop((prev) => !prev)}
     >
       {showPop ? <Box sx={{
         display: 'flex',
@@ -52,7 +52,7 @@ export const AttendanceCellScore: React.FC<PropsType> = ({
             id="score"
             type='number'
             value={Number(score)}
-            onDoubleClick={(e) => {
+            onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
             }}

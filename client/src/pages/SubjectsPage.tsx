@@ -4,7 +4,7 @@ import {
   Card,
   CardContent,
   CardHeader, Divider,
-  Grid, IconButton, Typography
+  Grid, IconButton, Typography, useMediaQuery
 } from "@mui/material";
 import {useTypedSelector} from "../hooks/useTypedSelector";
 import {
@@ -23,6 +23,7 @@ export const SubjectsPage: React.FC = () => {
   const [openInfo, setOpenInfo] = useState(false);
   const [name, setName] = useState('');
   const [openCreate, setOpenCreate] = useState(false);
+  const isMobile = useMediaQuery('(min-width: 400px)');
   const {
     subjectsInfos,
     loading,
@@ -50,7 +51,7 @@ export const SubjectsPage: React.FC = () => {
   return (
     <Grid container direction='column'>
       <Grid container>
-        <Grid item xs={6}>
+        <Grid item xs={isMobile ? 6 : 12}>
           <Typography
             variant="h5"
             component="div"
@@ -58,9 +59,9 @@ export const SubjectsPage: React.FC = () => {
           >Ваши предметы</Typography>
         </Grid>
         <Button
-          sx={{marginLeft: 'auto'}}
+          sx={{marginLeft: `${isMobile ? 'auto' : '.3rem'}`}}
           onClick={() => setOpenCreate(true)}
-        >Добавить новый предмет</Button>
+        >Добавить предмет</Button>
       </Grid>
       <Grid
         container
@@ -92,7 +93,7 @@ export const SubjectsPage: React.FC = () => {
                         >{vKey}</Typography>
                       </Grid>
                       {[].map.call(vValue, date => (
-                        <Grid item xs={4} sm={6} md={4} key={date}>
+                        <Grid item xs={6} md={4} key={date}>
                           <Typography
                             variant="body2"
                             align='center'

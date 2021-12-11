@@ -59,6 +59,7 @@ namespace Kitias.API
 			});
 			app.UseMiddleware<AuthenticationMiddleware>();
 			app.UseMiddleware<ErrorHandlerMiddleware>();
+			app.UseHttpsRedirection();
 			app.UseRouting();
 			app.UseCors("CorsPolicy");
 			app.UseAuthentication();

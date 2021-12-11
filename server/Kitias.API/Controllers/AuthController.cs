@@ -288,7 +288,7 @@ namespace Kitias.API.Controllers
 				{
 					HttpOnly = true,
 					Path = "/api",
-					Expires = DateTime.UtcNow.AddHours(1),
+					Expires = DateTime.UtcNow.AddSeconds(10),
 					MaxAge = TimeSpan.FromHours(1)
 				}
 			);

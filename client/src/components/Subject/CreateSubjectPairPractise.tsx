@@ -69,6 +69,7 @@ export const CreateSubjectPairPractise: React.FC<FormikProps<typeof initialSubje
                     <TextField
                       id='practiseTime'
                       {...params}
+                      fullWidth
                       error={!!errors.practiseTime}
                     />}
               />
@@ -89,6 +90,7 @@ export const CreateSubjectPairPractise: React.FC<FormikProps<typeof initialSubje
                     <TextField
                       id='practiseFirstDate'
                       {...params}
+                      fullWidth
                       error={!!errors.practiseFirstDate}
                     />}
               />
@@ -97,6 +99,7 @@ export const CreateSubjectPairPractise: React.FC<FormikProps<typeof initialSubje
       {values.practiseWeek === 'По определенным данным' &&
       <Grid item>
           <MultipleDatePicker
+              id='practiseDates'
               dates={values.practiseDates}
               setDates={(dates: Date[]) => setFieldValue('practiseDates', dates)}
               error={!!errors.practiseDates}

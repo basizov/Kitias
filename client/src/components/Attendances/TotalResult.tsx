@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Box,
   Paper, styled,
@@ -6,7 +6,7 @@ import {
   TableCell,
   TableContainer,
   TableRow,
-  Typography
+  Typography, useMediaQuery
 } from "@mui/material";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {useDispatch} from "react-redux";
@@ -18,12 +18,19 @@ import {StyledTableHead, StyledTableHeadCell} from "./AttendancesTable";
 const StyledBox = styled(Box)({
   display: 'flex',
   justifyContent: 'center',
+  flexWrap: 'wrap',
+  maxWidth: '100%',
+  margin: '0 auto',
   gap: '.3rem'
 });
 
 export const TotalResult: React.FC = () => {
   const dispatch = useDispatch();
   const params = useParams();
+  const isTablet = useMediaQuery('(min-width: 760px)');
+  const isMobile = useMediaQuery('(min-width: 560px)');
+  const isGrade = useMediaQuery('(min-width: 360px)');
+  const [selectedTab, setSelectedTab] = useState('Лекции');
   const {
     loadingSA,
     selectedSheduler,
@@ -82,70 +89,78 @@ export const TotalResult: React.FC = () => {
             <StyledTableHeadCell
               align='center'
               sx={{borderRight: 1, borderRightColor: 'grey.800'}}
-            >{selectedSheduler}</StyledTableHeadCell>
+            >{isMobile ? selectedSheduler : ''}</StyledTableHeadCell>
             <StyledTableHeadCell
               align='center'
-            >Лекции</StyledTableHeadCell>
+              onClick={() => setSelectedTab('Лекции')}
+            >{`${!isMobile ? 'Л' : 'Лекции'}`}</StyledTableHeadCell>
             <StyledTableHeadCell
               align='center'
-            >Практики</StyledTableHeadCell>
+              onClick={() => setSelectedTab('Практики')}
+            >{`${!isMobile ? 'П' : 'Практики'}`}</StyledTableHeadCell>
             <StyledTableHeadCell
               align='center'
-            >Лабороторные работы</StyledTableHeadCell>
+              onClick={() => setSelectedTab('Лабы')}
+            >{`${!isMobile ? 'ЛР' : 'Лабороторные работы'}`}</StyledTableHeadCell>
             <StyledTableHeadCell
               align='center'
             >Σ</StyledTableHeadCell>
-            <StyledTableHeadCell
+            {isGrade && <StyledTableHeadCell
               align='center'
-            >Оценка</StyledTableHeadCell>
+            >{`${!isMobile ? 'О' : 'Оценка'}`}</StyledTableHeadCell>}
           </TableRow>
         </StyledTableHead>
         <TableBody>
           {sAttendances.map(s => (
             <TableRow key={s.id}>
-              <TableCell>{s.studentName}</TableCell>
               <TableCell>
-                <StyledBox>
-                  {s.lectures.map(l => (
-                    <Typography
-                      key={l.id}
-                      color={selectColor(l.attended)}
-                    >{l.score}</Typography>
-                  ))}
-                </StyledBox>
+                {isMobile ? s.studentName : s.studentName.split(' ')[0]}
               </TableCell>
-              <TableCell>
-                <StyledBox>
-                  {s.practises.map(p => (
-                    <Typography
-                      key={p.id}
-                      color={selectColor(p.attended)}
-                    >{p.score}</Typography>
-                  ))}
-                </StyledBox>
-              </TableCell>
-              <TableCell>
-                <StyledBox>
-                  {s.laborotories.map(l => (
-                    <Typography
-                      key={l.id}
-                      color={selectColor(l.attended)}
-                    >{l.score}</Typography>
-                  ))}
-                </StyledBox>
-              </TableCell>
+              {(isTablet || selectedTab === 'Лекции') &&
+              <TableCell colSpan={isTablet ? 1 : 3}>
+                  <StyledBox>
+                    {s.lectures.map(l => (
+                      <Typography
+                        key={l.id}
+                        color={selectColor(l.attended)}
+                      >{l.score}</Typography>
+                    ))}
+                  </StyledBox>
+              </TableCell>}
+              {(isTablet || selectedTab === 'Практики') &&
+              <TableCell colSpan={isTablet ? 1 : 3}>
+                  <StyledBox>
+                    {s.practises.map(p => (
+                      <Typography
+                        key={p.id}
+                        color={selectColor(p.attended)}
+                      >{p.score}</Typography>
+                    ))}
+                  </StyledBox>
+              </TableCell>}
+              {(isTablet || selectedTab === 'Лабы') &&
+              <TableCell colSpan={isTablet ? 1 : 3}>
+                  <StyledBox>
+                    {s.laborotories.map(l => (
+                      <Typography
+                        key={l.id}
+                        color={selectColor(l.attended)}
+                      >{l.score}</Typography>
+                    ))}
+                  </StyledBox>
+              </TableCell>}
               <TableCell
                 align='center'
                 sx={{
                   backgroundColor: selectBackColor(Number(s.raiting))
                 }}
               >{s.raiting}</TableCell>
-              <TableCell
+              {isGrade && <TableCell
                 align='center'
                 sx={{
                   backgroundColor: selectGrade(s.grade)
                 }}
-              >{s.grade}</TableCell>
+              >{s.grade}</TableCell>}
             </TableRow>
           ))}
         </TableBody>

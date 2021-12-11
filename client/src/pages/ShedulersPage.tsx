@@ -5,7 +5,7 @@ import {
   List,
   ListItem, ListItemButton,
   ListItemIcon,
-  ListItemText, Typography
+  ListItemText, Typography, useMediaQuery
 } from "@mui/material";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
@@ -28,6 +28,7 @@ export const ShedulersPage: React.FC = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
   const [selectedSheduler, setSelectedSheduler] = useState<ShedulerListType | null>(null);
   const {shedulers, loadingInitial} = useTypedSelector(s => s.attendance);
+  const isMobile = useMediaQuery('(min-width: 430px)');
 
   useEffect(() => {
     dispatch(getShedulers());
@@ -60,18 +61,18 @@ export const ShedulersPage: React.FC = () => {
           >Журналы посещений</Typography>
         </Grid>
         <Button
-          sx={{marginLeft: 'auto'}}
+          sx={{marginLeft: `${isMobile ? 'auto' : '.3rem'}`}}
           onClick={() => {
             dispatch(attendanceActions.setGroupStudents([]));
             setOpenCreate(true);
           }}
-        >Добавить новый журнал</Button>
+        >Добавить журнал</Button>
       </Grid>
       <Grid item>
         <List sx={{padding: 0}}>
           <Grid container spacing={1}>
             {shedulers.map((s) => (
-              <Grid item xs={6} sm={4} md={3} key={s.id}>
+              <Grid item xs={12} sm={6} md={4} key={s.id}>
                 <ListItem disablePadding sx={{position: 'relative'}}>
                   <ListItemButton
                     onClick={async () => {

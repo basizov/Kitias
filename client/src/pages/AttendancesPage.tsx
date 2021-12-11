@@ -48,6 +48,7 @@ export const AttendancesPage: React.FC = () => {
         onChange={(_, selectedTab) => setTab(selectedTab)}
         variant='scrollable'
         scrollButtons='auto'
+        sx={{maxWidth: '100%'}}
       >
         <StyledTab label='Посещений лекций'/>
         <StyledTab label='Посещение практик'/>

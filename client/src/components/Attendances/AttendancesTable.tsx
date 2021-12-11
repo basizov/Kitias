@@ -5,7 +5,7 @@ import {
   TableCell,
   TableContainer, TableFooter,
   TableHead, TablePagination,
-  TableRow
+  TableRow, useMediaQuery
 } from "@mui/material";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {
@@ -32,6 +32,10 @@ export const StyledTableHead = styled(TableHead)(({theme}) => ({
   backgroundColor: theme.palette.action.selected
 }));
 
+export const StyledPaper = styled(Paper)(() => ({
+  maxWidth: '100%'
+}));
+
 type PropsType = {
   subjectType: 'Лекция' | 'Практика' | 'Лабораторная работа';
   withScore?: boolean;
@@ -41,7 +45,12 @@ export const AttendancesTable: React.FC<PropsType> = ({
                                                         subjectType,
                                                         withScore = false
                                                       }) => {
-  const pageSize = useMemo(() => 4, []);
+  const isTablet = useMediaQuery('(min-width: 840px)');
+  const isMobile = useMediaQuery('(min-width: 400px)');
+  const pageSize = useMemo(
+    () => isTablet ? 4 : isMobile ? 2 : 1,
+    [isMobile, isTablet]
+  );
   const [page, setPage] = useState(0);
   const {attendances, selectedSheduler} = useTypedSelector(s => s.attendance);
   const {subjects} = useTypedSelector(s => s.subject);
@@ -60,7 +69,7 @@ export const AttendancesTable: React.FC<PropsType> = ({
   }, [attendances, subjectType]);
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={StyledPaper}>
       <Table stickyHeader>
         <StyledTableHead>
           <TableRow>
@@ -94,7 +103,7 @@ export const AttendancesTable: React.FC<PropsType> = ({
           {Object.entries(selectedAttendances).map(([key, value]) => (
             <StyledTableRow key={key}>
               <TableCell
-                sx={{width: '15rem', height: '2.35rem'}}
+                sx={{maxWidth: '15rem', height: '2.35rem'}}
                 aria-describedby={key}
               >{key}</TableCell>
               {[].map.call(value, (a: AttendenceType, i) => {

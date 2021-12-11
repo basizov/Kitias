@@ -32,12 +32,17 @@ const RootPaper = styled(Paper)({
   borderRadius: 0
 });
 
-const StyledIconButton = styled(IconButton)({
+const StyledIconButton = styled(IconButton)(({theme}) => ({
   position: 'fixed',
   bottom: ".3rem",
   right: ".3rem",
-  zIndex: 10001
-});
+  zIndex: 10001,
+  [theme.breakpoints.down('sm')]: {
+    top: '.5rem',
+    right: '1rem',
+    bottom: 'auto'
+  }
+}));
 
 export const ColorModeContext = createContext({
   toggleColorMode: () => {
@@ -45,23 +50,28 @@ export const ColorModeContext = createContext({
 });
 
 const Main = styled('main', {shouldForwardProp: (prop) => prop !== 'open'})<{
-  open?: boolean;
-}>(({theme, open}) => ({
-  flexGrow: 1,
-  padding: theme.spacing(1),
-  transition: theme.transitions.create('margin', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  marginLeft: theme.spacing(7),
-  ...(open && {
+    open?: boolean;
+  }>(({theme, open}) => ({
+    flexGrow: 1,
+    padding: theme.spacing(1),
     transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
     }),
-    // marginLeft: 300,
-  }),
-}));
+    marginLeft: theme.spacing(7),
+    ...(open && {
+      transition: theme.transitions.create('margin', {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    }),
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: 0,
+      marginTop: `calc(${theme.spacing(7)} + 1px)`,
+      height: 'auto'
+    }
+  }))
+;
 
 export const App: React.FC = () => {
   const dispatch = useDispatch();
@@ -79,6 +89,15 @@ export const App: React.FC = () => {
   const theme = useMemo(() => createTheme({
     palette: {
       mode: colorTheme
+    },
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 620,
+        md: 900,
+        lg: 1200,
+        xl: 1536,
+      }
     },
     components: {
       MuiCssBaseline: {
