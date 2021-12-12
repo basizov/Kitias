@@ -35,5 +35,9 @@ namespace Kitias.Providers.Models.Subject
 		/// Subject theme
 		/// </summary>
 		public string Theme { get; init; }
+		/// <summary>
+		/// Flag to give scores
+		/// </summary>
+		public bool IsGiveScore { get; set; } = true;
 	}
 }

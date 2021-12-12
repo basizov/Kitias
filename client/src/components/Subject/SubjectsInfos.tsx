@@ -36,8 +36,8 @@ export const SubjectsInfos: React.FC<PropsType> = ({
                                                    }) => {
   const dispatch = useDispatch();
   const [updateOpen, setUpdateOpen] = useState(false);
-  const isTablet = useMediaQuery('(min-width: 450px)');
   const [selectedSubject, setSelectedSubject] = useState<SubjectType | null>(null);
+  const isTablet = useMediaQuery('(min-width: 450px)');
 
   const initialState = useMemo(() => ({
     name: name
@@ -100,7 +100,7 @@ export const SubjectsInfos: React.FC<PropsType> = ({
         </Formik>
       </Grid>
       <Grid container sx={{
-        maxWidth: isTablet ? '35rem' : '17rem',
+        maxWidth: isTablet ? '100%' : '17rem',
         maxHeight: '10rem',
         overflowY: 'auto'
       }}>
@@ -138,7 +138,7 @@ export const SubjectsInfos: React.FC<PropsType> = ({
                 ><RotateLeft/></IconButton>
                 <IconButton
                   color='error'
-                  onClick={() => dispatch(deleteSubject(subject.id))}
+                  onClick={async () => await dispatch(deleteSubject(subject.id))}
                 ><Delete/></IconButton>
               </Box>
             </Grid>

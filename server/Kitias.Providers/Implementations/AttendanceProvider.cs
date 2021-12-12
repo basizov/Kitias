@@ -12,7 +12,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -151,6 +150,39 @@ namespace Kitias.Providers.Implementations
 
 			if (sheduler == null)
 				return ReturnFailureResult<IEnumerable<StudentAttendanceResult>>($"Couldn't find sheduler with id {id}", "Couldn't find sheduler");
+			var	sAttendances = await _unitOfWork.ShedulerAttendace
+				.FindBy(s => s.Id == id)
+				.Include(s => s.StudentAttendances)
+				.SingleOrDefaultAsync();
+			foreach (var sAttendance in sAttendances.StudentAttendances)
+			{
+				var studentAttendances = sheduler.Attendances
+					.Where(a => a.StudentName == sAttendance.StudentName);
+				var raiting = studentAttendances
+					.Average(sa => sa.Score);
+
+				if (sAttendance.IsAutomatic)
+				{
+					sAttendance.Raiting = (byte)Convert.ToInt32(raiting);
+					if (raiting == 0)
+						sAttendance.Grade = Grade.None;
+					else if (raiting is > 0 and < 51)
+						sAttendance.Grade = Grade.NotAdmitted;
+					else if (raiting < 64)
+						sAttendance.Grade = Grade.Retake;
+					else if (raiting < 72)
+						sAttendance.Grade = Grade.Satisfactorily;
+					else if (raiting < 81)
+						sAttendance.Grade = Grade.Good;
+					else if (raiting > 80)
+						sAttendance.Grade = Grade.Excellent;
+					_unitOfWork.StudentAttendace.Update(sAttendance);
+				}
+			}
+			var isSave = await _unitOfWork.SaveChangesAsync();
+
+			if (isSave <= 0)
+				throw new ApplicationException("Couldn't save grade");
 			var result = new List<StudentAttendanceResult>();
 
 			foreach (var sAttendance in sheduler.StudentAttendances)
@@ -169,7 +201,6 @@ namespace Kitias.Providers.Implementations
 					Practises = _mapper.Map<IEnumerable<SubjectTypeInfo>>(studentAttendances.Where(a => a.Subject.Type == SubjectType.Practise).OrderBy(s => s.Subject.Date))
 				});
 			}
-
 			_logger.LogInformation($"Take all student attendances of the scheduler {id}");
 			return ResultHandler.OnSuccess(result.OrderBy(s => s.StudentName) as IEnumerable<StudentAttendanceResult>);
 		}
@@ -365,6 +396,81 @@ namespace Kitias.Providers.Implementations
 			});
 		}
 
+		public async Task<Result<IEnumerable<StudentAttendanceDto>>> UpdateStudentAttendancesAsync(Guid id, IEnumerable<StudentAttendanceRequestModel> models)
+		{
+			var sheduler = await _unitOfWork.ShedulerAttendace
+				.FindByAndInclude(s => s.Id == id, s => s.StudentAttendances)
+				.SingleOrDefaultAsync();
+
+			if (sheduler == null)
+			{
+				return ReturnFailureResult<IEnumerable<StudentAttendanceDto>>(
+					$"Couldn't find sheduler with id {id}",
+					"Couldn't find sheduler"
+				);
+			}
+			return await TryCatchExecute(models, async (parameter) =>
+			{
+				var attendances = new List<StudentAttendance>();
+
+				foreach (var model in parameter)
+				{
+					if (await _unitOfWork.StudentAttendace.AnyAsync(s => s.StudentName == model.StudentName))
+						continue;
+					var newStudentAttendance = new StudentAttendance
+					{
+						Grade = Helpers.GetEnumMemberFromString<Grade>(model.Grade ?? "-"),
+						Raiting = byte.Parse(model.Raiting ?? "0"),
+						ShedulerId = id,
+						SubjectName = model.SubjectName
+					};
+
+					if (model.StudentId != null)
+					{
+						var student = await _unitOfWork.Student
+							.FindBy(s => s.Id == model.StudentId)
+							.Include(s => s.Person)
+							.SingleOrDefaultAsync();
+
+						if (student == null)
+						{
+							return ReturnFailureResult<IEnumerable<StudentAttendanceDto>>(
+								$"Couldn't find student with id {model.StudentId}",
+								"Couldn't find student"
+							);
+						}
+						newStudentAttendance.StudentId = model.StudentId;
+						_unitOfWork.StudentAttendace.Create(newStudentAttendance);
+						newStudentAttendance.Student = student;
+						attendances.Add(newStudentAttendance);
+					}
+					else if (model.StudentName != null)
+					{
+						newStudentAttendance.StudentName = model.StudentName;
+						_unitOfWork.StudentAttendace.Create(newStudentAttendance);
+						attendances.Add(newStudentAttendance);
+					}
+					else
+						return ReturnFailureResult<IEnumerable<StudentAttendanceDto>>("Enter students");
+					_logger.LogInformation($"Created new studenAttendance with id {newStudentAttendance.Id}");
+				}
+				var oldStudentAttendances = sheduler.StudentAttendances
+					.Where(a => !models.Any(m => m.StudentName == a.StudentName && m.SubjectName == a.SubjectName))
+					.ToList();
+
+				foreach (var sAttendance in oldStudentAttendances)
+					_unitOfWork.StudentAttendace.Delete(sAttendance);
+				var isSave = await _unitOfWork.SaveChangesAsync();
+
+				if (isSave <= 0)
+					throw new ApplicationException("Couldn't save new student attendances");
+				var result = _mapper.Map<IEnumerable<StudentAttendanceDto>>(attendances);
+
+				_logger.LogInformation("Student attendance was successfully created");
+				return ResultHandler.OnSuccess(result);
+			});
+		}
+
 		public async Task<Result<StudentAttendanceDto>> UpdateStudentAttendanceAsync(Guid id, UpdateStudentAttendanceModel model)
 		{
 			var studentAttendance = await _unitOfWork.StudentAttendace
@@ -380,8 +486,11 @@ namespace Kitias.Providers.Implementations
 					"Couldn't find student attendance"
 				);
 			}
-			if (model.Grade != null)
+			if (Helpers.GetEnumMemberFromString<Grade>(model.Grade)!= studentAttendance.Grade)
+			{
+				studentAttendance.IsAutomatic = false;
 				studentAttendance.Grade = Helpers.GetEnumMemberFromString<Grade>(model.Grade);
+			}
 			if (model.Raiting != null)
 				studentAttendance.Raiting = byte.Parse(model.Raiting);
 			return await TryCatchExecute(studentAttendance, async (parameter) =>
@@ -606,10 +715,10 @@ namespace Kitias.Providers.Implementations
 					"Couldn't find attendance"
 				);
 			}
-			if (model.Attended != null)
-				attendance.Attended = Helpers.GetEnumMemberFromString<AttendaceVariants>(model.Attended);
 			if (model.Score != null)
 				attendance.Score = byte.Parse(model.Score);
+			if (model.Attended != null)
+				attendance.Attended = Helpers.GetEnumMemberFromString<AttendaceVariants>(model.Attended);
 			return await TryCatchExecute(attendance, async (parameter) =>
 			{
 				var updateAttendance = _unitOfWork.Attendance.Update(parameter);
@@ -697,7 +806,8 @@ namespace Kitias.Providers.Implementations
 				worksheet.Cell(currentRow, currentColumn++).Value = $"Практика {i + 1}";
 			for (var i = 0; i < laborotories.Count; ++i)
 				worksheet.Cell(currentRow, currentColumn++).Value = $"Лабороторная работа {i + 1}";
-			worksheet.Cell(currentRow, currentColumn).Value = "Итого";
+			worksheet.Cell(currentRow, currentColumn++).Value = "Итого";
+			worksheet.Cell(currentRow, currentColumn).Value = "Оценка";
 			worksheet.Range(
 				worksheet.Cell(currentRow, currentColumn),
 				worksheet.Cell(currentRow + 1, currentColumn)
@@ -752,11 +862,13 @@ namespace Kitias.Providers.Implementations
 					++currentColumn;
 				}
 				var sAttendace = await _unitOfWork.StudentAttendace
-					.FindBy(s => s.StudentName == attendace.Key && s.SubjectName == sheduler.SubjectName)
+					.FindBy(s => s.StudentName.Equals(attendace.Key) && string.Compare(sheduler.SubjectName, s.SubjectName) == 0)
 					.SingleOrDefaultAsync();
 
+				worksheet.Cell(currentRow, currentColumn).Value = sAttendace.Raiting;
+				worksheet.Cell(currentRow, currentColumn++).Style.Fill.BackgroundColor = ColorizedCell(sAttendace.Raiting);
 				worksheet.Cell(currentRow, currentColumn).Value = Helpers.GetEnumMemberAttrValue(sAttendace.Grade);
-				worksheet.Cell(currentRow, currentColumn).Style.Fill.BackgroundColor = ColorizedCell(sAttendace.Raiting);
+				worksheet.Cell(currentRow, currentColumn++).Style.Fill.BackgroundColor = ColorizedCell(sAttendace.Grade);
 				currentColumn = 1;
 				++currentRow;
 			}
@@ -787,6 +899,21 @@ namespace Kitias.Providers.Implementations
 				return XLColor.YellowGreen;
 			else if (result > 50)
 				return XLColor.Yellow;
+			return XLColor.Red;
+		}
+
+		private static XLColor ColorizedCell(Grade grade)
+		{
+			if (grade == Grade.Excellent)
+				return XLColor.Green;
+			else if (grade == Grade.Good)
+				return XLColor.YellowGreen;
+			else if (grade == Grade.Satisfactorily)
+				return XLColor.Yellow;
+			else if (grade == Grade.Retake)
+				return XLColor.RedPigment;
+			else if (grade == Grade.NotAdmitted)
+				return XLColor.RedMunsell;
 			return XLColor.Red;
 		}
 	}

@@ -7,6 +7,7 @@ export type SubjectType = {
   week: string;
   theme: string;
   day: string;
+  isGiveScore: boolean;
 };
 
 type SubSubjectInfoType = {

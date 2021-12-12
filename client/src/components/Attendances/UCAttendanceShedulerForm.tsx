@@ -83,7 +83,10 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
   useEffect(() => {
     dispatch(getSubjectsNames());
     dispatch(getGroupsNames());
-  }, [dispatch]);
+    if (attendace) {
+      dispatch(getSubjects(attendace.subjectName));
+    }
+  }, [dispatch, attendace]);
 
   if (loadingHelper || loadingSubject) {
     return <Loading loading={loadingHelper || loadingSubject}/>;
@@ -106,7 +109,7 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
         });
         groupStudents.forEach(gs => sAttendances.push({
           studentName: gs,
-          subjectName: values.name
+          subjectName: values.selectedSubject
         }));
         if (isUpdating) {
           await dispatch(updateSheduler(attendace!.id,
@@ -114,7 +117,7 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
               groupNumber: values.selectedGroup,
               subjectName: values.selectedSubject,
               name: values.name
-            }, attendances));
+            }, attendances, sAttendances));
         } else {
           await dispatch(createSheduler({
             groupNumber: values.selectedGroup,

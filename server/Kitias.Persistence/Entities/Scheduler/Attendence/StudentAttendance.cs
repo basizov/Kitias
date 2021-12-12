@@ -48,5 +48,9 @@ namespace Kitias.Persistence.Entities.Scheduler.Attendence
 		/// Student grade
 		/// </summary>
 		public Grade Grade { get; set; }
+		/// <summary>
+		/// Student flag to modificate grade
+		/// </summary>
+		public bool IsAutomatic { get; set; } = true;
 	}
 }

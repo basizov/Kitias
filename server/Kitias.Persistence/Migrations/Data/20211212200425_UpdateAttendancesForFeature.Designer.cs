@@ -3,15 +3,17 @@ using System;
 using Kitias.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Kitias.Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211212200425_UpdateAttendancesForFeature")]
+    partial class UpdateAttendancesForFeature
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -111,6 +113,11 @@ namespace Kitias.Persistence.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("character varying(15)");
 
+                    b.Property<bool>("IsGiveScore")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
                     b.Property<byte>("Score")
                         .HasColumnType("smallint");
 
@@ -186,7 +193,9 @@ namespace Kitias.Persistence.Migrations
                         .HasColumnType("character varying(20)");
 
                     b.Property<bool>("IsAutomatic")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
 
                     b.Property<byte>("Raiting")
                         .HasColumnType("smallint");
@@ -276,9 +285,6 @@ namespace Kitias.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
-
-                    b.Property<bool>("IsGiveScore")
-                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -382,7 +388,7 @@ namespace Kitias.Persistence.Migrations
                         .HasForeignKey("StudentId");
 
                     b.HasOne("Kitias.Persistence.Entities.Scheduler.Subject", "Subject")
-                        .WithMany("Attendances")
+                        .WithMany()
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -481,8 +487,6 @@ namespace Kitias.Persistence.Migrations
 
             modelBuilder.Entity("Kitias.Persistence.Entities.Scheduler.Subject", b =>
                 {
-                    b.Navigation("Attendances");
-
                     b.Navigation("Groups");
                 });
 #pragma warning restore 612, 618

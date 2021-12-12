@@ -23,6 +23,7 @@ import {CreateStudentAttendanceType} from "../model/Attendance/CreateStudentAtte
 import {StudentAttendanceResultType} from "../model/Attendance/StudentAttendaceModel";
 import {saveAs} from "file-saver";
 import {SignUpType} from "../model/User/SugnUpModel";
+import {UpdateSAttendanceType} from "../model/Attendance/UpdateStudentAttendance";
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
@@ -36,6 +37,7 @@ enum Paths {
   TAKE_SUBJECTS_INFOS = '/Teacher/subjectsInfos',
   TAKE_SHEDULERS_PATH = '/AttendanceScheduler',
   TAKE_ATTENDANCES_PATH = '/AttendanceScheduler/',
+  TAKE_GRADES_PATH = '/AttendanceScheduler/attendances/grades',
   CREATE_ATTENDANCES_PATH = '/AttendanceScheduler',
   TAKE_SUBJECT = '/Subject'
 };
@@ -85,6 +87,7 @@ const auth = {
 
 const attendance = {
   shedulers: () => requests.get<ShedulerListType[]>(Paths.TAKE_SHEDULERS_PATH),
+  grades: () => requests.get<string[]>(Paths.TAKE_GRADES_PATH),
   studentsGroup: (id: string) => requests.get<ShedulerStudentsGroupType>(`${Paths.TAKE_SHEDULERS_PATH}/${id}/students`),
   details: (id: string) => requests.get<ShedulerListType>(`${Paths.TAKE_SHEDULERS_PATH}/${id}`),
   attendances: (id: string) => requests.get<AttendancesByStudents[]>(`${Paths.TAKE_ATTENDANCES_PATH}${id}/attendances`),
@@ -93,11 +96,15 @@ const attendance = {
   export: (id: string) => requests.getBlob(`${Paths.TAKE_ATTENDANCES_PATH}${id}/export`),
   createSheduler: (payload: CreateShedulerTYpe) => requests
     .post<ShedulerType>(Paths.CREATE_ATTENDANCES_PATH, payload),
+  updateSAttendance: (id: string, payload: UpdateSAttendanceType) => requests
+    .put(`${Paths.TAKE_SHEDULERS_PATH}/${id}/studentAttendances`, payload),
   updateSheduler: (id: string, payload: CreateShedulerTYpe) => requests
     .put<ShedulerType>(`${Paths.CREATE_ATTENDANCES_PATH}/${id}`, payload),
   deleteSheduler: (id: string) => requests.delete(`${Paths.CREATE_ATTENDANCES_PATH}/${id}`),
   createSAttendance: (id: string, payload: CreateStudentAttendanceType[]) => requests
     .post(`${Paths.TAKE_ATTENDANCES_PATH}${id}/studentAttendances`, payload),
+  updateStudentAttendance: (id: string, payload: CreateStudentAttendanceType[]) => requests
+    .put(`${Paths.TAKE_ATTENDANCES_PATH}${id}/studentAttendances/all`, payload),
   studentAttendances: (id: string) => requests
     .get<StudentAttendanceResultType[]>(`${Paths.TAKE_ATTENDANCES_PATH}${id}/studentAttendances`),
   createAttendances: (id: string, payload: CreateAttendanceType[]) => requests

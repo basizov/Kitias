@@ -461,6 +461,11 @@
             Subject day
             </summary>
         </member>
+        <member name="P:Kitias.Persistence.DTOs.SubjectDto.IsGiveScore">
+            <summary>
+            Flag to give scores
+            </summary>
+        </member>
         <member name="T:Kitias.Persistence.DTOs.TeacherDto">
             <summary>
             Teacher data transfer object
@@ -1040,6 +1045,11 @@
             Student grade
             </summary>
         </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Attendence.StudentAttendance.IsAutomatic">
+            <summary>
+            Student flag to modificate grade
+            </summary>
+        </member>
         <member name="T:Kitias.Persistence.Entities.Scheduler.Group">
             <summary>
             Group model
@@ -1145,9 +1155,19 @@
             Teacher info
             </summary>
         </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Subject.IsGiveScore">
+            <summary>
+            Flag to give scores
+            </summary>
+        </member>
         <member name="P:Kitias.Persistence.Entities.Scheduler.Subject.Groups">
             <summary>
             Subject groups
+            </summary>
+        </member>
+        <member name="P:Kitias.Persistence.Entities.Scheduler.Subject.Attendances">
+            <summary>
+            Attendance collection
             </summary>
         </member>
         <member name="T:Kitias.Persistence.Entities.Scheduler.SubjectGroup">
@@ -1293,6 +1313,41 @@
         <member name="F:Kitias.Persistence.Enums.Grade.None">
             <summary>
             Start of the session
+            </summary>
+        </member>
+        <member name="T:Kitias.Persistence.Enums.GradeNames">
+            <summary>
+            Class which stored all grade names
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.GradeNames.NONE_GRADE">
+            <summary>
+            None grade value
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.GradeNames.EXCELLENT_GRADE">
+            <summary>
+            summary grade value
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.GradeNames.GOOD_GRADE">
+            <summary>
+            Good grade value
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.GradeNames.SATISFACTORILY_GRADE">
+            <summary>
+            Satisfactorily grade value
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.GradeNames.RETAKE_GRADE">
+            <summary>
+            Bad grade value
+            </summary>
+        </member>
+        <member name="F:Kitias.Persistence.Enums.GradeNames.NOTADMITTED_GRADE">
+            <summary>
+            Too low grade value
             </summary>
         </member>
         <member name="T:Kitias.Persistence.Enums.PersonRoles">

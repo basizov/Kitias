@@ -17,6 +17,7 @@ import {MoreHoriz} from "@mui/icons-material";
 import {SubjectsInfos} from "../components/Subject/SubjectsInfos";
 import {ModalHoc} from "../components/HOC/ModalHoc";
 import {CreateSubject} from "../components/Subject/CreateSubject";
+import {format, parse} from "date-fns";
 
 export const SubjectsPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -43,6 +44,16 @@ export const SubjectsPage: React.FC = () => {
   const closeInfoModel = async () => {
     await dispatch(getSubjectsInfos());
     setOpenInfo(false);
+  };
+
+  const chooseColor = (date: string) => {
+    if (date === format(new Date(), 'dd.MM.yyyy')) {
+      return '#cfcf25';
+    } else if (parse(date, 'dd.MM.yyyy', new Date()) >
+      parse(format(new Date(), 'dd.MM.yyyy'), 'dd.MM.yyyy', new Date())) {
+      return '#a34e4e';
+    }
+    return '#2a8a21';
   };
 
   if (loadingInitial) {
@@ -92,12 +103,12 @@ export const SubjectsPage: React.FC = () => {
                           sx={{marginLeft: '.3rem'}}
                         >{vKey}</Typography>
                       </Grid>
-                      {[].map.call(vValue, date => (
+                      {[].map.call(vValue, (date: string) => (
                         <Grid item xs={6} md={4} key={date}>
                           <Typography
                             variant="body2"
                             align='center'
-                            color="text.secondary"
+                            color={chooseColor(date.split(' ')[0])}
                           >{date}</Typography>
                         </Grid>
                       ))}

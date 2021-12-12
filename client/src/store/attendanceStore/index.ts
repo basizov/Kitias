@@ -6,6 +6,7 @@ import {StudentAttendanceResultType} from "../../model/Attendance/StudentAttenda
 
 const initialState = {
   shedulers: [] as ShedulerListType[],
+  grades: [] as string[],
   sAttendances: [] as StudentAttendanceResultType[],
   shedulerGroup: '',
   selectedSheduler: '',
@@ -23,6 +24,8 @@ export const attendanceReducer = (state = initialState, action: AttendanceAction
   switch (action.type) {
     case 'SET_SHEDULERS':
       return {...state, shedulers: action.payload};
+    case 'SET_GRADES':
+      return {...state, grades: action.payload};
     case 'SET_SATTENDACES':
       return {...state, sAttendances: action.payload};
     case 'SET_SELECTED_SHEDULER':
@@ -55,6 +58,10 @@ export type AttendanceActionType = InferActionType<typeof attendanceActions>;
 export const attendanceActions = {
   setShedulers: (payload: ShedulerListType[]) => ({
     type: 'SET_SHEDULERS',
+    payload
+  } as const),
+  setGrades: (payload: string[]) => ({
+    type: 'SET_GRADES',
     payload
   } as const),
   setSAttendances: (payload: StudentAttendanceResultType[]) => ({

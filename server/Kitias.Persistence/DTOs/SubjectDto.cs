@@ -39,5 +39,9 @@ namespace Kitias.Persistence.DTOs
 		/// Subject day
 		/// </summary>
 		public string Day { get; init; }
+		/// <summary>
+		/// Flag to give scores
+		/// </summary>
+		public bool IsGiveScore { get; init; }
 	}
 }

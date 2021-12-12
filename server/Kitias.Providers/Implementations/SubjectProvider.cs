@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Kitias.Persistence.DTOs;
 using Kitias.Persistence.Entities.Scheduler;
+using Kitias.Persistence.Entities.Scheduler.Attendence;
+using Kitias.Persistence.Enums;
 using Kitias.Providers.Interfaces;
 using Kitias.Providers.Models;
 using Kitias.Providers.Models.Subject;
@@ -83,6 +85,21 @@ namespace Kitias.Providers.Implementations
 
 			if (teacher == null)
 				return ReturnFailureResult<IEnumerable<SubjectDto>>($"Couldn't find teacher with email {email}", "Couldn't find teacher");
+			var sheduler = await _unitOfWork.ShedulerAttendace
+				.FindByAndInclude(
+					s => s.SubjectName == subjects.First().Name,
+					s => s.StudentAttendances
+				).SingleOrDefaultAsync();
+			List<string> students = null;
+
+			if (sheduler != null)
+			{
+				students = sheduler.StudentAttendances
+					.Select(sa => sa.StudentName)
+					.Distinct()
+					.ToList();
+			}
+
 			//if (await _unitOfWork.Subject
 			//		.AnyAsync(s => s.Name == subject.Name && s.Type == Helpers.GetEnumMemberFromString<SubjectType>(subject.Type)))
 			//	return ReturnFailureResult<SubjectDto>("This subject have the same subject");
@@ -98,6 +115,22 @@ namespace Kitias.Providers.Implementations
 					var newSubject = _unitOfWork.Subject.Create(subjectEntity);
 
 					subjectsEntities.Add(newSubject);
+					if (students != null)
+					{
+						foreach (var student in students)
+						{
+							var newAttendance = new Attendance
+							{
+								ShedulerId = sheduler.Id,
+								Score = byte.Parse("0"),
+								Attended = Helpers.GetEnumMemberFromString<AttendaceVariants>("Н"),
+								SubjectId = subjectEntity.Id,
+								StudentName = student
+							};
+
+							_unitOfWork.Attendance.Create(newAttendance);
+						}
+					}
 				}
 				var isSave = await _unitOfWork.SaveChangesAsync();
 
@@ -133,7 +166,7 @@ namespace Kitias.Providers.Implementations
 				var shedulers = await _unitOfWork.ShedulerAttendace
 					.FindBy(s => s.SubjectName == name)
 					.ToListAsync();
-				
+
 				if (shedulers != null)
 				{
 					foreach (var sheduler in shedulers)
@@ -237,7 +270,7 @@ namespace Kitias.Providers.Implementations
 		public async Task<Result<SubjectDto>> UpdateSubjectAsync(Guid id, UpdateSubjectModel subject)
 		{
 			var findSubject = await _unitOfWork.Subject
-				.FindBy(s => s.Id == id)
+				.FindByAndInclude(s => s.Id == id, s => s.Attendances)
 				.SingleOrDefaultAsync();
 
 			if (findSubject == null)
@@ -260,6 +293,15 @@ namespace Kitias.Providers.Implementations
 					parameter.Day = updatedEntity.Day;
 				if (subject.Theme != null)
 					parameter.Theme = updatedEntity.Theme;
+				if (!subject.IsGiveScore)
+				{
+					parameter.IsGiveScore = updatedEntity.IsGiveScore;
+					foreach (var attendance in findSubject.Attendances)
+					{
+						attendance.Score = 100;
+						_unitOfWork.Attendance.Update(attendance);
+					}
+				}
 				var updateSubject = _unitOfWork.Subject.Update(parameter);
 				var isSave = await _unitOfWork.SaveChangesAsync();
 

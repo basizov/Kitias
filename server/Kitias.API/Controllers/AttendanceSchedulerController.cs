@@ -1,4 +1,5 @@
 ﻿using Kitias.Persistence.DTOs;
+using Kitias.Persistence.Enums;
 using Kitias.Providers.Interfaces;
 using Kitias.Providers.Models.Attendances;
 using Microsoft.AspNetCore.Http;
@@ -41,6 +42,29 @@ namespace Kitias.API.Controllers
 			if (!result.IsSuccess)
 				return BadRequest(result.Error);
 			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Take all attendances grades
+		/// </summary>
+		/// <returns>Shedulers</returns>
+		[HttpGet("attendances/grades")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<IEnumerable<string>>> TakeAttendanceGrades()
+		{
+			var grades = new List<string>
+			{
+				GradeNames.NOTADMITTED_GRADE,
+				GradeNames.RETAKE_GRADE,
+				GradeNames.SATISFACTORILY_GRADE,
+				GradeNames.GOOD_GRADE,
+				GradeNames.EXCELLENT_GRADE,
+				GradeNames.NONE_GRADE
+			};
+
+			return Ok(grades);
 		}
 
 		/// <summary>
@@ -214,7 +238,7 @@ namespace Kitias.API.Controllers
 		}
 
 		/// <summary>
-		/// Update student attendance
+		/// Update student attendance grade/raiting
 		/// </summary>
 		/// <param name="id">Id of student attendace</param>
 		/// <param name="model">Model to updart student attendace</param>
@@ -226,6 +250,25 @@ namespace Kitias.API.Controllers
 		public async Task<ActionResult<IEnumerable<StudentAttendanceDto>>> UpdateStudentAttendanceAsync(Guid id, UpdateStudentAttendanceModel model)
 		{
 			var result = await _attendanceProvider.UpdateStudentAttendanceAsync(id, model);
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Update student attendance like create
+		/// </summary>
+		/// <param name="id">Id of the sheduler</param>
+		/// <param name="models">Models to update student attendace</param>
+		/// <returns>Updated student attendances</returns>
+		[HttpPut("{id}/studentAttendances/all")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<IEnumerable<StudentAttendanceDto>>> UpdateStudentAttendanceAsync(Guid id, IEnumerable<StudentAttendanceRequestModel> models)
+		{
+			var result = await _attendanceProvider.UpdateStudentAttendancesAsync(id, models);
 
 			if (!result.IsSuccess)
 				return BadRequest(result.Error);

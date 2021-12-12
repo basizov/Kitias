@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Grid,
   styled,
@@ -8,7 +8,7 @@ import {
 import {AttendancesTable} from "../components/Attendances/AttendancesTable";
 import {
   getAttendances,
-  getAttendanceSubjects, getSheduler
+  getAttendanceSubjects, getGrades, getSheduler, getShedulerSAttendaces
 } from "../store/attendanceStore/asyncActions";
 import {useDispatch} from "react-redux";
 import {useParams} from "react-router";
@@ -24,7 +24,9 @@ export const AttendancesPage: React.FC = () => {
   const dispatch = useDispatch();
   const params = useParams();
   const [tab, setTab] = useState(0);
+  const [valueTab, setValueTab] = useState(0);
   const {loadingInitial} = useTypedSelector(s => s.attendance);
+  const {subjects} = useTypedSelector(s => s.subject);
 
   useEffect(() => {
     if (params.id) {
@@ -33,6 +35,13 @@ export const AttendancesPage: React.FC = () => {
       dispatch(getAttendanceSubjects(params.id));
     }
   }, [params.id, params.subjectName, dispatch]);
+
+  const checkLen = useCallback((subjectType: string) => {
+    const typeSubjects = subjects
+      .filter(s => s.type === subjectType);
+
+    return typeSubjects.filter(s => s.isGiveScore);
+  }, [subjects]);
 
   if (loadingInitial) {
     return <Loading loading={loadingInitial}/>;
@@ -45,7 +54,31 @@ export const AttendancesPage: React.FC = () => {
     >
       <Tabs
         value={tab}
-        onChange={(_, selectedTab) => setTab(selectedTab)}
+        onChange={async (_, selectedTab) => {
+          const lecCheck = checkLen('Лекция').length === 0;
+          const pracCheck = checkLen('Практика').length === 0;
+          const labCheck = checkLen('Лабораторная работа').length === 0;
+          const check = [
+            lecCheck,
+            pracCheck,
+            labCheck
+          ].filter(s => s).length;
+
+          if (selectedTab === 6 - check && params.id) {
+            await dispatch(getGrades());
+            await dispatch(getShedulerSAttendaces(params.id));
+          }
+          if (check === 1 && selectedTab > 4) {
+            setValueTab(selectedTab + 1);
+          } else if (check === 2 && selectedTab > 3) {
+            setValueTab(selectedTab + 2);
+          } else if (check === 3 && selectedTab > 2) {
+            setValueTab(selectedTab + 3);
+          } else {
+            setValueTab(selectedTab);
+          }
+          setTab(selectedTab);
+        }}
         variant='scrollable'
         scrollButtons='auto'
         sx={{maxWidth: '100%'}}
@@ -53,28 +86,32 @@ export const AttendancesPage: React.FC = () => {
         <StyledTab label='Посещений лекций'/>
         <StyledTab label='Посещение практик'/>
         <StyledTab label='Посещение лаб'/>
-        <StyledTab label='Работы по лекциям'/>
-        <StyledTab label='Работы по практикам'/>
-        <StyledTab label='Работы по лабам'/>
+        {checkLen('Лекция').length !== 0 &&
+        <StyledTab label='Работы по лекциям'/>}
+        {checkLen('Практика').length !== 0 &&
+        <StyledTab label='Работы по практикам'/>}
+        {checkLen('Лабораторная работа').length !== 0 &&
+        <StyledTab label='Работы по лабам'/>}
         <StyledTab label='Итог'/>
       </Tabs>
       <Grid item>
-        {tab === 0 && <AttendancesTable subjectType='Лекция'/>}
-        {tab === 1 && <AttendancesTable subjectType='Практика'/>}
-        {tab === 2 && <AttendancesTable subjectType='Лабораторная работа'/>}
-        {tab === 3 && <AttendancesTable
+        {valueTab === 0 && <AttendancesTable subjectType='Лекция'/>}
+        {valueTab === 1 && <AttendancesTable subjectType='Практика'/>}
+        {valueTab === 2 &&
+        <AttendancesTable subjectType='Лабораторная работа'/>}
+        {valueTab === 3 && <AttendancesTable
             subjectType='Лекция'
             withScore={true}
         />}
-        {tab === 4 && <AttendancesTable
+        {valueTab === 4 && <AttendancesTable
             subjectType='Практика'
             withScore={true}
         />}
-        {tab === 5 && <AttendancesTable
+        {valueTab === 5 && <AttendancesTable
             subjectType='Лабораторная работа'
             withScore={true}
         />}
-        {tab === 6 && <TotalResult/>}
+        {valueTab === 6 && <TotalResult/>}
       </Grid>
     </Grid>
   );

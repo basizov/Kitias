@@ -1,4 +1,5 @@
 ﻿using Kitias.Persistence.Entities.People;
+using Kitias.Persistence.Entities.Scheduler.Attendence;
 using Kitias.Persistence.Enums;
 using System;
 using System.Collections.Generic;
@@ -51,8 +52,16 @@ namespace Kitias.Persistence.Entities.Scheduler
 		/// </summary>
 		public Teacher Teacher { get; init; }
 		/// <summary>
+		/// Flag to give scores
+		/// </summary>
+		public bool IsGiveScore { get; set; } = true;
+		/// <summary>
 		/// Subject groups
 		/// </summary>
 		public virtual ICollection<SubjectGroup> Groups { get; init; }
+		/// <summary>
+		/// Attendance collection
+		/// </summary>
+		public virtual ICollection<Attendance> Attendances { get; init; }
 	}
 }

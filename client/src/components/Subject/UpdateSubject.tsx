@@ -1,6 +1,6 @@
 import {
-  Button,
-  FormControl,
+  Button, ButtonGroup, Checkbox,
+  FormControl, FormControlLabel,
   Grid,
   InputLabel,
   MenuItem,
@@ -9,14 +9,17 @@ import {
 import {SubjectType} from "../../model/Subject/Subject";
 import {Form, Formik} from "formik";
 import {useDispatch} from "react-redux";
-import {updateSubject} from "../../store/subjectStore/asyncActions";
+import {
+  deleteSubject,
+  updateSubject
+} from "../../store/subjectStore/asyncActions";
 import React, {useMemo} from "react";
 import {DatePicker, LocalizationProvider, TimePicker} from "@mui/lab";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import {ru} from "date-fns/locale";
 import {format, parse} from "date-fns";
 import {SchemaOptions} from "yup/es/schema";
-import {object, string} from "yup/es";
+import {boolean, object, string} from "yup/es";
 
 type PropsType = {
   subject: SubjectType;
@@ -34,7 +37,8 @@ export const UpdateSubject: React.FC<PropsType> = ({
       type: string().required(),
       time: string().required(),
       date: string().required(),
-      theme: string()
+      theme: string(),
+      isGiveScore: boolean()
     });
   }, []);
 
@@ -69,7 +73,7 @@ export const UpdateSubject: React.FC<PropsType> = ({
         <Form onSubmit={handleSubmit}>
           <Grid
             container
-            sx={{minWidth: isTablet ? '35rem' : '18rem'}}
+            sx={{minWidth: isTablet ? '35rem' : '17rem'}}
             spacing={1}
           >
             <Grid item xs={12} sm={6}>
@@ -144,12 +148,32 @@ export const UpdateSubject: React.FC<PropsType> = ({
                 </Select>
               </FormControl>
             </Grid>
-            <Button
-              type='submit'
+            <FormControlLabel
+              sx={{marginLeft: 'auto'}}
+              control={<Checkbox
+                id='isGiveScore'
+                checked={values.isGiveScore}
+                onChange={handleChange}
+              />}
+              label="Возможность проставлять баллы"
+            />
+            <Grid item xs={12}></Grid>
+            <ButtonGroup
               variant='outlined'
               size='small'
-              sx={{marginLeft: 'auto', marginTop: '.5rem'}}
-            >Обновить</Button>
+              sx={{marginLeft: 'auto', marginTop: '-.5rem'}}
+            >
+              <Button
+                type='submit'
+              >Обновить</Button>
+              <Button
+                color='error'
+                onClick={async () => {
+                  await dispatch(deleteSubject(subject.id));
+                  close();
+                }}
+              >Удалить</Button>
+            </ButtonGroup>
           </Grid>
         </Form>
       )}

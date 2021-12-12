@@ -7,6 +7,7 @@ import {UpdateAttendaceType} from "../../model/Attendance/UpdateAttendace";
 import {CreateShedulerTYpe} from "../../model/Attendance/CreateShedulerModel";
 import {CreateAttendanceType} from "../../model/Attendance/CreateAttendanceModel";
 import {CreateStudentAttendanceType} from "../../model/Attendance/CreateStudentAttendance";
+import {UpdateSAttendanceType} from "../../model/Attendance/UpdateStudentAttendance";
 
 type AsyncThunkType = ThunkAction<Promise<void>,
   null,
@@ -28,6 +29,47 @@ export const getShedulers = (): AsyncThunkType => {
       console.log(error)
     } finally {
       dispatch(attendanceActions.setLoadingInitial(false));
+    }
+  }
+};
+
+export const getGrades = (): AsyncThunkType => {
+  return async dispatch => {
+    dispatch(attendanceActions.setLoading(true));
+    try {
+      const response = await API.attendance.grades();
+
+      if (response) {
+        dispatch(attendanceActions.setGrades(response));
+      }
+    } catch (e) {
+      const error = e as ServerErrorType;
+
+      console.log(error)
+    } finally {
+      dispatch(attendanceActions.setLoading(false));
+    }
+  }
+};
+
+export const updateSAttendance = (
+  id: string,
+  payload: UpdateSAttendanceType
+): AsyncThunkType => {
+  return async dispatch => {
+    dispatch(attendanceActions.setLoading(true));
+    try {
+      const response = await API.attendance.updateSAttendance(id, payload);
+
+      if (response) {
+        dispatch(attendanceActions.setError(''));
+      }
+    } catch (e) {
+      const error = e as ServerErrorType;
+
+      console.log(error)
+    } finally {
+      dispatch(attendanceActions.setLoading(false));
     }
   }
 };
@@ -142,7 +184,8 @@ export const createSheduler = (
 export const updateSheduler = (
   id: string,
   payload: CreateShedulerTYpe,
-  attendances: CreateAttendanceType[]
+  attendances: CreateAttendanceType[],
+  sAttendances: CreateStudentAttendanceType[]
 ): AsyncThunkType => {
   return async dispatch => {
     dispatch(attendanceActions.setLoading(true));
@@ -154,8 +197,12 @@ export const updateSheduler = (
           id,
           attendances
         );
+        const responseSAttendances = await API.attendance.updateStudentAttendance(
+          id,
+          sAttendances
+        );
 
-        if (responseAttendances) {
+        if (responseAttendances && responseSAttendances) {
           dispatch(attendanceActions.setError(''));
         }
       }

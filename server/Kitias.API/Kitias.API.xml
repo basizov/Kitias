@@ -22,6 +22,12 @@
             </summary>
             <returns>Shedulers</returns>
         </member>
+        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.TakeAttendanceGrades">
+            <summary>
+            Take all attendances grades
+            </summary>
+            <returns>Shedulers</returns>
+        </member>
         <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.TakeShedulerAsync(System.Guid)">
             <summary>
             Take sheduler by id
@@ -89,11 +95,19 @@
         </member>
         <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.UpdateStudentAttendanceAsync(System.Guid,Kitias.Providers.Models.Attendances.UpdateStudentAttendanceModel)">
             <summary>
-            Update student attendance
+            Update student attendance grade/raiting
             </summary>
             <param name="id">Id of student attendace</param>
             <param name="model">Model to updart student attendace</param>
             <returns>Update student attendance</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.UpdateStudentAttendanceAsync(System.Guid,System.Collections.Generic.IEnumerable{Kitias.Providers.Models.Attendances.StudentAttendanceRequestModel})">
+            <summary>
+            Update student attendance like create
+            </summary>
+            <param name="id">Id of the sheduler</param>
+            <param name="models">Models to update student attendace</param>
+            <returns>Updated student attendances</returns>
         </member>
         <member name="M:Kitias.API.Controllers.AttendanceSchedulerController.DeleteStudentAttendanceAsync(System.Guid)">
             <summary>

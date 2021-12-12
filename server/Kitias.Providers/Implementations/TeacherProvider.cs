@@ -130,7 +130,7 @@ namespace Kitias.Providers.Implementations
 				return ReturnFailureResult<IEnumerable<SubjectDto>>($"Teacher with email ${email} doesn't existed", "Couldn't find this teacher");
 			var result = _mapper.Map<IEnumerable<SubjectDto>>(teacher.Subjects
 				.OrderBy(s => s.Date)
-				.Where(s => s.Name == name)
+				.Where(s => s.Name.Equals(name))
 			);
 
 			_logger.LogInformation($"Take all subjects of teacher {email}");

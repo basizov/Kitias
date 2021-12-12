@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
   Box,
   FormControl, IconButton, OutlinedInput,
@@ -12,6 +12,7 @@ import {
   AttendenceType
 } from "../../model/Attendance/Attendence";
 import {StyledTableCell} from "./AttendanceCell";
+import {format, parse} from "date-fns";
 
 type PropsType = {
   identifier: string;
@@ -19,6 +20,7 @@ type PropsType = {
   defaultAttended: string;
   ownKey: string;
   base: AttendenceType;
+  showAll?: boolean;
 };
 
 export const AttendanceCellScore: React.FC<PropsType> = ({
@@ -26,18 +28,33 @@ export const AttendanceCellScore: React.FC<PropsType> = ({
                                                            title,
                                                            defaultAttended,
                                                            ownKey,
-                                                           base
+                                                           base,
+                                                           showAll = false
                                                          }) => {
   const dispatch = useDispatch();
   const [showPop, setShowPop] = useState(false);
   const [changed, setChanged] = useState(false);
   const [score, setScore] = useState(Number(title));
   const {attendances} = useTypedSelector(s => s.attendance);
+  const isNotValid = useMemo(
+    () => parse(base.date, 'dd.MM.yyyy', new Date()) >
+      parse(format(new Date(), 'dd.MM.yyyy'), 'dd.MM.yyyy', new Date()),
+    [base]
+  );
+
+  useEffect(() => {
+    setShowPop(showAll);
+  }, [showAll]);
 
   return (
     <StyledTableCell
       align='center'
-      onClick={() => setShowPop((prev) => !prev)}
+      onClick={() => {
+        if (isNotValid) {
+          return;
+        }
+        setShowPop((prev) => !prev);
+      }}
     >
       {showPop ? <Box sx={{
         display: 'flex',

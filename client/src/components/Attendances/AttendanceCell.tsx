@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Button, ButtonGroup, styled, TableCell} from "@mui/material";
 import {useDispatch} from "react-redux";
 import {updateAttendance} from "../../store/attendanceStore/asyncActions";
@@ -7,6 +7,7 @@ import {
 } from "../../model/Attendance/Attendence";
 import {attendanceActions} from "../../store/attendanceStore";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
+import {format, parse} from "date-fns";
 
 type PropsType = {
   identifier: string;
@@ -14,6 +15,7 @@ type PropsType = {
   defaultScore: string;
   ownKey: string;
   base: AttendenceType;
+  showAll?: boolean;
 };
 
 export const StyledTableCell = styled(TableCell)({
@@ -28,13 +30,19 @@ export const AttendanceCell: React.FC<PropsType> = ({
                                                       title,
                                                       defaultScore,
                                                       base,
-                                                      ownKey
+                                                      ownKey,
+                                                      showAll = false
                                                     }) => {
   const dispatch = useDispatch();
   const [showPop, setShowPop] = useState(false);
   const [changed, setChanged] = useState(false);
   const [attendace, setAttendace] = useState('');
   const {attendances} = useTypedSelector(s => s.attendance);
+  const isNotValid = useMemo(
+    () => parse(base.date, 'dd.MM.yyyy', new Date()) >
+      parse(format(new Date(), 'dd.MM.yyyy'), 'dd.MM.yyyy', new Date()),
+    [base]
+  );
 
   const changeAttendace = async (attendace: string) => {
     const updatedAttendace = {
@@ -59,10 +67,19 @@ export const AttendanceCell: React.FC<PropsType> = ({
     ));
   };
 
+  useEffect(() => {
+    setShowPop(showAll);
+  }, [showAll]);
+
   return (
     <StyledTableCell
       align='center'
-      onClick={() => setShowPop((prev) => !prev)}
+      onClick={() => {
+        if (isNotValid) {
+          return;
+        }
+        setShowPop((prev) => !prev);
+      }}
     >
       {showPop ? <ButtonGroup>
         <Button
