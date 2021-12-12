@@ -3,7 +3,7 @@ import {
   Box, Button, ButtonGroup,
   CircularProgress,
   Grid, IconButton, TextField,
-  Typography
+  Typography, useMediaQuery
 } from "@mui/material";
 import {SubjectType} from "../../model/Subject/Subject";
 import {Check, Delete, RotateLeft} from "@mui/icons-material";
@@ -36,6 +36,7 @@ export const SubjectsInfos: React.FC<PropsType> = ({
                                                    }) => {
   const dispatch = useDispatch();
   const [updateOpen, setUpdateOpen] = useState(false);
+  const isTablet = useMediaQuery('(min-width: 450px)');
   const [selectedSubject, setSelectedSubject] = useState<SubjectType | null>(null);
 
   const initialState = useMemo(() => ({
@@ -99,37 +100,54 @@ export const SubjectsInfos: React.FC<PropsType> = ({
         </Formik>
       </Grid>
       <Grid container sx={{
+        maxWidth: isTablet ? '35rem' : '17rem',
         maxHeight: '10rem',
         overflowY: 'auto'
       }}>
         {subjects.map((subject) => (
-          <Grid container key={subject.id}>
-            <Grid item>
-              <Typography variant='subtitle1' component='div'>
-                {subject.type}. {subject.theme || 'Нет темы'}
-              </Typography>
-              <Typography variant='subtitle2' component='div'>
-                {subject.date}
+          <Grid
+            container
+            key={subject.id}
+            justifyContent='space-between'
+            alignItems='center'
+          >
+            <Grid item sx={{maxWidth: '67%'}}>
+              <Typography
+                variant='subtitle1'
+                component='div'
+              >
+                <Box>{`${subject.type}. `}</Box>
+                <Box
+                  sx={{
+                    whiteSpace: 'nowrap',
+                    textOverflow: 'ellipsis',
+                    overflow: 'hidden'
+                  }}
+                >{`${subject.theme || 'Нет темы'}`}</Box>
+                <Box>{`${subject.date}`}</Box>
               </Typography>
             </Grid>
-            <Box sx={{marginLeft: 'auto'}}>
-              <IconButton
-                color='warning'
-                onClick={() => {
-                  setSelectedSubject(subject);
-                  setUpdateOpen(true);
-                }}
-              ><RotateLeft/></IconButton>
-              <IconButton
-                color='error'
-                onClick={() => dispatch(deleteSubject(subject.id))}
-              ><Delete/></IconButton>
-            </Box>
+            <Grid item>
+              <Box>
+                <IconButton
+                  color='warning'
+                  onClick={() => {
+                    setSelectedSubject(subject);
+                    setUpdateOpen(true);
+                  }}
+                ><RotateLeft/></IconButton>
+                <IconButton
+                  color='error'
+                  onClick={() => dispatch(deleteSubject(subject.id))}
+                ><Delete/></IconButton>
+              </Box>
+            </Grid>
           </Grid>
         ))}
       </Grid>
       <ButtonGroup
-        sx={{marginLeft: 'auto'}}
+        sx={{marginLeft: 'auto', marginTop: '.3rem'}}
+        size='small'
       >
         <Button
           color='success'
@@ -137,14 +155,14 @@ export const SubjectsInfos: React.FC<PropsType> = ({
             await dispatch(exportSheduler(name));
             close();
           }}
-        >Экспортировать предмет</Button>
+        >Экспортировать</Button>
         <Button
           color='error'
           onClick={async () => {
             await dispatch(deleteSubjectByName(name));
             close();
           }}
-        >Удалить предмет</Button>
+        >Удалить</Button>
       </ButtonGroup>
       <ModalHoc
         open={updateOpen}

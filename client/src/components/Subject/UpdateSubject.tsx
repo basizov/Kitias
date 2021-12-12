@@ -4,7 +4,7 @@ import {
   Grid,
   InputLabel,
   MenuItem,
-  Select, TextField
+  Select, TextField, useMediaQuery
 } from "@mui/material";
 import {SubjectType} from "../../model/Subject/Subject";
 import {Form, Formik} from "formik";
@@ -28,6 +28,7 @@ export const UpdateSubject: React.FC<PropsType> = ({
                                                      close
                                                    }) => {
   const dispatch = useDispatch();
+  const isTablet = useMediaQuery('(min-width: 620px)');
   const validationSchema: SchemaOptions<SubjectType> = useMemo(() => {
     return object({
       type: string().required(),
@@ -68,10 +69,10 @@ export const UpdateSubject: React.FC<PropsType> = ({
         <Form onSubmit={handleSubmit}>
           <Grid
             container
-            sx={{minWidth: '35rem'}}
+            sx={{minWidth: isTablet ? '35rem' : '18rem'}}
             spacing={1}
           >
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={6}>
               <LocalizationProvider
                 dateAdapter={AdapterDateFns}
                 locale={ru}
@@ -85,25 +86,12 @@ export const UpdateSubject: React.FC<PropsType> = ({
                       id='updateSubjectTime'
                       error={!!errors.time}
                       {...params}
+                      fullWidth
                     />}
                 />
               </LocalizationProvider>
             </Grid>
-            <Grid item xs={4}>
-              <TextField
-                id="theme"
-                type="text"
-                variant="outlined"
-                fullWidth
-                onBlur={handleBlur}
-                value={values.theme}
-                onChange={handleChange}
-                onFocus={(e) => e.target.select()}
-                error={!!errors.theme}
-                label="Тема"
-              />
-            </Grid>
-            <Grid item xs={6} sm={4}>
+            <Grid item xs={12} sm={6}>
               <LocalizationProvider
                 dateAdapter={AdapterDateFns}
                 locale={ru}
@@ -118,11 +106,26 @@ export const UpdateSubject: React.FC<PropsType> = ({
                       id='updateSubjectDate'
                       error={!!errors.date}
                       {...params}
+                      fullWidth
                     />}
                 />
               </LocalizationProvider>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                id="theme"
+                type="text"
+                variant="outlined"
+                fullWidth
+                onBlur={handleBlur}
+                value={values.theme}
+                onChange={handleChange}
+                onFocus={(e) => e.target.select()}
+                error={!!errors.theme}
+                label="Тема"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
                 <InputLabel id="updateSubjectType-label">Тип</InputLabel>
                 <Select
@@ -136,7 +139,7 @@ export const UpdateSubject: React.FC<PropsType> = ({
                   <MenuItem value={'Лекция'}>Лекция</MenuItem>
                   <MenuItem value={'Практика'}>Практика</MenuItem>
                   <MenuItem
-                    value={'Лабороторная работа'}
+                    value={'Лабораторная работа'}
                   >Лабороторная работа</MenuItem>
                 </Select>
               </FormControl>
@@ -144,6 +147,7 @@ export const UpdateSubject: React.FC<PropsType> = ({
             <Button
               type='submit'
               variant='outlined'
+              size='small'
               sx={{marginLeft: 'auto', marginTop: '.5rem'}}
             >Обновить</Button>
           </Grid>

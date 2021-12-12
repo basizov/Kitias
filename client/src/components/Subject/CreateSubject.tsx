@@ -212,34 +212,36 @@ export const CreateSubject: React.FC<PropsType> = ({close}) => {
         <Form onSubmit={props.handleSubmit}>
           <Grid
             container
-            spacing={1}
-            direction='column'
-            sx={{minWidth: `${isMobile ? '25rem' : '18rem'}`}}
+            sx={{
+              minWidth: `${isMobile ? '25rem' : '17rem'}`
+            }}
           >
-            <Grid container sx={{paddingTop: '0 !important'}}>
-              <TextField
-                id="subjectName"
-                type="text"
-                variant="outlined"
-                fullWidth
-                onBlur={props.handleBlur}
-                value={props.values.subjectName}
-                onChange={props.handleChange}
-                onFocus={(e) => e.target.select()}
-                error={!!props.errors.subjectName}
-                label="Введите название предмета..."
-              />
-              <FormControlLabel
-                sx={{marginLeft: 'auto'}}
-                control={<Checkbox id='themes'/>}
-                label="Использовать темы предметов"
-                value={props.values.themes}
-                onChange={props.handleChange}
-              />
+            <Grid item xs={12}>
+              <Grid container sx={{paddingLeft: '0'}}>
+                <TextField
+                  id="subjectName"
+                  type="text"
+                  variant="outlined"
+                  fullWidth
+                  onBlur={props.handleBlur}
+                  value={props.values.subjectName}
+                  onChange={props.handleChange}
+                  onFocus={(e) => e.target.select()}
+                  error={!!props.errors.subjectName}
+                  label="Введите название предмета..."
+                />
+                <FormControlLabel
+                  sx={{marginLeft: 'auto'}}
+                  control={<Checkbox id='themes'/>}
+                  label="Использовать темы предметов"
+                  value={props.values.themes}
+                  onChange={props.handleChange}
+                />
+              </Grid>
             </Grid>
             {props.values.themes && <Grid
                 item
-                sx={{padding: '0 !important', marginTop: '.3rem'}}
+                xs={12}
             >
                 <TextField
                     id="newTheme"
@@ -260,7 +262,6 @@ export const CreateSubject: React.FC<PropsType> = ({close}) => {
                 xs={12}
                 sx={{
                   padding: '0 !important',
-                  marginTop: '.5rem',
                   maxHeight: '5rem',
                   overflowY: 'auto'
                 }}
@@ -273,7 +274,7 @@ export const CreateSubject: React.FC<PropsType> = ({close}) => {
                   ))}
                 </List>
             </Grid>}
-            <Grid container spacing={2} sx={{marginTop: '.3rem'}}>
+            <Grid container spacing={1} sx={{marginTop: '.3rem'}}>
               <Grid item xs={12} sm={4}>
                 <CreateSubjectPairLecture {...props}/>
               </Grid>
@@ -297,6 +298,7 @@ export const CreateSubject: React.FC<PropsType> = ({close}) => {
                         setNewSubjects(subjects);
                         props.setValues({
                           ...initialSubjectTypeState,
+                          subjectName: props.values.subjectName,
                           themesList: [props.values.newTheme, ...props.values.themesList]
                         });
                       }
@@ -304,7 +306,7 @@ export const CreateSubject: React.FC<PropsType> = ({close}) => {
                 >Добавить тему</Button>}
                 <Button
                   type='submit'
-                >Создать предмет</Button>
+                >Создать</Button>
               </ButtonGroup>
             </Grid>
           </Grid>

@@ -6,7 +6,7 @@ import {
   IconButton,
   List,
   ListItem, ListItemButton, ListItemIcon, ListItemText,
-  styled, Theme
+  styled, Theme, useMediaQuery
 } from "@mui/material";
 import {
   ChevronLeft,
@@ -114,6 +114,7 @@ export const Sidebar: React.FC<PropsType> = ({
                                              }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const isTablet = useMediaQuery('(min-width: 900px)');
   const {isAuth} = useTypedSelector(s => s.common);
 
   return (
@@ -131,7 +132,7 @@ export const Sidebar: React.FC<PropsType> = ({
         </StyledLeftArrow>}
       <Divider/>
       <List sx={{height: '100%'}}>
-        <StyledListItem disablePadding>
+        {isTablet && <StyledListItem disablePadding>
           <ListItemButton onClick={() => {
             navigate('/');
             setOpen(false);
@@ -141,7 +142,7 @@ export const Sidebar: React.FC<PropsType> = ({
             </ListItemIcon>
             <ListItemText primary="Главная"/>
           </ListItemButton>
-        </StyledListItem>
+        </StyledListItem>}
         <ListItem disablePadding>
           <ListItemButton onClick={() => {
             navigate('/subjects');

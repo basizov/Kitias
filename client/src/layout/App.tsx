@@ -77,6 +77,7 @@ export const App: React.FC = () => {
   const dispatch = useDispatch();
   const {colorTheme, loadingInitial} = useTypedSelector(s => s.common);
   const preferDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const isTablet = useMediaQuery('(min-width: 900px)');
   const changeColorTheme = useMemo(() => ({
     toggleColorMode: () => {
       if (colorTheme === ColorEnums.LIGHT_COLOR) {
@@ -156,10 +157,10 @@ export const App: React.FC = () => {
               <Sidebar open={open} setOpen={setOpen}/>
               <Main open={open} sx={{height: 'calc(100% - 16px)'}}>
                   <Routes>
-                      <Route path='/' element={<PrivateRoute>
+                      {isTablet && <Route path='/' element={<PrivateRoute>
                         <CalendarPage/>
-                      </PrivateRoute>}/>
-                      <Route path='/subjects' element={<PrivateRoute>
+                      </PrivateRoute>}/>}
+                      <Route path={'/subjects'} element={<PrivateRoute>
                         <SubjectsPage/>
                       </PrivateRoute>}/>
                       <Route path='/attendances/:id' element={<PrivateRoute>

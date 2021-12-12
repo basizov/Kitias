@@ -15,7 +15,7 @@ import {
   Typography
 } from "@mui/material";
 import {useNavigate} from "react-router";
-import {AuthPaper} from "./AuthPage";
+import {AuthPaper, StyledGrid} from "./AuthPage";
 import {defaultActions} from "../store/defaultStore";
 
 export const SignUpPage: React.FC = () => {
@@ -60,12 +60,11 @@ export const SignUpPage: React.FC = () => {
             resetForm
           }) => (
           <Form onSubmit={handleSubmit}>
-            <Grid
+            <StyledGrid
               container
               spacing={1}
-              sx={{maxWidth: '30rem'}}
             >
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <TextField
                   id="email"
                   type="text"
@@ -79,7 +78,7 @@ export const SignUpPage: React.FC = () => {
                   label="E-mail"
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <TextField
                   id="userName"
                   type="text"
@@ -93,7 +92,7 @@ export const SignUpPage: React.FC = () => {
                   label="Логин"
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={6} sm={4}>
                 <TextField
                   id="name"
                   type="text"
@@ -107,7 +106,7 @@ export const SignUpPage: React.FC = () => {
                   label="Имя"
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={6} sm={4}>
                 <TextField
                   id="surname"
                   type="text"
@@ -121,7 +120,7 @@ export const SignUpPage: React.FC = () => {
                   label="Фамилия"
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={12} sm={4}>
                 <TextField
                   id="patronymic"
                   type="text"
@@ -192,7 +191,7 @@ export const SignUpPage: React.FC = () => {
                   navigate('/login');
                 }}
               >У вас уже есть аккаунт?</Button>
-            </Grid>
+            </StyledGrid>
           </Form>
         )}
       </Formik>

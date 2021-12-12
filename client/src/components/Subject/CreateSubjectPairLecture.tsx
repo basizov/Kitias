@@ -21,7 +21,7 @@ export const CreateSubjectPairLecture: React.FC<FormikProps<typeof initialSubjec
                                                                                                   setFieldValue
                                                                                                 }) => {
   return (
-    <Grid container direction='column' spacing={2}>
+    <Grid container direction='column' spacing={1}>
       <Grid item>
         <FormControl variant="standard" fullWidth>
           <InputLabel

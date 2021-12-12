@@ -30,6 +30,13 @@ export const AuthPaper = styled(Paper)({
   justifyContent: 'center'
 });
 
+export const StyledGrid = styled(Grid)(({theme}) => ({
+  maxWidth: '30rem',
+  [theme.breakpoints.down('sm')]: {
+    maxWidth: '20rem'
+  }
+}));
+
 export const AuthPage: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -64,10 +71,9 @@ export const AuthPage: React.FC = () => {
             resetForm
           }) => (
           <Form onSubmit={handleSubmit}>
-            <Grid
+            <StyledGrid
               container
               spacing={1}
-              sx={{maxWidth: '30rem'}}
             >
               <Grid item xs={12}>
                 <TextField
@@ -102,7 +108,6 @@ export const AuthPage: React.FC = () => {
                   container
                   justifyContent="space-between"
                   alignItems="center"
-                  sx={{marginTop: '.5rem'}}
                 >
                   <Grid item>
                     <Typography
@@ -113,7 +118,7 @@ export const AuthPage: React.FC = () => {
                     >{error || ''}</Typography>
                   </Grid>
                   <Grid item>
-                    <ButtonGroup variant='outlined'>
+                    <ButtonGroup variant='outlined' size='small'>
                       <Button
                         color='secondary'
                         sx={{width: '7rem'}}
@@ -141,7 +146,7 @@ export const AuthPage: React.FC = () => {
                   navigate('/register');
                 }}
               >У вас еще нет аккаунта?</Button>
-            </Grid>
+            </StyledGrid>
           </Form>
         )}
       </Formik>

@@ -7,7 +7,7 @@ const StyledPaper = styled(Paper)({
   left: '50%',
   transform: 'translate(-50%, -50%)',
   padding: '1rem',
-  maxHeight: '90%',
+  maxHeight: '50%',
   overflowY: 'auto'
 });
 
