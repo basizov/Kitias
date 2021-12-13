@@ -345,6 +345,12 @@
             </summary>
             <returns>Groups</returns>
         </member>
+        <member name="M:Kitias.Providers.Interfaces.IGroupProvider.TakeGroupsWithStudentsAsync">
+            <summary>
+            Take all groups with students from db
+            </summary>
+            <returns>Groups with students</returns>
+        </member>
         <member name="M:Kitias.Providers.Interfaces.IGroupProvider.TakeGroupsNames">
             <summary>
             Take all groups names from db
@@ -386,7 +392,7 @@
             <param name="group">Model to create a group</param>
             <returns>New group</returns>
         </member>
-        <member name="M:Kitias.Providers.Interfaces.IGroupProvider.CreateGroupStudentsAsync(System.Guid,System.Collections.Generic.IEnumerable{System.Guid})">
+        <member name="M:Kitias.Providers.Interfaces.IGroupProvider.CreateGroupStudentsAsync(System.Guid,System.Collections.Generic.IEnumerable{System.String})">
             <summary>
             Create group students
             </summary>
@@ -941,6 +947,46 @@
             Group number
             </summary>
         </member>
+        <member name="T:Kitias.Providers.Models.Group.GroupWithStudents">
+            <summary>
+            Group data with sstudent transfer object
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Group.GroupWithStudents.Id">
+            <summary>
+            Group identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Group.GroupWithStudents.Course">
+            <summary>
+            Group course
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Group.GroupWithStudents.Number">
+            <summary>
+            Group number
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Group.GroupWithStudents.Students">
+            <summary>
+            Group students
+            </summary>
+        </member>
+        <member name="T:Kitias.Providers.Models.Group.StudentInGroup">
+            <summary>
+            Student model in group
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Group.StudentInGroup.Id">
+            <summary>
+            Student identifier
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Group.StudentInGroup.FullName">
+            <summary>
+            Student FIO
+            </summary>
+        </member>
         <member name="T:Kitias.Providers.Models.Group.UpdateGroupModel">
             <summary>
             Model to update the exsisted group
@@ -954,6 +1000,21 @@
         <member name="P:Kitias.Providers.Models.Group.UpdateGroupModel.Number">
             <summary>
             New group number
+            </summary>
+        </member>
+        <member name="T:Kitias.Providers.Models.Person.CreateNotRegisteredStudent">
+            <summary>
+            Model to create no authorized student
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Person.CreateNotRegisteredStudent.FullName">
+            <summary>
+            Student full name
+            </summary>
+        </member>
+        <member name="P:Kitias.Providers.Models.Person.CreateNotRegisteredStudent.GroupNumber">
+            <summary>
+            Student group number
             </summary>
         </member>
         <member name="T:Kitias.Providers.Models.Person.CreateStudentModel">

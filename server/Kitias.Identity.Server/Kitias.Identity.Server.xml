@@ -61,7 +61,7 @@
             Save refresh token method
             </summary>
             <param name="model">Model to save token for user</param>
-            <returns>Status message</returns>
+            <returns>Roles</returns>
         </member>
         <member name="M:Kitias.Identity.Server.Controllers.AuthController.UpdateTokenAsync(Kitias.Providers.Models.Request.UpdateTokenRequestModel)">
             <summary>

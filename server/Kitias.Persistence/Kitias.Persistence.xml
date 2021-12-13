@@ -856,6 +856,11 @@
             Student group
             </summary>
         </member>
+        <member name="P:Kitias.Persistence.Entities.People.Student.FullName">
+            <summary>
+            Student fullname
+            </summary>
+        </member>
         <member name="T:Kitias.Persistence.Entities.People.Teacher">
             <summary>
             Teacher entity

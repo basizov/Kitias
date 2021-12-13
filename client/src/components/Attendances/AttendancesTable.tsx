@@ -110,11 +110,11 @@ export const AttendancesTable: React.FC<PropsType> = ({
     setShowAll(Array(pageSize).fill(false));
   }, [pageSize]);
 
-  const closeCreateModel = async () => {
+  const closeCreateModel = () => {
     if (params.id) {
-      await dispatch(getAttendances(params.id));
-      await dispatch(getSheduler(params.id));
-      await dispatch(getAttendanceSubjects(params.id));
+      dispatch(getAttendances(params.id));
+      dispatch(getSheduler(params.id));
+      dispatch(getAttendanceSubjects(params.id));
     }
     setOpenCreate(false);
   };
@@ -266,7 +266,10 @@ export const AttendancesTable: React.FC<PropsType> = ({
       <ModalHoc
         open={openCreate}
         onClose={closeCreateModel}
-      ><CreateSubject close={closeCreateModel}/></ModalHoc>
+      ><CreateSubject
+        close={closeCreateModel}
+        name={selectedSubjects[0]?.name || ''}
+      /></ModalHoc>
     </React.Fragment>
   );
 };

@@ -15,7 +15,7 @@ namespace Kitias.Persistence.Entities.People
 		/// <summary>
 		/// Person id
 		/// </summary>
-		public Guid PersonId { get; set; }
+		public Guid? PersonId { get; set; }
 		/// <summary>
 		/// Person
 		/// </summary>
@@ -28,5 +28,9 @@ namespace Kitias.Persistence.Entities.People
 		/// Student group
 		/// </summary>
 		public virtual Group Group { get; set; }
+		/// <summary>
+		/// Student fullname
+		/// </summary>
+		public string FullName { get; init; }
 	}
 }

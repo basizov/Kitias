@@ -161,9 +161,9 @@ namespace Kitias.Providers.Implementations
 				var raiting = studentAttendances
 					.Average(sa => sa.Score);
 
+				sAttendance.Raiting = (byte)Convert.ToInt32(raiting);
 				if (sAttendance.IsAutomatic)
 				{
-					sAttendance.Raiting = (byte)Convert.ToInt32(raiting);
 					if (raiting == 0)
 						sAttendance.Grade = Grade.None;
 					else if (raiting is > 0 and < 51)
@@ -176,8 +176,8 @@ namespace Kitias.Providers.Implementations
 						sAttendance.Grade = Grade.Good;
 					else if (raiting > 80)
 						sAttendance.Grade = Grade.Excellent;
-					_unitOfWork.StudentAttendace.Update(sAttendance);
 				}
+				_unitOfWork.StudentAttendace.Update(sAttendance);
 			}
 			var isSave = await _unitOfWork.SaveChangesAsync();
 

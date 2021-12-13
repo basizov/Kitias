@@ -22,7 +22,7 @@ namespace Kitias.Providers.Interfaces
 		/// </summary>
 		/// <param name="model">Token save model</param>
 		/// <returns>Status message</returns>
-		Task<Result<string>> TokenSaveAsync(TokenRequestModel model);
+		Task<Result<IEnumerable<string>>> TokenSaveAsync(TokenRequestModel model);
 		/// <summary>
 		/// Update refresh token
 		/// </summary>

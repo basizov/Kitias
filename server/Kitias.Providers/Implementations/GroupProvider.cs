@@ -37,6 +37,49 @@ namespace Kitias.Providers.Implementations
 			return ResultHandler.OnSuccess(result);
 		}
 
+		public async Task<Result<IEnumerable<GroupWithStudents>>> TakeGroupsWithStudentsAsync()
+		{
+			var groups = await _unitOfWork.Group
+				.GetAll()
+				.Include(g => g.Students)
+				.ToListAsync();
+			var result = new List<GroupWithStudents>();
+
+			foreach (var group in groups)
+			{
+				var students = new List<StudentInGroup>();
+
+				foreach (var student in group.Students)
+				{
+					var person = await _unitOfWork.Person
+						.FindBy(p => p.Id == student.PersonId)
+						.SingleOrDefaultAsync();
+
+					if (person == null && student.PersonId != null)
+					{
+						return ReturnFailureResult<IEnumerable<GroupWithStudents>>(
+							$"Pereson with id ${student.PersonId} doesn't existed",
+							"Couldn't find group student"
+						);
+					}
+					students.Add(new()
+					{
+						Id = student.Id,
+						FullName = student.FullName ?? person.FullName
+					});
+				}
+				result.Add(new()
+				{
+					Id = group.Id,
+					Course = group.Course,
+					Number = group.Number,
+					Students = students
+				});
+			}
+			_logger.LogInformation("Take all groups with students from db");
+			return ResultHandler.OnSuccess(result as IEnumerable<GroupWithStudents>);
+		}
+
 		public Result<IEnumerable<GroupNames>> TakeGroupsNames()
 		{
 			var groups = _unitOfWork.Group.GetAll();
@@ -138,7 +181,7 @@ namespace Kitias.Providers.Implementations
 			});
 		}
 
-		public async Task<Result<IEnumerable<StudentDto>>> CreateGroupStudentsAsync(Guid id, IEnumerable<Guid> students)
+		public async Task<Result<IEnumerable<string>>> CreateGroupStudentsAsync(Guid id, IEnumerable<string> students)
 		{
 			return await TryCatchExecute(students, async (parameter) =>
 			{
@@ -149,7 +192,7 @@ namespace Kitias.Providers.Implementations
 
 				if (group == null)
 				{
-					return ReturnFailureResult<IEnumerable<StudentDto>>(
+					return ReturnFailureResult<IEnumerable<string>>(
 						$"Group with id ${id} doesn't existed",
 						"Couldn't find this group"
 					);
@@ -162,9 +205,9 @@ namespace Kitias.Providers.Implementations
 						.FindBy(p => p.Id == student.PersonId)
 						.SingleOrDefaultAsync();
 
-					if (person == null)
+					if (person == null && student.PersonId != null)
 					{
-						return ReturnFailureResult<IEnumerable<StudentDto>>(
+						return ReturnFailureResult<IEnumerable<string>>(
 							$"Person with id ${student.PersonId} doesn't existed",
 							"Couldn't find student"
 						);
@@ -173,36 +216,74 @@ namespace Kitias.Providers.Implementations
 				}
 				foreach (var studentId in parameter)
 				{
-					var findStudent = await _unitOfWork.Student
-						.FindBy(s => s.Id == studentId)
-						.Include(s => s.Person)
-						.SingleOrDefaultAsync();
+					Student findStudent = null;
 
+					if (Guid.TryParse(studentId, out var sId))
+					{
+						if (group.Students.Any(s => s.Id == sId))
+							continue;
+						findStudent = await _unitOfWork.Student
+							.FindBy(s => s.Id == sId)
+							.Include(s => s.Person)
+							.SingleOrDefaultAsync();
+					}
+					else
+					{
+						if (group.Students.Any(s => s.FullName == studentId))
+							continue;
+						findStudent = _unitOfWork.Student.Create(new()
+						{
+							FullName = studentId,
+							GroupId = group.Id
+						});
+						group.Students.Add(findStudent);
+					}
 					if (findStudent == null)
 					{
-						return ReturnFailureResult<IEnumerable<StudentDto>>(
+						return ReturnFailureResult<IEnumerable<string>>(
 							$"Student with id ${studentId} doesn't existed",
 							"Couldn't find student"
 						);
 					}
 					if (findStudent.GroupId != group.Id)
 					{
-						findStudent.Group = group;
 						group.Students.Add(findStudent);
 						findStudent.GroupId = group.Id;
 						_unitOfWork.Student.Update(findStudent);
 						_logger.LogInformation($"Add student {studentId} to the group {id}");
 					}
 				}
+				var oldStudents = group.Students
+					.Where(s => !parameter.Contains(s.FullName) && !parameter.Contains(s.Id.ToString()))
+					.ToList();
+
+				foreach (var oldStudent in oldStudents)
+				{
+					group.Students.Remove(oldStudent);
+					_unitOfWork.Student.Delete(oldStudent);
+				}
 				var isSave = await _unitOfWork.SaveChangesAsync();
 
 				if (isSave <= 0)
 					throw new ApplicationException("Couldn't save new students");
-				var result = _mapper.Map<IEnumerable<StudentDto>>(group.Students);
+				var result = group.Students.Select(s => s.FullName ?? s.Person.FullName);
 
 				_logger.LogInformation($"Get all students of the group {id}");
 				return ResultHandler.OnSuccess(result);
 			});
+		}
+
+		private async Task EditAttendances(Guid groupId, IEnumerable<string> students)
+		{
+			var shedulers = await _unitOfWork.ShedulerAttendace
+				.FindByAndInclude(
+					s => s.GroupId == groupId,
+					s => s.Attendances, s => s.StudentAttendances
+				).ToListAsync();
+
+			if (shedulers == null)
+				return;
+
 		}
 
 		public async Task<Result<IEnumerable<SubjectDto>>> CreateGroupSubjectsAsync(Guid id, IEnumerable<Guid> subjects)

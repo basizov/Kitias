@@ -2,6 +2,7 @@
 using Kitias.Persistence.Enums;
 using Kitias.Providers.Interfaces;
 using Kitias.Providers.Models.Group;
+using Kitias.Providers.Models.Person;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +38,23 @@ namespace Kitias.API.Controllers
 		public ActionResult<IEnumerable<GroupDto>> TakeGroups()
 		{
 			var result = _groupProvider.TakeGroups();
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Take all groups with students from db
+		/// </summary>
+		/// <returns>Groups with students</returns>
+		[HttpGet("withStudents")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<IEnumerable<GroupWithStudents>>> TakeGroupsWithStudentsAsync()
+		{
+			var result = await _groupProvider.TakeGroupsWithStudentsAsync();
 
 			if (!result.IsSuccess)
 				return BadRequest(result.Error);
@@ -124,7 +142,7 @@ namespace Kitias.API.Controllers
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-		public async Task<ActionResult<StudentDto>> AddGroupStudentsByIdAsync(Guid id, [FromBody] IEnumerable<Guid> students)
+		public async Task<ActionResult<string>> AddGroupStudentsByIdAsync(Guid id, [FromBody] IEnumerable<string> students)
 		{
 			var result = await _groupProvider.CreateGroupStudentsAsync(id, students);
 

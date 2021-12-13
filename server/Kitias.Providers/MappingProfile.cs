@@ -36,7 +36,7 @@ namespace Kitias.Providers
 				.ForMember(g => g.ReceiptDate, o => o.MapFrom(g => g.ReceiptDate.ToString("dd.MM.yyyy")));
 			CreateMap<Student, StudentDto>()
 				.ForMember(s => s.Email, o => o.MapFrom(s => s.Person.Email))
-				.ForMember(s => s.FullName, o => o.MapFrom(s => s.Person.FullName))
+				.ForMember(s => s.FullName, o => o.MapFrom(s => s.FullName ?? s.Person.FullName))
 				.ForMember(s => s.Course, o => o.MapFrom(s => s.Group.Course))
 				.ForMember(s => s.GroupNumber, o => o.MapFrom(s => s.Group.Number))
 				.ForMember(s => s.EducationType, o => o.MapFrom(s => Helpers.GetEnumMemberAttrValue(s.Group.EducationType)))

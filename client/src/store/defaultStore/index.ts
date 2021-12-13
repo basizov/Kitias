@@ -10,6 +10,7 @@ const initialState = {
   isAuth: false,
   error: '',
   loadingInitial: true,
+  roles: [] as string[],
   loading: false
 };
 
@@ -17,6 +18,8 @@ export const defaultReducer = (state = initialState, action: DefaultActionType) 
   switch (action.type) {
     case 'SET_LIGHT_THEME':
       return {...state, colorTheme: action.payload};
+    case 'SET_ROLES':
+      return {...state, roles: action.payload};
     case 'SET_DARK_THEME':
       return {...state, colorTheme: action.payload};
     case 'SET_IS_AUTH':
@@ -44,6 +47,7 @@ export const defaultActions = {
     payload: ColorEnums.DARK_COLOR
   } as const),
   setIsAuth: (payload: boolean) => ({type: 'SET_IS_AUTH', payload} as const),
+  setRoles: (payload: string[]) => ({type: 'SET_ROLES', payload} as const),
   setLoading: (payload: boolean) => ({
     type: 'SET_AUTH_LOADING',
     payload

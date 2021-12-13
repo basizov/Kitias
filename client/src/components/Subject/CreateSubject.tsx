@@ -41,9 +41,10 @@ export const initialSubjectTypeState = {
 
 type PropsType = {
   close: () => void;
+  name?: string;
 };
 
-export const CreateSubject: React.FC<PropsType> = ({close}) => {
+export const CreateSubject: React.FC<PropsType> = ({close, name = ''}) => {
   const dispatch = useDispatch();
   const [newSubjects, setNewSubjects] = useState<CreateSubjectType[]>([]);
   const isMobile = useMediaQuery('(min-width: 450px)');
@@ -197,7 +198,10 @@ export const CreateSubject: React.FC<PropsType> = ({close}) => {
 
   return (
     <Formik
-      initialValues={initialSubjectTypeState}
+      initialValues={{
+        ...initialSubjectTypeState,
+        subjectName: name
+      }}
       validationSchema={validationSchema}
       onSubmit={async (values) => {
         const subjects = getSubjectsFromValues(values);

@@ -13,7 +13,7 @@ import {
   getShedulers, getShedulerStudentsGroup
 } from "../store/attendanceStore/asyncActions";
 import {useTypedSelector} from "../hooks/useTypedSelector";
-import {MoreHoriz, Groups} from "@mui/icons-material";
+import {MoreHoriz, Apps} from "@mui/icons-material";
 import {Loading} from "../layout/Loading";
 import {ModalHoc} from "../components/HOC/ModalHoc";
 import {UCAttendanceShedulerForm} from "../components/Attendances/UCAttendanceShedulerForm";
@@ -81,7 +81,7 @@ export const ShedulersPage: React.FC = () => {
                     }}
                   >
                     <ListItemIcon>
-                      <Groups/>
+                      <Apps/>
                     </ListItemIcon>
                     <ListItemText primary={s.name}/>
                   </ListItemButton>

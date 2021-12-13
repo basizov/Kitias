@@ -13,8 +13,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -47,13 +49,13 @@ namespace Kitias.API.Controllers
 		/// <summary>
 		/// Flag tha user is auth
 		/// </summary>
-		/// <returns>Status message</returns>
+		/// <returns>Roles</returns>
 		[HttpGet]
 		[AllowAnonymous]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
-		public async Task<ActionResult<string>> IsAuthAsync()
+		public async Task<ActionResult<IEnumerable<string>>> IsAuthAsync()
 		{
 			var token = Request.Cookies[".AspNetCore.Application.Guid"];
 
@@ -78,7 +80,10 @@ namespace Kitias.API.Controllers
 				}
 				SaveTokens(tokenResponse);
 			}
-			return Ok("User is auth");
+			var roles = User.FindAll(ClaimTypes.Role)
+				.Select(r => r.Value);
+
+			return Ok(roles);
 		}
 
 		/// <summary>
@@ -159,13 +164,13 @@ namespace Kitias.API.Controllers
 		/// Sign in endpoint for user
 		/// </summary>
 		/// <param name="model">Model with user data</param>
-		/// <returns>Status message</returns>
+		/// <returns>Roles</returns>
 		[HttpPost("signIn")]
 		[AllowAnonymous]
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-		public async Task<ActionResult<string>> SignInAsync([FromBody] SignInRequestModel model)
+		public async Task<ActionResult<IEnumerable<string>>> SignInAsync([FromBody] SignInRequestModel model)
 		{
 			var signInClient = _clientFactory.CreateClient();
 			var discovery = await signInClient.GetDiscoveryDocumentAsync(_secureOptions.Value.Authority);
@@ -201,7 +206,11 @@ namespace Kitias.API.Controllers
 				return BadRequest(await saveRefreshResponse.Content.ReadAsStringAsync());
 			}
 			SaveTokens(tokenResponse);
-			return Ok("User was successfully logged in");
+			var roles = JsonSerializer.Deserialize<IEnumerable<string>>(
+				await saveRefreshResponse.Content.ReadAsStringAsync()
+			);
+
+			return Ok(roles);
 		}
 
 		/// <summary>

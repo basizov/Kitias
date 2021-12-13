@@ -1,6 +1,7 @@
 ﻿using Kitias.Persistence.DTOs;
 using Kitias.Providers.Models;
 using Kitias.Providers.Models.Group;
+using Kitias.Providers.Models.Person;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,6 +18,11 @@ namespace Kitias.Providers.Interfaces
 		/// </summary>
 		/// <returns>Groups</returns>
 		Result<IEnumerable<GroupDto>> TakeGroups();
+		/// <summary>
+		/// Take all groups with students from db
+		/// </summary>
+		/// <returns>Groups with students</returns>
+		Task<Result<IEnumerable<GroupWithStudents>>> TakeGroupsWithStudentsAsync();
 		/// <summary>
 		/// Take all groups names from db
 		/// </summary>
@@ -58,7 +64,7 @@ namespace Kitias.Providers.Interfaces
 		/// <param name="id">Id of the group to take</param>
 		/// <param name="students">New students to the group</param>
 		/// <returns>Students</returns>
-		Task<Result<IEnumerable<StudentDto>>> CreateGroupStudentsAsync(Guid id, IEnumerable<Guid> students);
+		Task<Result<IEnumerable<string>>> CreateGroupStudentsAsync(Guid id, IEnumerable<string> students);
 		/// <summary>
 		/// Create group subjects
 		/// </summary>

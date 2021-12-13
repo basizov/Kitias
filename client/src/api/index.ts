@@ -24,6 +24,7 @@ import {StudentAttendanceResultType} from "../model/Attendance/StudentAttendaceM
 import {saveAs} from "file-saver";
 import {SignUpType} from "../model/User/SugnUpModel";
 import {UpdateSAttendanceType} from "../model/Attendance/UpdateStudentAttendance";
+import {GroupType} from "../model/Group/GroupModel";
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
@@ -79,9 +80,9 @@ const requests = {
 };
 
 const auth = {
-  isAuth: () => requests.get<string>(Paths.IS_AUTH_PATH),
+  isAuth: () => requests.get<string[]>(Paths.IS_AUTH_PATH),
   logout: () => requests.get<string>(Paths.LOGOUT_PATH),
-  signIn: (payload: SignInType) => requests.post(Paths.SIGN_IN_PATH, payload),
+  signIn: (payload: SignInType) => requests.post<string[]>(Paths.SIGN_IN_PATH, payload),
   signUp: (payload: SignUpType) => requests.post(Paths.SIGN_UP_PATH, payload)
 };
 
@@ -131,6 +132,9 @@ const subject = {
 };
 
 const group = {
+  groups: () => requests.get<GroupType[]>(`${Paths.TAKE_GROUP}/withStudents`),
+  students: (id: string, payload: string[]) => requests
+    .post<GroupType[]>(`${Paths.TAKE_GROUP}/${id}/students`, payload),
   groupNames: () => requests.get<GroupName[]>(`${Paths.TAKE_GROUP}/names`),
   groupStudentsNames: (id: string) => requests
     .get<string[]>(`${Paths.TAKE_GROUP}/${id}/students/names`)

@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -80,13 +81,17 @@ namespace Kitias.Providers.Implementations
 			return ResultHandler.OnSuccess("User was successfully created");
 		}
 
-		public async Task<Result<string>> TokenSaveAsync(TokenRequestModel model)
+		public async Task<Result<IEnumerable<string>>> TokenSaveAsync(TokenRequestModel model)
 		{
 			var user = await _userManager
-				.FindByNameAsync(model.UserName);
+				.Users
+				.Include(u => u.UserRoles)
+				.ThenInclude(ur => ur.Role)
+				.Where(u => u.UserName == model.UserName)
+				.SingleOrDefaultAsync();
 
 			if (user == null)
-				return ReturnFailureResult<string>($"User with userName: {model.UserName} doesn't existed");
+				return ReturnFailureResult<IEnumerable<string>>($"User with userName: {model.UserName} doesn't existed");
 			_dataContext.UserTokens.Add(new()
 			{
 				Value = model.Token,
@@ -97,7 +102,11 @@ namespace Kitias.Providers.Implementations
 
 			if (isSaved <= 0)
 				throw new ApplicationException("Couldn't save token");
-			return ResultHandler.OnSuccess("UserToken was successfully saved");
+			var roles = new List<string>();
+
+			foreach (var userRole in user.UserRoles)
+				roles.Add(userRole.Role.Name);
+			return ResultHandler.OnSuccess(roles as IEnumerable<string>);
 		}
 
 		public async Task<Result<string>> TokenUpdateAsync(UpdateTokenRequestModel model)

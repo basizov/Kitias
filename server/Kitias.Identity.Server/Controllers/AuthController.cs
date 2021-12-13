@@ -82,12 +82,12 @@ namespace Kitias.Identity.Server.Controllers
 		/// Save refresh token method
 		/// </summary>
 		/// <param name="model">Model to save token for user</param>
-		/// <returns>Status message</returns>
+		/// <returns>Roles</returns>
 		[HttpPost("token")]
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-		public async Task<ActionResult<string>> SaveTokenAsync(TokenRequestModel model)
+		public async Task<ActionResult<IEnumerable<string>>> SaveTokenAsync(TokenRequestModel model)
 		{
 			var result = await _authProvider.TokenSaveAsync(model);
 

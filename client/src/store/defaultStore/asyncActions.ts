@@ -17,6 +17,7 @@ export const isAuthAsync = (): AsyncThunkType => {
 
       if (response) {
         dispatch(defaultActions.setIsAuth(true));
+        dispatch(defaultActions.setRoles(response));
       }
     } catch (e) {
       const error = e as ServerErrorType;
@@ -57,6 +58,7 @@ export const signInAsync = (
 
       if (response) {
         dispatch(defaultActions.setIsAuth(true));
+        dispatch(defaultActions.setRoles(response));
       }
     } catch (e) {
       dispatch(defaultActions.setError('Не правильный логин или пароль'));

@@ -22,6 +22,7 @@ import {AttendancesPage} from "../pages/AttendancesPage";
 import {SubjectsPage} from "../pages/SubjectsPage";
 import {CalendarPage} from "../pages/CalendarPage";
 import {SignUpPage} from "../pages/SignUpPage";
+import {GroupPage} from "../pages/GroupPage";
 
 const RootPaper = styled(Paper)({
   position: 'absolute',
@@ -75,7 +76,11 @@ const Main = styled('main', {shouldForwardProp: (prop) => prop !== 'open'})<{
 
 export const App: React.FC = () => {
   const dispatch = useDispatch();
-  const {colorTheme, loadingInitial} = useTypedSelector(s => s.common);
+  const {
+    colorTheme,
+    loadingInitial,
+    roles
+  } = useTypedSelector(s => s.common);
   const preferDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const isTablet = useMediaQuery('(min-width: 900px)');
   const changeColorTheme = useMemo(() => ({
@@ -157,18 +162,25 @@ export const App: React.FC = () => {
               <Sidebar open={open} setOpen={setOpen}/>
               <Main open={open} sx={{height: 'calc(100% - 16px)'}}>
                   <Routes>
-                      {isTablet && <Route path='/' element={<PrivateRoute>
-                        <CalendarPage/>
-                      </PrivateRoute>}/>}
-                      <Route path={'/subjects'} element={<PrivateRoute>
-                        <SubjectsPage/>
-                      </PrivateRoute>}/>
-                      <Route path='/attendances/:id' element={<PrivateRoute>
-                        <AttendancesPage/>
-                      </PrivateRoute>}/>
-                      <Route path='/attendances' element={<PrivateRoute>
-                        <ShedulersPage/>
-                      </PrivateRoute>}/>
+                    {isTablet && <Route path='/' element={<PrivateRoute>
+                      {roles.includes('Teacher') && <CalendarPage/>}
+                    </PrivateRoute>}/>}
+                    {roles.includes('Teacher') &&
+                    <Route path={'/subjects'} element={<PrivateRoute>
+                      <SubjectsPage/>
+                    </PrivateRoute>}/>}
+                    {roles.includes('Admin') &&
+                    <Route path={'/groups'} element={<PrivateRoute>
+                      <GroupPage/>
+                    </PrivateRoute>}/>}
+                    {roles.includes('Teacher') &&
+                    <Route path='/attendances/:id' element={<PrivateRoute>
+                      <AttendancesPage/>
+                    </PrivateRoute>}/>}
+                    {roles.includes('Teacher') &&
+                    <Route path='/attendances' element={<PrivateRoute>
+                      <ShedulersPage/>
+                    </PrivateRoute>}/>}
                       <Route path='/login' element={<PublicRoute>
                         <AuthPage/>
                       </PublicRoute>}/>

@@ -12,7 +12,7 @@ import {
   ChevronLeft,
   Menu,
   Home,
-  DateRange, FeaturedPlayList, Logout
+  DateRange, FeaturedPlayList, Logout, Groups
 } from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
@@ -115,7 +115,7 @@ export const Sidebar: React.FC<PropsType> = ({
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isTablet = useMediaQuery('(min-width: 900px)');
-  const {isAuth} = useTypedSelector(s => s.common);
+  const {isAuth, roles} = useTypedSelector(s => s.common);
 
   return (
     <StyledDrawer variant="permanent" open={open}>
@@ -143,7 +143,18 @@ export const Sidebar: React.FC<PropsType> = ({
             <ListItemText primary="Главная"/>
           </ListItemButton>
         </StyledListItem>}
-        <ListItem disablePadding>
+        {roles.includes('Admin') && <ListItem disablePadding>
+          <ListItemButton onClick={() => {
+            navigate('/groups');
+            setOpen(false);
+          }}>
+            <ListItemIcon>
+              <Groups/>
+            </ListItemIcon>
+            <ListItemText primary="Группы"/>
+          </ListItemButton>
+        </ListItem>}
+        {roles.includes('Teacher') && <ListItem disablePadding>
           <ListItemButton onClick={() => {
             navigate('/subjects');
             setOpen(false);
@@ -153,8 +164,8 @@ export const Sidebar: React.FC<PropsType> = ({
             </ListItemIcon>
             <ListItemText primary="Предметы"/>
           </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
+        </ListItem>}
+        {roles.includes('Teacher') && <ListItem disablePadding>
           <ListItemButton onClick={() => {
             navigate('/attendances');
             setOpen(false);
@@ -164,7 +175,7 @@ export const Sidebar: React.FC<PropsType> = ({
             </ListItemIcon>
             <ListItemText primary="Журналы посещений"/>
           </ListItemButton>
-        </ListItem>
+        </ListItem>}
         {isAuth && <LogoutItem disablePadding>
             <ListItemButton onClick={async () => {
               await dispatch(logoutAsync());

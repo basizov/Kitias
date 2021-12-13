@@ -164,7 +164,7 @@
             <summary>
             Flag tha user is auth
             </summary>
-            <returns>Status message</returns>
+            <returns>Roles</returns>
         </member>
         <member name="M:Kitias.API.Controllers.AuthController.SignUpAsync(Kitias.Providers.Models.SignUpRegisterModel)">
             <summary>
@@ -178,7 +178,7 @@
             Sign in endpoint for user
             </summary>
             <param name="model">Model with user data</param>
-            <returns>Status message</returns>
+            <returns>Roles</returns>
         </member>
         <member name="M:Kitias.API.Controllers.AuthController.TakeNewTokenAsync">
             <summary>
@@ -226,6 +226,12 @@
             </summary>
             <returns>Groups</returns>
         </member>
+        <member name="M:Kitias.API.Controllers.GroupController.TakeGroupsWithStudentsAsync">
+            <summary>
+            Take all groups with students from db
+            </summary>
+            <returns>Groups with students</returns>
+        </member>
         <member name="M:Kitias.API.Controllers.GroupController.TakeGroupsNames">
             <summary>
             Take all groups names from db
@@ -253,7 +259,7 @@
             <param name="id">Id of group</param>
             <returns>Students</returns>
         </member>
-        <member name="M:Kitias.API.Controllers.GroupController.AddGroupStudentsByIdAsync(System.Guid,System.Collections.Generic.IEnumerable{System.Guid})">
+        <member name="M:Kitias.API.Controllers.GroupController.AddGroupStudentsByIdAsync(System.Guid,System.Collections.Generic.IEnumerable{System.String})">
             <summary>
             Add group students to db by id
             </summary>
