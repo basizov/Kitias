@@ -4,3 +4,10 @@ export type ShedulerListType = {
   groupNumber: string;
   subjectName: string;
 };
+
+export type TeacherShedulerType = {
+  id: string;
+  name: string;
+  fullName: string;
+  subjectName: string;
+};

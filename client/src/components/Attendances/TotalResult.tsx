@@ -27,7 +27,15 @@ const StyledBox = styled(Box)({
   gap: '.3rem'
 });
 
-export const TotalResult: React.FC = () => {
+type PropsType = {
+  id?: string;
+  canChangeGrade?: boolean;
+};
+
+export const TotalResult: React.FC<PropsType> = ({
+                                                   id = '',
+                                                   canChangeGrade = true
+                                                 }) => {
   const dispatch = useDispatch();
   const params = useParams();
   const isTablet = useMediaQuery('(min-width: 760px)');
@@ -101,8 +109,11 @@ export const TotalResult: React.FC = () => {
     if (params.id) {
       dispatch(getGrades());
       dispatch(getShedulerSAttendaces(params.id));
+    } else if (id) {
+      dispatch(getGrades());
+      dispatch(getShedulerSAttendaces(id));
     }
-  }, [dispatch, params.id]);
+  }, [dispatch, params.id, id]);
 
   useEffect(() => {
     if (sAttendances) {
@@ -196,9 +207,11 @@ export const TotalResult: React.FC = () => {
                     backgroundColor: selectGrade(newGrades[i])
                   }}
                   onClick={() => {
-                    setShowGrade(
-                      showGrade.map((sg, j) => j === i ? !sg : sg)
-                    );
+                    if (canChangeGrade) {
+                      setShowGrade(
+                        showGrade.map((sg, j) => j === i ? !sg : sg)
+                      );
+                    }
                   }}
               >{showGrade[i] ?
                 <FormControl fullWidth>

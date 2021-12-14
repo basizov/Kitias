@@ -33,6 +33,25 @@ export const getShedulers = (): AsyncThunkType => {
   }
 };
 
+export const getTeachersShedulers = (): AsyncThunkType => {
+  return async dispatch => {
+    dispatch(attendanceActions.setLoadingInitial(true));
+    try {
+      const response = await API.attendance.teacherShedulers();
+
+      if (response) {
+        dispatch(attendanceActions.setTeacherShedulers(response));
+      }
+    } catch (e) {
+      const error = e as ServerErrorType;
+
+      console.log(error)
+    } finally {
+      dispatch(attendanceActions.setLoadingInitial(false));
+    }
+  }
+};
+
 export const getGrades = (): AsyncThunkType => {
   return async dispatch => {
     dispatch(attendanceActions.setLoading(true));

@@ -39,6 +39,19 @@ namespace Kitias.Providers.Implementations
 			return ResultHandler.OnSuccess(result);
 		}
 
+		public async Task<Result<IEnumerable<TeacherShedulerModel>>> TakeTeachersShedulersAsync()
+		{
+			var shedulers = await _unitOfWork.ShedulerAttendace
+				.GetAll()
+				.Include(s => s.Teacher)
+				.ThenInclude(s => s.Person)
+				.ToListAsync();
+			var result = _mapper.Map<IEnumerable<TeacherShedulerModel>>(shedulers);
+
+			_logger.LogInformation("Take all teachers shedulers from db");
+			return ResultHandler.OnSuccess(result);
+		}
+
 		public async Task<Result<TeacherDto>> TakeTeacherByIdAsync(Guid id)
 		{
 			var teacher = await _unitOfWork.Teacher

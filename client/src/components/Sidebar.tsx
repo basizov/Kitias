@@ -12,7 +12,7 @@ import {
   ChevronLeft,
   Menu,
   Home,
-  DateRange, FeaturedPlayList, Logout, Groups
+  DateRange, FeaturedPlayList, Logout, Groups, School
 } from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
@@ -132,49 +132,62 @@ export const Sidebar: React.FC<PropsType> = ({
         </StyledLeftArrow>}
       <Divider/>
       <List sx={{height: '100%'}}>
-        {isTablet && <StyledListItem disablePadding>
-          <ListItemButton onClick={() => {
-            navigate('/');
-            setOpen(false);
-          }}>
-            <ListItemIcon>
-              <Home/>
-            </ListItemIcon>
-            <ListItemText primary="Главная"/>
-          </ListItemButton>
+        {(isTablet || roles.includes('Admin')) &&
+        <StyledListItem disablePadding>
+            <ListItemButton onClick={() => {
+              navigate('/');
+              setOpen(false);
+            }}>
+                <ListItemIcon>
+                    <Home/>
+                </ListItemIcon>
+                <ListItemText primary="Главная"/>
+            </ListItemButton>
         </StyledListItem>}
         {roles.includes('Admin') && <ListItem disablePadding>
-          <ListItemButton onClick={() => {
-            navigate('/groups');
-            setOpen(false);
-          }}>
-            <ListItemIcon>
-              <Groups/>
-            </ListItemIcon>
-            <ListItemText primary="Группы"/>
-          </ListItemButton>
+            <ListItemButton onClick={() => {
+              navigate('/groups');
+              setOpen(false);
+            }}>
+                <ListItemIcon>
+                    <Groups/>
+                </ListItemIcon>
+                <ListItemText primary="Группы"/>
+            </ListItemButton>
         </ListItem>}
         {roles.includes('Teacher') && <ListItem disablePadding>
-          <ListItemButton onClick={() => {
-            navigate('/subjects');
-            setOpen(false);
-          }}>
-            <ListItemIcon>
-              <FeaturedPlayList/>
-            </ListItemIcon>
-            <ListItemText primary="Предметы"/>
-          </ListItemButton>
+            <ListItemButton onClick={() => {
+              navigate('/subjects');
+              setOpen(false);
+            }}>
+                <ListItemIcon>
+                    <FeaturedPlayList/>
+                </ListItemIcon>
+                <ListItemText primary="Предметы"/>
+            </ListItemButton>
         </ListItem>}
         {roles.includes('Teacher') && <ListItem disablePadding>
-          <ListItemButton onClick={() => {
-            navigate('/attendances');
-            setOpen(false);
-          }}>
-            <ListItemIcon>
-              <DateRange/>
-            </ListItemIcon>
-            <ListItemText primary="Журналы посещений"/>
-          </ListItemButton>
+            <ListItemButton onClick={() => {
+              navigate('/attendances');
+              setOpen(false);
+            }}>
+                <ListItemIcon>
+                    <DateRange/>
+                </ListItemIcon>
+                <ListItemText primary="Журналы посещений"/>
+            </ListItemButton>
+        </ListItem>}
+        {roles.includes('Admin') && roles.includes('Teacher')
+        && <ListItem disablePadding>
+            <ListItemButton onClick={() => {
+              navigate('/teachers');
+              setOpen(false);
+            }}>
+                <ListItemIcon>
+                    <School/>
+                </ListItemIcon>
+                <ListItemText primary="Преподаватели"/>
+            </ListItemButton>
         </ListItem>}
         {isAuth && <LogoutItem disablePadding>
             <ListItemButton onClick={async () => {

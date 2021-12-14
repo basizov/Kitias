@@ -1,5 +1,8 @@
 import {InferActionType} from "../index";
-import {ShedulerListType} from "../../model/Attendance/ShedulerList";
+import {
+  ShedulerListType,
+  TeacherShedulerType
+} from "../../model/Attendance/ShedulerList";
 import {AttendancesByStudents} from "../../model/Attendance/Attendence";
 import {GroupName} from "../../model/Group/GroupNames";
 import {StudentAttendanceResultType} from "../../model/Attendance/StudentAttendaceModel";
@@ -7,6 +10,7 @@ import {StudentInGroupType} from "../../model/Group/GroupModel";
 
 const initialState = {
   shedulers: [] as ShedulerListType[],
+  teacherShedulers: [] as TeacherShedulerType[],
   grades: [] as string[],
   sAttendances: [] as StudentAttendanceResultType[],
   shedulerGroup: '',
@@ -25,6 +29,8 @@ export const attendanceReducer = (state = initialState, action: AttendanceAction
   switch (action.type) {
     case 'SET_SHEDULERS':
       return {...state, shedulers: action.payload};
+    case 'SET_TEACHERS_SHEDULERS':
+      return {...state, teacherShedulers: action.payload};
     case 'SET_GRADES':
       return {...state, grades: action.payload};
     case 'SET_SATTENDACES':
@@ -59,6 +65,10 @@ export type AttendanceActionType = InferActionType<typeof attendanceActions>;
 export const attendanceActions = {
   setShedulers: (payload: ShedulerListType[]) => ({
     type: 'SET_SHEDULERS',
+    payload
+  } as const),
+  setTeacherShedulers: (payload: TeacherShedulerType[]) => ({
+    type: 'SET_TEACHERS_SHEDULERS',
     payload
   } as const),
   setGrades: (payload: string[]) => ({

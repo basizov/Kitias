@@ -1,5 +1,6 @@
 ﻿using Kitias.Persistence.DTOs;
 using Kitias.Providers.Interfaces;
+using Kitias.Providers.Models.Person;
 using Kitias.Providers.Models.Subject;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,9 +35,26 @@ namespace Kitias.API.Controllers
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-		public ActionResult<IEnumerable<TeacherDto>> TakeStudents()
+		public ActionResult<IEnumerable<TeacherDto>> TakeTeachers()
 		{
 			var result = _teacherProvider.TakeTeachers();
+
+			if (!result.IsSuccess)
+				return BadRequest(result.Error);
+			return Ok(result.Value);
+		}
+
+		/// <summary>
+		/// Take all teachers from db
+		/// </summary>
+		/// <returns>Teachers</returns>
+		[HttpGet("shedulers")]
+		[Produces("application/json")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+		public async Task<ActionResult<IEnumerable<TeacherShedulerModel>>> TakeTeachersShedulersAsync()
+		{
+			var result = await _teacherProvider.TakeTeachersShedulersAsync();
 
 			if (!result.IsSuccess)
 				return BadRequest(result.Error);
@@ -52,7 +70,7 @@ namespace Kitias.API.Controllers
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-		public async Task<ActionResult<TeacherDto>> TakeStudentByIdAsync(Guid id)
+		public async Task<ActionResult<TeacherDto>> TakeTeacherByIdAsync(Guid id)
 		{
 			var result = await _teacherProvider.TakeTeacherByIdAsync(id);
 

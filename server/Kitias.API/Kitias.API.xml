@@ -440,13 +440,19 @@
             <param name="logger">Logging</param>
             <param name="teacherProvider">Teacher provider to work teacher db</param>
         </member>
-        <member name="M:Kitias.API.Controllers.TeacherController.TakeStudents">
+        <member name="M:Kitias.API.Controllers.TeacherController.TakeTeachers">
             <summary>
             Take all teachers from db
             </summary>
             <returns>Teachers</returns>
         </member>
-        <member name="M:Kitias.API.Controllers.TeacherController.TakeStudentByIdAsync(System.Guid)">
+        <member name="M:Kitias.API.Controllers.TeacherController.TakeTeachersShedulersAsync">
+            <summary>
+            Take all teachers from db
+            </summary>
+            <returns>Teachers</returns>
+        </member>
+        <member name="M:Kitias.API.Controllers.TeacherController.TakeTeacherByIdAsync(System.Guid)">
             <summary>
             Take teacher from db by id
             </summary>

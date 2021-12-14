@@ -23,6 +23,7 @@ import {SubjectsPage} from "../pages/SubjectsPage";
 import {CalendarPage} from "../pages/CalendarPage";
 import {SignUpPage} from "../pages/SignUpPage";
 import {GroupPage} from "../pages/GroupPage";
+import {AdminPage} from "../pages/AdminPage";
 
 const RootPaper = styled(Paper)({
   position: 'absolute',
@@ -162,8 +163,11 @@ export const App: React.FC = () => {
               <Sidebar open={open} setOpen={setOpen}/>
               <Main open={open} sx={{height: 'calc(100% - 16px)'}}>
                   <Routes>
-                    {isTablet && <Route path='/' element={<PrivateRoute>
+                    {(isTablet || roles.includes('Admin')) &&
+                    <Route path='/' element={<PrivateRoute>
                       {roles.includes('Teacher') && <CalendarPage/>}
+                      {roles.includes('Admin') && !roles.includes('Teacher')
+                      && <AdminPage/>}
                     </PrivateRoute>}/>}
                     {roles.includes('Teacher') &&
                     <Route path={'/subjects'} element={<PrivateRoute>
@@ -180,6 +184,10 @@ export const App: React.FC = () => {
                     {roles.includes('Teacher') &&
                     <Route path='/attendances' element={<PrivateRoute>
                       <ShedulersPage/>
+                    </PrivateRoute>}/>}
+                    {roles.includes('Admin') && roles.includes('Teacher') &&
+                    <Route path='/teachers' element={<PrivateRoute>
+                      <AdminPage/>
                     </PrivateRoute>}/>}
                       <Route path='/login' element={<PublicRoute>
                         <AuthPage/>

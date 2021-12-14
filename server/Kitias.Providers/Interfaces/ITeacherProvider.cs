@@ -20,6 +20,11 @@ namespace Kitias.Providers.Interfaces
 		/// <returns>Teacher</returns>
 		Result<IEnumerable<TeacherDto>> TakeTeachers();
 		/// <summary>
+		/// Take all teachers shedulers from db
+		/// </summary>
+		/// <returns>Teacherhedulers</returns>
+		Task<Result<IEnumerable<TeacherShedulerModel>>> TakeTeachersShedulersAsync();
+		/// <summary>
 		/// Take only one te teacher db
 		/// </summary>
 		/// <param name="id">Id of the teacher to take</param>

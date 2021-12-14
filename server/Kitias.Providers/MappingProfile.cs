@@ -71,6 +71,8 @@ namespace Kitias.Providers
 			CreateMap<AttendanceSheduler, AttendanceShedulerDto>()
 				.ForMember(s => s.TeacherFullName, o => o.MapFrom(s => s.Teacher.Person.FullName))
 				.ForMember(s => s.GroupNumber, o => o.MapFrom(s => s.Group.Number));
+			CreateMap<AttendanceSheduler, TeacherShedulerModel>()
+				.ForMember(s => s.FullName, o => o.MapFrom(s => s.Teacher.Person.FullName));
 			CreateMap<StudentAttendance, StudentAttendanceDto>()
 				.ForMember(s => s.Raiting, o => o.MapFrom(s => s.Raiting.ToString()))
 				.ForMember(s => s.Grade, o => o.MapFrom(s => Helpers.GetEnumMemberAttrValue(s.Grade)))

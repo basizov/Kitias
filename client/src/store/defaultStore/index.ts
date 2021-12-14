@@ -9,6 +9,7 @@ const initialState = {
   colorTheme: ColorEnums.DARK_COLOR,
   isAuth: false,
   error: '',
+  success: '',
   loadingInitial: true,
   roles: [] as string[],
   loading: false
@@ -30,6 +31,8 @@ export const defaultReducer = (state = initialState, action: DefaultActionType) 
       return {...state, loadingInitial: action.payload};
     case 'SET_AUTH_ERROR':
       return {...state, error: action.payload};
+    case 'SET_AUTH_SUCCESS':
+      return {...state, success: action.payload};
     default:
       return {...state};
   }
@@ -56,5 +59,6 @@ export const defaultActions = {
     type: 'SET_AUTH_LOADING_INITIAL',
     payload
   } as const),
-  setError: (payload: string) => ({type: 'SET_AUTH_ERROR', payload} as const)
+  setError: (payload: string) => ({type: 'SET_AUTH_ERROR', payload} as const),
+  setSuccess: (payload: string) => ({type: 'SET_AUTH_SUCCESS', payload} as const)
 };

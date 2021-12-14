@@ -1,7 +1,10 @@
 import {instance} from "./instance";
 import {SignInType} from "../model/User/SignInModel";
 import {AxiosRequestConfig, AxiosResponse} from "axios";
-import {ShedulerListType} from "../model/Attendance/ShedulerList";
+import {
+  ShedulerListType,
+  TeacherShedulerType
+} from "../model/Attendance/ShedulerList";
 import {
   AttendancesByStudents, AttendenceType,
 } from "../model/Attendance/Attendence";
@@ -36,6 +39,7 @@ enum Paths {
   SIGN_UP_PATH = '/Auth/signUp',
   TAKE_GROUP = '/Group',
   TAKE_SUBJECTS = '/Teacher/subjects',
+  TAKE_TEACHERS_SHEDULERS = '/Teacher/shedulers',
   TAKE_SUBJECTS_INFOS = '/Teacher/subjectsInfos',
   TAKE_SHEDULERS_PATH = '/AttendanceScheduler',
   TAKE_ATTENDANCES_PATH = '/AttendanceScheduler/',
@@ -89,6 +93,7 @@ const auth = {
 
 const attendance = {
   shedulers: () => requests.get<ShedulerListType[]>(Paths.TAKE_SHEDULERS_PATH),
+  teacherShedulers: () => requests.get<TeacherShedulerType[]>(Paths.TAKE_TEACHERS_SHEDULERS),
   grades: () => requests.get<string[]>(Paths.TAKE_GRADES_PATH),
   studentsGroup: (id: string) => requests.get<ShedulerStudentsGroupType>(`${Paths.TAKE_SHEDULERS_PATH}/${id}/students`),
   details: (id: string) => requests.get<ShedulerListType>(`${Paths.TAKE_SHEDULERS_PATH}/${id}`),

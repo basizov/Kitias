@@ -77,7 +77,7 @@ export const signUpAsync = (
       const response = await API.auth.signUp(payload);
 
       if (response) {
-        dispatch(defaultActions.setIsAuth(true));
+        dispatch(defaultActions.setSuccess('Success sign up'));
       }
     } catch (e) {
       dispatch(defaultActions.setError('Данный пользователь существует'));
