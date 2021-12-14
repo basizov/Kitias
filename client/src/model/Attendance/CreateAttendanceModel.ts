@@ -1,4 +1,5 @@
 export type CreateAttendanceType = {
-  studentName: string;
+  studentId: string | null;
+  studentName: string | null;
   subjectId: string;
 };

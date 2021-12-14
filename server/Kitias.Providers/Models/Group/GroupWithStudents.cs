@@ -34,7 +34,7 @@ namespace Kitias.Providers.Models.Group
 		/// <summary>
 		/// Student identifier
 		/// </summary>
-		public Guid Id { get; init; }
+		public Guid? Id { get; init; }
 		/// <summary>
 		/// Student FIO
 		/// </summary>

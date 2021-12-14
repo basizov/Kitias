@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Kitias.Providers.Models.Group;
+using System;
 using System.Collections.Generic;
 
 namespace Kitias.Providers.Models.Attendances
@@ -15,6 +16,6 @@ namespace Kitias.Providers.Models.Attendances
 		/// <summary>
 		/// Sheduler students
 		/// </summary>
-		public IEnumerable<string> Students { get; init; }
+		public IEnumerable<StudentInGroup> Students { get; init; }
 	}
 }

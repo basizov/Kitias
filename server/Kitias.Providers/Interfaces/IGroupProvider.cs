@@ -39,7 +39,7 @@ namespace Kitias.Providers.Interfaces
 		/// </summary>
 		/// <param name="id">Id of the group to take</param>
 		/// <returns>Groups</returns>
-		Task<Result<IEnumerable<string>>> TakeGroupStudentsNamesAsync(Guid id);
+		Task<Result<IEnumerable<StudentInGroup>>> TakeGroupStudentsNamesAsync(Guid id);
 		/// <summary>
 		/// Take all subjects of the group from db
 		/// </summary>

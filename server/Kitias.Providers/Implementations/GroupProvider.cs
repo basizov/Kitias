@@ -2,6 +2,7 @@
 using Kitias.Persistence.DTOs;
 using Kitias.Persistence.Entities.People;
 using Kitias.Persistence.Entities.Scheduler;
+using Kitias.Persistence.Enums;
 using Kitias.Providers.Interfaces;
 using Kitias.Providers.Models;
 using Kitias.Providers.Models.Group;
@@ -107,7 +108,7 @@ namespace Kitias.Providers.Implementations
 			return ResultHandler.OnSuccess(result);
 		}
 
-		public async Task<Result<IEnumerable<string>>> TakeGroupStudentsNamesAsync(Guid id)
+		public async Task<Result<IEnumerable<StudentInGroup>>> TakeGroupStudentsNamesAsync(Guid id)
 		{
 			var group = await _unitOfWork.Group
 				.FindBy(g => g.Id == id)
@@ -116,11 +117,15 @@ namespace Kitias.Providers.Implementations
 				.SingleOrDefaultAsync();
 
 			if (group == null)
-				return ReturnFailureResult<IEnumerable<string>>($"Group with id ${id} doesn't existed", "Couldn't find this group");
+				return ReturnFailureResult<IEnumerable<StudentInGroup>>($"Group with id ${id} doesn't existed", "Couldn't find this group");
 			else if (group.Students == null)
-				return ReturnFailureResult<IEnumerable<string>>($"Couldn;t find students for {id}", "Couldn't find students for this group");
+				return ReturnFailureResult<IEnumerable<StudentInGroup>>($"Couldn;t find students for {id}", "Couldn't find students for this group");
 			_logger.LogInformation($"Get students for group {id}");
-			return ResultHandler.OnSuccess(group.Students.Select(s => s.Person.FullName));
+			return ResultHandler.OnSuccess(group.Students.Select(s => new StudentInGroup
+			{
+				Id = s.Id,
+				FullName = s.FullName ?? s.Person.FullName
+			}));
 		}
 
 		public async Task<Result<IEnumerable<SubjectDto>>> TakeGroupSubjectsAsync(Guid id)
@@ -262,6 +267,7 @@ namespace Kitias.Providers.Implementations
 					group.Students.Remove(oldStudent);
 					_unitOfWork.Student.Delete(oldStudent);
 				}
+				await EditAttendances(group.Id, parameter);
 				var isSave = await _unitOfWork.SaveChangesAsync();
 
 				if (isSave <= 0)
@@ -283,7 +289,83 @@ namespace Kitias.Providers.Implementations
 
 			if (shedulers == null)
 				return;
+			foreach (var sheduler in shedulers)
+			{
+				var subjects = await _unitOfWork.Subject
+					.FindBy(s => s.TeacherId == sheduler.TeacherId && s.Name == sheduler.SubjectName)
+					.ToListAsync();
 
+				if (subjects == null || subjects.Count == 0)
+					continue;
+				foreach (var student in students)
+				{
+					if (Guid.TryParse(student, out var sId))
+					{
+						if (await _unitOfWork.StudentAttendace
+							.AnyAsync(sa => sa.StudentId == sId))
+							continue;
+						_unitOfWork.StudentAttendace.Create(new()
+						{
+							Grade = Helpers.GetEnumMemberFromString<Grade>("-"),
+							Raiting = byte.Parse("0"),
+							ShedulerId = sheduler.Id,
+							SubjectName = sheduler.SubjectName,
+							StudentId = sId
+						});
+
+						foreach (var subject in subjects)
+						{
+							_unitOfWork.Attendance.Create(new()
+							{
+								ShedulerId = sheduler.Id,
+								Score = byte.Parse("0"),
+								Attended = Helpers.GetEnumMemberFromString<AttendaceVariants>("Н"),
+								SubjectId = subject.Id,
+								StudentId = sId
+							});
+						}
+					}
+					else
+					{
+						if (await _unitOfWork.StudentAttendace
+							.AnyAsync(sa => sa.StudentName == student))
+							continue;
+						_unitOfWork.StudentAttendace.Create(new()
+						{
+							Grade = Helpers.GetEnumMemberFromString<Grade>("-"),
+							Raiting = byte.Parse("0"),
+							ShedulerId = sheduler.Id,
+							SubjectName = sheduler.SubjectName,
+							StudentName = student
+						});
+
+						foreach (var subject in subjects)
+						{
+							_unitOfWork.Attendance.Create(new()
+							{
+								ShedulerId = sheduler.Id,
+								Score = byte.Parse("0"),
+								Attended = Helpers.GetEnumMemberFromString<AttendaceVariants>("Н"),
+								SubjectId = subject.Id,
+								StudentName = student
+							});
+						}
+					}
+				}
+
+				var oldStudentAttendances = sheduler.StudentAttendances
+					.Where(a => !students.Any(s => s == a.StudentName || s == a.StudentId.ToString()))
+					.ToList();
+
+				foreach (var sAttendance in oldStudentAttendances)
+					_unitOfWork.StudentAttendace.Delete(sAttendance);
+				var oldAttendances = sheduler.Attendances
+					.Where(a => !students.Any(s => s== a.StudentName || s == a.StudentId.ToString()))
+					.ToList();
+
+				foreach (var attendance in oldAttendances)
+					_unitOfWork.Attendance.Delete(attendance);
+			}
 		}
 
 		public async Task<Result<IEnumerable<SubjectDto>>> CreateGroupSubjectsAsync(Guid id, IEnumerable<Guid> subjects)

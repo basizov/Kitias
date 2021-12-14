@@ -123,7 +123,7 @@ namespace Kitias.API.Controllers
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-		public async Task<ActionResult<IEnumerable<string>>> TakeGroupStudentsNamesByIdAsync(Guid id)
+		public async Task<ActionResult<IEnumerable<StudentInGroup>>> TakeGroupStudentsNamesByIdAsync(Guid id)
 		{
 			var result = await _groupProvider.TakeGroupStudentsNamesAsync(id);
 

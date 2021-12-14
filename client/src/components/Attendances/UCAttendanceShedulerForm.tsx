@@ -7,8 +7,8 @@ import {
   getSubjectsNames
 } from "../../store/subjectStore/asyncActions";
 import {
-  Button, ButtonGroup,
-  FormControl,
+  Button, ButtonGroup, Checkbox,
+  FormControl, FormControlLabel,
   Grid, IconButton,
   InputLabel, List, ListItem, ListItemText,
   MenuItem,
@@ -28,7 +28,7 @@ import {Loading} from "../../layout/Loading";
 import {Delete} from "@mui/icons-material";
 import {CreateStudentAttendanceType} from "../../model/Attendance/CreateStudentAttendance";
 import {SchemaOptions} from "yup/es/schema";
-import {object, string} from "yup/es";
+import {boolean, object, string} from "yup/es";
 
 const StyledList = styled(List)(({theme}) => ({
   height: '9rem',
@@ -66,9 +66,10 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
 
   const initialState = useMemo(() => ({
     selectedSubject: attendace ? attendace.subjectName : '' as string,
-    selectedGroup: attendace ? shedulerGroup : '' as string,
+    selectedGroup: attendace ? shedulerGroup || '' : '' as string,
     name: attendace ? attendace.name : '' as string,
-    newStudent: '' as string
+    newStudent: '' as string,
+    hasGroup: attendace ? !!attendace.groupNumber : true
   } as const), [attendace, shedulerGroup]);
 
   const validationSchema: SchemaOptions<typeof initialState> = useMemo(() => {
@@ -76,7 +77,8 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
       selectedSubject: string().required(),
       selectedGroup: string(),
       name: string().required(),
-      newStudent: string()
+      newStudent: string(),
+      hasGroup: boolean()
     });
   }, []);
 
@@ -102,13 +104,15 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
         subjects.forEach(s => {
           groupStudents.forEach(gs => {
             attendances.push({
-              studentName: gs,
+              studentId: gs.id || null,
+              studentName: gs.id === '' ? gs.fullName : gs.id,
               subjectId: s.id
             });
           });
         });
         groupStudents.forEach(gs => sAttendances.push({
-          studentName: gs,
+          studentId: gs.id || null,
+          studentName: gs.id === '' ? gs.fullName : null,
           subjectName: values.selectedSubject
         }));
         if (isUpdating) {
@@ -120,7 +124,7 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
             }, attendances, sAttendances));
         } else {
           await dispatch(createSheduler({
-            groupNumber: values.selectedGroup,
+            groupNumber: values.selectedGroup || null,
             subjectName: values.selectedSubject,
             name: values.name
           }, attendances, sAttendances));
@@ -139,9 +143,23 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
         <Form onSubmit={handleSubmit}>
           <Grid
             container
-            sx={{minWidth: `${isTablet ? '35rem' : isMobile ? '25rem' : '18rem'}`}}
+            sx={{minWidth: `${isTablet ? '35rem' : isMobile ? '25rem' : '17rem'}`}}
             spacing={1}
           >
+            <FormControlLabel
+              sx={{marginLeft: 'auto'}}
+              control={<Checkbox
+                id='hasGroup'
+                checked={values.hasGroup}
+                onChange={(e) => {
+                  handleChange(e);
+                  setFieldValue('selectedGroup', '');
+                  dispatch(attendanceActions.setGroupStudents([]));
+                }}
+              />}
+              label="Расписание для существующей группы?"
+            />
+            <Grid item xs={12} sx={{padding: 0}}></Grid>
             <Grid item xs={12} sm={4}>
               <TextField
                 id="name"
@@ -188,6 +206,7 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
                   id="selectedGroup"
                   labelId="selectedGroup-label"
                   value={values.selectedGroup}
+                  disabled={!values.hasGroup}
                   label="Группа"
                   error={!!errors.selectedGroup}
                   onChange={async (e) => {
@@ -207,10 +226,10 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
             <Grid item xs={12} sm={6}>
               <StyledList>
                 {groupStudents.length > 0 && groupStudents.map(gs => (
-                  <ListItem key={gs} disablePadding sx={{
+                  <ListItem key={gs.fullName} disablePadding sx={{
                     position: 'relative'
                   }}>
-                    <ListItemText primary={gs} sx={{
+                    <ListItemText primary={gs.fullName} sx={{
                       textAlign: 'center',
                       margin: '0 .5rem'
                     }}/>
@@ -245,6 +264,7 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
                     onBlur={handleBlur}
                     value={values.newStudent}
                     onChange={handleChange}
+                    disabled={values.hasGroup}
                     onFocus={(e) => e.target.select()}
                     error={!!errors.newStudent}
                     label="Новый студент"
@@ -254,11 +274,15 @@ export const UCAttendanceShedulerForm: React.FC<PropsType> = ({
                       sx={{display: 'flex', justifyContent: 'end'}}>
                   <Button
                     variant='outlined'
+                    disabled={values.hasGroup}
                     sx={{marginLeft: 'auto'}}
                     onClick={() => {
                       if (values.name && values.selectedSubject && values.newStudent) {
                         dispatch(attendanceActions.setGroupStudents([
-                          values.newStudent,
+                          {
+                            id: '',
+                            fullName: values.newStudent
+                          },
                           ...groupStudents
                         ]));
                         setFieldValue('newStudent', '');

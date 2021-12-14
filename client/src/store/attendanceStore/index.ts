@@ -3,6 +3,7 @@ import {ShedulerListType} from "../../model/Attendance/ShedulerList";
 import {AttendancesByStudents} from "../../model/Attendance/Attendence";
 import {GroupName} from "../../model/Group/GroupNames";
 import {StudentAttendanceResultType} from "../../model/Attendance/StudentAttendaceModel";
+import {StudentInGroupType} from "../../model/Group/GroupModel";
 
 const initialState = {
   shedulers: [] as ShedulerListType[],
@@ -11,7 +12,7 @@ const initialState = {
   shedulerGroup: '',
   selectedSheduler: '',
   groupsNames: [] as GroupName[],
-  groupStudents: [] as string[],
+  groupStudents: [] as StudentInGroupType[],
   attendances: [] as AttendancesByStudents[],
   error: '',
   loadingInitial: false,
@@ -80,7 +81,7 @@ export const attendanceActions = {
     type: 'SET_GROUPS_NAMES',
     payload
   } as const),
-  setGroupStudents: (payload: string[]) => ({
+  setGroupStudents: (payload: StudentInGroupType[]) => ({
     type: 'SET_GROUP_STUDENTS',
     payload
   } as const),

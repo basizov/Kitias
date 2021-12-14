@@ -17,8 +17,6 @@ namespace Kitias.Persistence.Configurations.Data
 				.HasMaxLength(15);
 			builder.Property(a => a.Score)
 				.IsRequired();
-			builder.Property(a => a.StudentName)
-				.IsRequired();
 		}
 	}
 }

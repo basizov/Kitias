@@ -94,7 +94,7 @@ namespace Kitias.API.Controllers
 		[Produces("application/json")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-		public async Task<ActionResult<SubjectDto>> TakeShedulerStudentsGroupAsync(Guid id)
+		public async Task<ActionResult<ShedulerStudentsGroup>> TakeShedulerStudentsGroupAsync(Guid id)
 		{
 			var result = await _attendanceProvider.TakeShedulerStudentsGroupAsync(id);
 

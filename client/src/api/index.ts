@@ -24,7 +24,8 @@ import {StudentAttendanceResultType} from "../model/Attendance/StudentAttendaceM
 import {saveAs} from "file-saver";
 import {SignUpType} from "../model/User/SugnUpModel";
 import {UpdateSAttendanceType} from "../model/Attendance/UpdateStudentAttendance";
-import {GroupType} from "../model/Group/GroupModel";
+import {GroupType, StudentInGroupType} from "../model/Group/GroupModel";
+import {CreateGroupType} from "../model/Group/CreateGroup";
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
@@ -133,11 +134,13 @@ const subject = {
 
 const group = {
   groups: () => requests.get<GroupType[]>(`${Paths.TAKE_GROUP}/withStudents`),
+  create: (payload: CreateGroupType) => requests.post<GroupType>(Paths.TAKE_GROUP, payload),
+  deleteGroup: (id: string) => requests.delete(`${Paths.TAKE_GROUP}/${id}`),
   students: (id: string, payload: string[]) => requests
     .post<GroupType[]>(`${Paths.TAKE_GROUP}/${id}/students`, payload),
   groupNames: () => requests.get<GroupName[]>(`${Paths.TAKE_GROUP}/names`),
   groupStudentsNames: (id: string) => requests
-    .get<string[]>(`${Paths.TAKE_GROUP}/${id}/students/names`)
+    .get<StudentInGroupType[]>(`${Paths.TAKE_GROUP}/${id}/students/names`)
 };
 
 export const API = {

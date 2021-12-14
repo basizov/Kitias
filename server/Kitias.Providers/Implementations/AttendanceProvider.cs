@@ -7,6 +7,7 @@ using Kitias.Persistence.Enums;
 using Kitias.Providers.Interfaces;
 using Kitias.Providers.Models;
 using Kitias.Providers.Models.Attendances;
+using Kitias.Providers.Models.Group;
 using Kitias.Repository.Interfaces.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -73,13 +74,27 @@ namespace Kitias.Providers.Implementations
 			var sheduler = await _unitOfWork.ShedulerAttendace
 				.FindByAndInclude(
 					s => s.Id == id,
-					s => s.Group, s => s.Attendances
+					s => s.Group, s => s.StudentAttendances
 				)
 				.SingleOrDefaultAsync();
 
 			if (sheduler == null)
 				return ReturnFailureResult<ShedulerStudentsGroup>($"Couldn't find sheduler with id {id}", "Couldn't find sheduler");
-			var students = sheduler.Attendances.Select(a => a.StudentName).Distinct();
+			foreach (var attendace in sheduler.StudentAttendances)
+			{
+				var student = await _unitOfWork.Student
+					.FindBy(s => s.Id == attendace.StudentId)
+					.SingleOrDefaultAsync();
+
+				attendace.Student = student;
+			}
+			var students = sheduler.StudentAttendances
+				.Select(a => new StudentInGroup
+				{
+					Id = a.StudentId,
+					FullName = a.StudentName ?? a.Student.FullName
+				})
+				.Distinct();
 
 			_logger.LogInformation($"Take sheduler {id} students and gorup id");
 			return ResultHandler.OnSuccess(new ShedulerStudentsGroup
@@ -157,7 +172,8 @@ namespace Kitias.Providers.Implementations
 			foreach (var sAttendance in sAttendances.StudentAttendances)
 			{
 				var studentAttendances = sheduler.Attendances
-					.Where(a => a.StudentName == sAttendance.StudentName);
+					.Where(a => a.StudentName == sAttendance.StudentName)
+					.ToList();
 				var raiting = studentAttendances
 					.Average(sa => sa.Score);
 
@@ -371,6 +387,7 @@ namespace Kitias.Providers.Implementations
 							);
 						}
 						newStudentAttendance.StudentId = model.StudentId;
+						newStudentAttendance.StudentName = student.FullName;
 						_unitOfWork.StudentAttendace.Create(newStudentAttendance);
 						newStudentAttendance.Student = student;
 						attendances.Add(newStudentAttendance);
@@ -581,6 +598,7 @@ namespace Kitias.Providers.Implementations
 							);
 						}
 						newAttendance.StudentId = model.StudentId;
+						newAttendance.StudentName = student.FullName;
 						_unitOfWork.Attendance.Create(newAttendance);
 						newAttendance.Student = student;
 						newAttendance.Subject = subject;
