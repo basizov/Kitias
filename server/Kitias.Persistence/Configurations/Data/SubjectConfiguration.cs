@@ -31,7 +31,6 @@ namespace Kitias.Persistence.Configurations.Data
 				.IsRequired()
 				.HasConversion<string>()
 				.HasMaxLength(20);
-			builder.HasAlternateKey(g => new { g.Date, g.Time, g.TeacherId });
 			builder.HasIndex(g => new { g.Date, g.Time, g.TeacherId })
 				.IsUnique()
 				.HasFilter(@"""Date"" IS NOT NULL")

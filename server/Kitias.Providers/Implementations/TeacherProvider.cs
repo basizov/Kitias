@@ -172,7 +172,7 @@ namespace Kitias.Providers.Implementations
 				.OrderBy(s => s.Name)
 				.GroupBy(s => s.Name)
 				.ToDictionary(s => s.Key);
-			var r = new Dictionary<string, Dictionary<string, IGrouping<string, string>>>();
+			var res = new Dictionary<string, Dictionary<string, IGrouping<string, string>>>();
 
 			foreach (var key in result.Keys)
 			{
@@ -186,10 +186,10 @@ namespace Kitias.Providers.Implementations
 					.GroupBy(s => s.Type, s => $"{s.Date} {s.Time}")
 					.ToDictionary(s => s.Key);
 
-				r.Add(key, newValue);
+				res.Add(key, newValue);
 			}
 			_logger.LogInformation($"Take all subjects of teacher {email}");
-			return ResultHandler.OnSuccess(r);
+			return ResultHandler.OnSuccess(res);
 		}
 	}
 }

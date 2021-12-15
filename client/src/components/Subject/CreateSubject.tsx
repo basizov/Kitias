@@ -137,7 +137,7 @@ export const CreateSubject: React.FC<PropsType> = ({close, name = ''}) => {
       subjects = [
         ...subjects, {
           day: Days[firstDate.getDay()],
-          date: dates.length === 0 ? format(
+          date: week !== 'По определенным данным' ? format(
             week === 'Еженедельно' ?
               addDays(firstDate, 7 * i) :
               addDays(firstDate, 14 * i),
@@ -145,7 +145,7 @@ export const CreateSubject: React.FC<PropsType> = ({close, name = ''}) => {
           ) : format(dates[i], "dd.MM.yyyy"),
           name: subjectName,
           theme: theme,
-          time: format(time, 'hh:mm:ss'),
+          time: format(time, 'H:mm:ss'),
           week: week,
           type: subjectTypeName
         }

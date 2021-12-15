@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -277,25 +278,23 @@ namespace Kitias.Providers.Implementations
 				return ReturnFailureResult<SubjectDto>($"Subject with id ${id} doesn't existed", "Couldn't find this subject");
 			return await TryCatchExecute(findSubject, async (parameter) =>
 			{
-				var updatedEntity = _mapper.Map<Subject>(subject);
-
-				if (subject.Name != null)
-					parameter.Name = updatedEntity.Name;
+				if (subject.Name == null)
+					parameter.Name = subject.Name;
 				if (subject.Time != null)
-					parameter.Time = updatedEntity.Time;
+					parameter.Time = TimeSpan.Parse(subject.Time);
 				if (subject.Type != null)
-					parameter.Type = updatedEntity.Type;
+					parameter.Type = Helpers.GetEnumMemberFromString<SubjectType>(subject.Type);
 				if (subject.Week != null)
-					parameter.Week = updatedEntity.Week;
+					parameter.Week = Helpers.GetEnumMemberFromString<Week>(subject.Week);
 				if (subject.Date != null)
-					parameter.Date = updatedEntity.Date;
+					parameter.Date = DateTime.ParseExact(subject.Date, "dd.MM.yyyy", CultureInfo.InvariantCulture);
 				if (subject.Day != null)
-					parameter.Day = updatedEntity.Day;
+					parameter.Day = Helpers.GetEnumMemberFromString<DayWeek>(subject.Day);
 				if (subject.Theme != null)
-					parameter.Theme = updatedEntity.Theme;
+					parameter.Theme = subject.Theme;
 				if (!subject.IsGiveScore)
 				{
-					parameter.IsGiveScore = updatedEntity.IsGiveScore;
+					parameter.IsGiveScore = subject.IsGiveScore;
 					foreach (var attendance in findSubject.Attendances)
 					{
 						attendance.Score = 100;

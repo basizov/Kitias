@@ -14,7 +14,7 @@ namespace Kitias.Persistence.Entities.Scheduler
 		/// <summary>
 		/// Subject identifier
 		/// </summary>
-		public Guid Id { get; init; }
+		public Guid Id { get; set; }
 		/// <summary>
 		/// Subject name
 		/// </summary>
